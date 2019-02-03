@@ -12,8 +12,8 @@ Avoir installé au préalable :
 Demarrage du bot :
 ==================
 
-pm2 : pm2 start bot.js
-pm2 : pm2 restart all
-pm2 usefull commands : pm2 show bot
+- pm2 : pm2 start bot.js
+- pm2 : pm2 restart all
+- pm2 usefull commands : pm2 show bot
 
 Il est aussi possible d'utiliser nodemon afin de run le but h24 mais pm2 nous permet davoir des informations supplémentaire sur le status du bot, de le restart, ...
