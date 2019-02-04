@@ -8,6 +8,7 @@ Avoir installé au préalable :
 5. youtube (npm install simple-youtube-api)
 6. npm install ffmpeg-binaries
 7. npm install opusscript
+8. npm install --save anilist-api-pt
 
 Si les commandes npm ne marchent pas, cela pourrait peut etre due au fait que npm ne soit pas dans les "variables d'environnements".
 
