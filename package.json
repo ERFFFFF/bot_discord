@@ -9,11 +9,14 @@
   "author": "ERFFFFF",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.3.2",
+    "anilist-api-pt": "^1.0.0",
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "discord.js": "^11.4.2",
     "ffmpeg": "0.0.4",
-    "ffmpeg-binaries": "^3.2.2-3",
+    "ffmpeg-binaries": "^3.2.2",
     "opusscript": "0.0.6",
-    "simple-youtube-api": "^5.0.2",
+    "simple-youtube-api": "^5.1.1",
     "ytdl-core": "^0.20.4"
   }
 }

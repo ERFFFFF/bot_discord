@@ -1,4 +1,7 @@
 
+const axios = require('axios');
+
+const cheerio = require('cheerio');
 
 const bot_settings = require('./bot_settings.json');
 
@@ -16,7 +19,6 @@ const PREFIX = '!';
 
 const youtube = new YouTube(bot_settings.GOOGLE_API_KEY);
 
-
 bot.on('ready', () => {
 
 	let bot_connected = `Bot ${bot.user.username} is ready.`;
@@ -26,9 +28,8 @@ bot.on('ready', () => {
  
 });
 
+bot.on('message', async message => {
 
-bot.on('message', message => {
-	
 	if(!message.content.startsWith(PREFIX)) return;
 	if(message.author.bot) return;
 	let test = 'Ceci est un test.';
@@ -48,8 +49,63 @@ bot.on('message', message => {
 
 		message.channel.send(Math.floor(Math.random() * 101));
 	}
+	if(message.content.toString() === `${PREFIX}anime`) 
+	{
+		let data = []
+		axios.get('https://www.livechart.me').then(res=>
+		{
+			const $ = cheerio.load(res.data);
+			$('.chart .anime').each((index,item)=>
+			{
+				const $element = $(item);
+				if($element.find('.anime-card .poster-container .episode-countdown'))
+				{
+					data.push
+					({
+						en:$element.attr('data-romaji'),
+						image:$element.find('.anime-card .poster-container img').attr('src'),
+						next_epiosode:$element.find('.anime-card .poster-container .episode-countdown').text()
+					})
+				}
+			})
+			console.log(data)
+			for (var j=0; j<data.length; j++)
+			{
+				if ((data[j].en == "Tensei Shitara Slime Datta Ken") || (data[j].en == "Fukigen na Mononokean: Tsuzuki"))
+				{
+					message.channel.send({embed: 
+						{
+						    color: 3447003,
+						    author: {
+						      name: bot.user.username,
+						      icon_url: bot.user.avatarURL
+						    },
+						    image: 
+						    {
+			   				   url: data[j].image
+			    			},
+						    fields:
+						    [
+						    	{
+						        	name: data[j].en,
+						        	value: data[j].next_epiosode
+						      	}
+						    ],
+						    timestamp: new Date(),
+						    footer: {
+						      icon_url: bot.user.avatarURL,
+						      text: "©"
+						    }
+						}
+					});
+				}
+			}
+		}) 
+
+	}
 });
 
+//vocal bot music
 bot.on('message', async message => {
 
 const args = message.content.split(' ');
@@ -88,5 +144,5 @@ const args = message.content.split(' ');
   }
   
 });
-
+	
 bot.login(bot_settings.token);
