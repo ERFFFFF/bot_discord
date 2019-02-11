@@ -13,6 +13,8 @@ Avoir installé au préalable :
 
 Si les commandes npm ne marchent pas, cela pourrait peut etre due au fait que npm ne soit pas dans les "variables d'environnements".
 
+Tous les npm install doivent êtres dans le dossier ou se situe le bot.
+
 Demarrage du bot :
 ==================
 
