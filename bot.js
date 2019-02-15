@@ -9,6 +9,7 @@ const ytdl = require('ytdl-core');
 const bot = new Discord.Client({});
 const PREFIX = '!';
 const youtube = new YouTube(bot_settings.GOOGLE_API_KEY);
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 bot.on('ready', () => 
 {
@@ -42,63 +43,67 @@ bot.on('message', async message =>
 	}
 	if(message.content.toString() === `${PREFIX}anime`) 
 	{
-/*
-var oui = new Date(1549897200*1000)
-var non = oui.toLocaleTimeString();
-console.log(non);
-*/
 		let data = []
-		async function test() {
-		await axios.get('https://www.livechart.me').then(async function (res) {
+		function readTextFile()
 		{
-			const $ = cheerio.load(res.data);
-			$('.chart .anime').each((index,item)=>
-			{
-				const $element = $(item);
-				if($element.find('.anime-card .poster-container .episode-countdown time'))
-				{
-					data.push
-					({
-						en:$element.attr('data-romaji'),
-						image:$element.find('.anime-card .poster-container img').attr('src'),
-						next_epiosode:$element.find('.anime-card .poster-container .episode-countdown time').text(),
-						countdown:$element.find('.anime-card .poster-container .episode-countdown time').attr('data-timestamp')
-					})
-				}
-			})
-			for (var j=0; j<data.length; j++)
-			{
-				if ((data[j].en == "Tensei Shitara Slime Datta Ken") || (data[j].en == "Fukigen na Mononokean: Tsuzuki"))
-				{
-					message.channel.send({embed: 
-						{
-						    color: 3447003,
-						    author: {
-						      name: bot.user.username,
-						      icon_url: bot.user.avatarURL
-						    },
-						    image: 
-						    {
-			   					url: data[j].image
-			    			},
-						    fields:
-						    [{
-						        name: data[j].en,
-						        value: data[j].countdown
-						     }],
-						    timestamp: new Date(),
-						    footer: {
-						      icon_url: bot.user.avatarURL,
-						      text: "©"
-						    }
-						}
-					});
-				}
-			}
-		} 
-	})
-	}
-	test()
+		    var file = "file://C:/Users/ERFFFFF/Desktop/anichart.html"
+		    var rawFile = new XMLHttpRequest();
+		    rawFile.open("GET", file, false);
+		    rawFile.onreadystatechange = function ()
+		    {
+		    			//console.log('Page récupéré !')
+		                var data1 = rawFile.responseText;
+		                const $ = cheerio.load(data1);
+		                $('.main-content .browse .browse__content .calendar .section span').each((index,item)=>
+		                {
+		                //	console.log('Contenue de la page trouvé !')
+		                    const $element = $(item);
+		                    if($element.attr('ng-repeat') == "b in series | filter:browseVm.filter | orderBy:browseVm.currentSort")
+		                    {
+		                    //	console.log('Items trouvé !')
+		                        data.push
+		                        ({
+			                        en:$element.find('.item .title a').text(),
+			                        image:$element.find('.item .image').attr('style').slice(21, -1),
+			                        next_epiosode:$element.find('.item .airing span').text(),
+			                        countdown:$element.find('.item .airing timer span').text().slice(1, -1)
+		                        })
+		                    }
+		                })
+		                for (var j=0; j<data.length; j++)
+		                {
+		                    if ((data[j].en == "Tensei Shitara Slime Datta Ken"))
+		                    {
+		                        message.channel.send({embed: 
+		                            {
+		                                color: 3447003,
+		                                author: {
+		                                  name: bot.user.username,
+		                                  icon_url: bot.user.avatarURL
+		                                },
+										image: 
+										{
+											url: data[j].image
+										},
+		                                fields:
+		                                [{
+		                                    name: data[j].en,
+		                                    value: "Sortie du prochain épisode dans : " + data[j].countdown
+		                                 }],
+		                                timestamp: new Date(),
+		                                footer: {
+		                                  icon_url: bot.user.avatarURL,
+		                                  text: "©"
+		                                }
+		                            }
+		                        });
+		                    }
+		                }    
+		               // console.log(data.length)
+		    }
+		    rawFile.send(null);
+		}
+readTextFile()
 	}
 });
 
