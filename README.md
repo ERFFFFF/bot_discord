@@ -10,6 +10,7 @@ Avoir installé au préalable :
 7. npm install opusscript
 8. npm install cheerio (implémentation des éléments de bases de jquery)
 9. npm install axios (Permet de faire des requettes http)
+10. npm i xmlhttprequest (read file)
 
 Si les commandes npm ne marchent pas, cela pourrait peut etre due au fait que npm ne soit pas dans les "variables d'environnements".
 
