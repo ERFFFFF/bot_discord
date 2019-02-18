@@ -43,149 +43,113 @@ bot.on('message', async message =>
     }
     if(message.content.toString() === `${PREFIX}anime`) 
     {
+        const puppeteer = require('puppeteer');
+
+(async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  await page.goto('https://anichart.net/airing', { waitUntil: 'networkidle2'});
+  await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
+
+  let content = await page.content();
+  var $ = cheerio.load(content);
+    $('.site-theme-default #app .main-content .airing-view .calendar .day span').each((index,item)=>
+    {
+    //  console.log('Contenue de la page trouvé !')
+        const $element = $(item);
+        if($element.attr('ng-repeat') == "b in series | filter:browseVm.filter | orderBy:browseVm.currentSort")
+        {
+        //  console.log('Items trouvé !')
+            data.push
+            ({
+                en:$element.find('.item .title a').text(),
+                image:$element.find('.item .image').attr('style').slice(21, -1),
+                next_epiosode:$element.find('.item .airing span').text(),
+                countdown:$element.find('.item .airing timer span').text().slice(1, -1)
+            })
+        }
+    })
+    for (var j=0; j<data.length; j++)
+    {
+        if ((data[j].en == "Tensei Shitara Slime Datta Ken"))
+        {
+            message.channel.send({embed: 
+                {
+                    color: 3447003,
+                    author: {
+                      name: bot.user.username,
+                      icon_url: bot.user.avatarURL
+                    },
+                    image: 
+                    {
+                        url: data[j].image
+                    },
+                    fields:
+                    [{
+                        name: data[j].en,
+                        value: "Sortie du prochain épisode dans : " + data[j].countdown
+                     }],
+                    timestamp: new Date(),
+                    footer: {
+                      icon_url: bot.user.avatarURL,
+                      text: "©"
+                    }
+                }
+            });
+        }
+    }    
+/*  let data = await page.evaluate(() => {
+
+    let title = document.querySelector('div[class="day"] > h2').innerText
+
+    return title
+
+
+
+  })*/
+
+  console.log(data)
+
+  browser.close();
+})();
+
+ //return  document.querySelectorAll(".site-theme-default, .noscript modern-browser, a").innerHTML
+/*
         var phantom = require('phantom');
         var _ph, _page, _outObj;
 
         phantom.create()
-          .then(ph => {
+        .then(ph => {
             _ph = ph;
             return _ph.createPage();
-          })
-          .then(page => {
+        })
+        .then(page => {
             _page = page;
-            var test = _page.open('https://anichart.net/airing')
-                            .then(function() {
-                                    _page.includeJs("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
-                                    .then(function() {
-                                            _page.evaluate(function() {
-                                                            return document.getElementById('app').innerHTML;
-                                                           /* $('.listMain > li').each(
-                                                                function () {
+             return _page.open('https://anichart.net/airing')
+        })
 
-                                                                    console.log($(this).find('a').attr('href'));
-                                                                }
-                                                            );
-                                                          },
-                                                          function() {
-                                                             _ph.exit()
-                                                          }*/
-                                                        })
-                                            .then(function(toto){ console.log("HTML=<"+toto+">")})
-                                        })
-                              });
-            return test;
-          })
-         /* .then(status => {
-            console.log("status="+status);
-            return _page.property('content');
-          })
-          .then(content => {
-           // console.log(content);
-            //_page.close();
-            //_ph.exit();
-          })*/
-          .catch(e => console.log(e));
-
-        
-       // var data = []
-        // Print all of the news items on hackernews
-     //   var phantom = require('phantom');
-
-        /*phantom.create(
-            function (ph)
-            {
-              ph.createPage(
-                function (page) {
-                    var url = "https://anichart.net/airing";
-                    page.open(url, 
-                              function() {
-                                    page.includeJs("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js", 
-                                                    function() {
-                                                        page.evaluate(function() {
-                                                                        $('.listMain > li').each(
-                                                                            function () {
-                                                                                console.log($(this).find('a').attr('href'));
-                                                                            }
-                                                                        );
-                                                                      },
-                                                                      function() {
-                                                                         ph.exit()
-                                                                      }
-                                                        );
-                                                    }
-                                    );
-                              }
-                    );
-                }
-              );
-            }
-        );*/
-        /*
-         console.log("coucou");
-        phantom.create(function (ph) {
-            console.log("page1");
-          ph.createPage(function (page) {
-            console.log("page2");
-            var url = "https://anichart.net/airing";
-            page.open(url, function() {
-                console.log("page3")
-              page.includeJs("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js", function() {
-                console.log("page4")
-                page.evaluate(function() {
-                    console.log("page5")
-                 //   const $ = cheerio.load(result);
-            $('.main-content .browse .browse__content .calendar .section').each(function () {
-                console.log('Contenue de la page trouvé !')
-                const $element = $(item);
-                if($element.find('span .item')){
-                    console.log('Items trouvé !')
-                    data.push
-                    ({
-                        en:$element.find('.title a').text(),
-                        image:$element.find('.image').attr('style'),
-                        next_epiosode:$element.find('.airing span').text(),
-                        countdown:$element.find('.airing timer span').text()
-                    })
-                    console.log(data)
-                }
-                else {
-                    console.log('aucun item trouvé')
-                }
+      //  .then(function(oui) {
+//console.log(oui)
+//return _page.includeJs("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+            //return _page.property('cont');
+       // })
+        .then(function(cont) 
+        {
+            console.log(cont)
+            var oui = _page.evaluate(function() {
+               // var $ = res;
+               // return $(".site-theme-default #app .main-content .airing-view .calendar day h2");
+               return document; 
             })
-            for (var j=0; j<data.length; j++){
-                if ((data[j].en == "Tensei Shitara Slime Datta Ken") || (data[j].en == "Fukigen na Mononokean: Tsuzuki")){
-                    message.channel.send({embed: 
-                        {
-                            color: 3447003,
-                            author: {
-                              name: bot.user.username,
-                              icon_url: bot.user.avatarURL
-                            },
-                            image: 
-                            {
-                                url: data[j].image
-                            },
-                            fields:
-                            [{
-                                name: data[j].en,
-                                value: data[j].countdown
-                             }],
-                            timestamp: new Date(),
-                            footer: {
-                              icon_url: bot.user.avatarURL,
-                              text: "©"
-                            }
-                        }
-                    });
-                }
-            }
-        }, function(){
-                  ph.exit()
-                });
-              });
-            });
-          });
-        });*/
+            return oui
+        })
+        .then(function(finalRes) {
+            console.log("HTML=<"+finalRes+">")
+        })
+
+        .catch(e => console.log(e));
+        */
     }
 });
 
