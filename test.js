@@ -46,30 +46,39 @@ bot.on('message', async message =>
         const puppeteer = require('puppeteer');
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch(/*{headless: false}*/);
   const page = await browser.newPage();
 
-  await page.goto('https://anichart.net/airing', { waitUntil: 'networkidle2'});
+  await page.goto('https://anichart.net/Winter-2019', { waitUntil: 'networkidle2'});
   await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
 
+  page.evaluate(_ => {
+    window.scrollBy(0, window.innerHeight);
+  });
+
   let content = await page.content();
+  let data=[]
+
   var $ = cheerio.load(content);
-    $('.site-theme-default #app .main-content .airing-view .calendar .day span').each((index,item)=>
+
+    $('.site-theme-default #app .main-content .chart-view .card-list .media-card').each((index,item)=>
     {
-    //  console.log('Contenue de la page trouvé !')
+      //console.log('Contenue de la page trouvé !')
         const $element = $(item);
-        if($element.attr('ng-repeat') == "b in series | filter:browseVm.filter | orderBy:browseVm.currentSort")
+        if($element.attr('class') == "media-card")
         {
-        //  console.log('Items trouvé !')
+          //console.log('Items trouvé !')
             data.push
-            ({
-                en:$element.find('.item .title a').text(),
-                image:$element.find('.item .image').attr('style').slice(21, -1),
-                next_epiosode:$element.find('.item .airing span').text(),
-                countdown:$element.find('.item .airing timer span').text().slice(1, -1)
+            ({ 
+                en:$element.find('.cover .overlay').text(),
+                image:$element.find('.cover img').attr('src'),//.slice(21, -1),
+                next_epiosode:$element.find('.data .scroller .scroller-wrap .body .header .episode').text(),
+                countdown:$element.find('.data .scroller .scroller-wrap .body .header .countdown').text()
             })
         }
+        console.log(data)
     })
+
     for (var j=0; j<data.length; j++)
     {
         if ((data[j].en == "Tensei Shitara Slime Datta Ken"))
