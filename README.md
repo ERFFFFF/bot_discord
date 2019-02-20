@@ -9,7 +9,7 @@ Avoir installé au préalable :
 6. npm install ffmpeg-binaries
 7. npm install opusscript
 8. npm install cheerio (implémentation des éléments de bases de jquery)
-9. npm install axios (Permet de faire des requettes http)
+9. npm i puppeteer (permet de naviguer sur une page web pour ensuite extraire des éléments)
 10. npm i xmlhttprequest (read file)
 
 Si les commandes npm ne marchent pas, cela pourrait peut etre due au fait que npm ne soit pas dans les "variables d'environnements".
