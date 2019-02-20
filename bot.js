@@ -1,13 +1,12 @@
-const cheerio = require('cheerio');
 const bot_settings = require('./bot_settings.json');
 const Discord = require('Discord.js');
-const function_ = require('./function.js'); 
+const AnimeFunc = require('./animeFunc.js'); 
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 const bot = new Discord.Client({});
 const PREFIX = '!';
 const youtube = new YouTube(bot_settings.GOOGLE_API_KEY);
-const puppeteer = require('puppeteer');
+
 
 bot.on('ready', () => 
 {
@@ -23,7 +22,6 @@ bot.on('message', async message =>
     if(!message.content.startsWith(PREFIX)) return;
     if(message.author.bot) return;
     let test = 'Ceci est un test.';
-    let oun = function_.hello();
 
     if(message.content.toString() === `${PREFIX}rs`) 
     {
@@ -41,86 +39,38 @@ bot.on('message', async message =>
     }
     if(message.content.toString() === `${PREFIX}anime`) 
     {
-
-
-        (async () => 
+        //Print message to discord
+        let DataAnime = AnimeFunc.dataAnime
+        for (var j=0; j<DataAnime.length; j++)
         {
-            //launch pupeteer
-            const browser = await puppeteer.launch(/*{headless: false}*/);
-
-            //create a new page
-            const page = await browser.newPage();
-
-            //tell to the bot to go to the website
-            await page.goto('https://www.livechart.me/', { waitUntil: 'networkidle2'});
-            await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
-
-            //Tell to the bot to scroll to the bottom of the page
-            page.evaluate(_ => 
+            //next stape, link that to mysql db
+            if ((DataAnime[j].en == "Tensei Shitara Slime Datta Ken"))
             {
-                window.scrollBy(0, window.innerHeight);
-            });
-
-            //get the data of the website
-            let content = await page.content();
-
-            //board that will contain our final data
-            let data=[];
-
-            //put all the content of the webpage into cheerio
-            var $ = cheerio.load(content);
-
-            //research all the items that we want to get
-            $('#content .chart .anime').each((index,item)=>
-            {
-                const $element = $(item);
-                //verify if the class is the object that we want
-                if($element.attr('class') == "anime")
-                {
-                    //push the data into a board
-                    data.push
-                    ({ 
-                        //the data, we dont need to describe all the path but just the path after the class anime
-                        en:$element.find('.anime-card .main-title a').text(),
-                        image:$element.find('.anime-card .poster-container img').attr('src'),//.slice(21, -1),
-                        next_epiosode:$element.find('.anime-card .poster-container .episode-countdown').text().slice(2, 4),
-                        countdown:$element.find('.anime-card .poster-container time').text()
-                    })
-                }
-            })
-            //Print message to discord
-            for (var j=0; j<data.length; j++)
-            {
-                if ((data[j].en == "Tensei Shitara Slime Datta Ken"))
-                {
-                    message.channel.send({embed: 
+                message.channel.send({embed: 
+                    {
+                        color: 3447003,
+                        author: {
+                          name: bot.user.username,
+                          icon_url: bot.user.avatarURL
+                        },
+                        image: 
                         {
-                            color: 3447003,
-                            author: {
-                              name: bot.user.username,
-                              icon_url: bot.user.avatarURL
-                            },
-                            image: 
-                            {
-                                url: data[j].image
-                            },
-                            fields:
-                            [{
-                                name: data[j].en,
-                                value: "Sortie de l'épisode numéro " + data[j].next_epiosode + " dans : " + data[j].countdown
-                             }],
-                            timestamp: new Date(),
-                            footer: {
-                              icon_url: bot.user.avatarURL,
-                              text: "©"
-                            }
+                            url: DataAnime[j].image
+                        },
+                        fields:
+                        [{
+                            name: DataAnime[j].en,
+                            value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
+                         }],
+                        timestamp: new Date(),
+                        footer: {
+                          icon_url: bot.user.avatarURL,
+                          text: "©"
                         }
-                    });
-                }
+                    }
+                });
             }
-            //close the browser
-            browser.close();
-        })();
+        }
     }
 });
 
