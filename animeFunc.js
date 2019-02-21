@@ -3,9 +3,15 @@ const Discord = require("Discord.js");
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 
+function delay(timeout) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+}
 
 function anime()
 {
+
 	//board that will contain our final data
 	var dataAnime=[];
     (async () => 
@@ -26,12 +32,13 @@ function anime()
             window.scrollBy(0, window.innerHeight);
         });
 
+        await delay(3000);
         //get the data of the website
         let content = await page.content();
 
         //put all the content of the webpage into cheerio
         var $ = cheerio.load(content);
-
+        
         //research all the items that we want to get
         $('#content .chart .anime').each((index,item)=>
         {
@@ -52,6 +59,7 @@ function anime()
         })	       
         //close the browser
         browser.close();
+        console.log("Anime ready to use.")
     })();
     //return/export data
     module.exports = { dataAnime };
