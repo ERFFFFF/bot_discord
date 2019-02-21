@@ -7,7 +7,13 @@ const ytdl = require('ytdl-core');
 const bot = new Discord.Client({});
 const PREFIX = '!';
 const youtube = new YouTube(bot_settings.GOOGLE_API_KEY);
-
+//retrieve data from the function animeFunc.js
+var DataAnime = AnimeFunc.dataAnime
+//retrieve data from the function mangaFunc.js
+var DataMangaChap = MangaFunc.dataMangaChap
+var DataMangaName = MangaFunc.dataMangaName
+//only the first word of the manga name
+var Manga="";
 
 bot.on('ready', () => 
 {
@@ -40,13 +46,11 @@ bot.on('message', async message =>
     }
     if(message.content.toString() === `${PREFIX}anime`) 
     {
-        //retrieve data from the function animeFunc.js
-        let DataAnime = AnimeFunc.dataAnime
         //Print message to discord
-        for (var j=0; j<DataAnime.length; j++)
+        for (let j=0; j<DataAnime.length; j++)
         {
             //next stape, link that to mysql db
-            if ((DataAnime[j].en == "Tensei Shitara Slime Datta Ken"))
+            if ((DataAnime[j].en == "Tensei Shitara Slime Datta Ken") || (DataAnime[j].en == "Tate no Yuusha no Nariagari") || (DataAnime[j].en == "Mob Psycho 100 II") || (DataAnime[j].en == "Kakegurui ××") || (DataAnime[j].en == "Sword Art Online: Alicization"))
             {
                 message.channel.send({embed: 
                     {
@@ -76,29 +80,74 @@ bot.on('message', async message =>
     }
     if(message.content.toString() === `${PREFIX}manga`) 
     {
-        let dataMangaChap = MangaFunc.dataMangaChap
-        //next stape, link that to mysql db
-        if ((dataMangaChap[j].next_epiosode == "Yuan Zun 25 VF: L’ascension de Zhou"))
+        for (let k=0; k<DataMangaChap.length; k++)
         {
-            message.channel.send({embed: 
+            for (let m=0; m<DataMangaName.length; m++)
+            {
+                let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ")
+                let splitMangaEn = DataMangaName[m].en.split(" ")
+
+                //next stape, link that to mysql db
+                if ((splitMangaEp[0] == splitMangaEn[0]))
                 {
-                    color: 3447003,
-                    author: {
-                      name: bot.user.username,
-                      icon_url: bot.user.avatarURL
-                    },
-                    fields:
-                    [{
-                       // name: dataMangaName[j].en,
-                        value: "Le/Les chapitres sorties aujourdhui est/sont : " + dataMangaChap[j].next_epiosode
-                     }],
-                    timestamp: new Date(),
-                    footer: {
-                      icon_url: bot.user.avatarURL,
-                      text: "©"
-                    }
+                    message.channel.send({embed: 
+                        {
+                            color: 3447003,
+                            author: {
+                              name: bot.user.username,
+                              icon_url: bot.user.avatarURL
+                            },
+                            fields:
+                            [{
+                                name: DataMangaName[m].en,
+                                value: "**__Le/Les chapitres sorties aujourdhui est/sont :__** " + DataMangaChap[k].next_epiosode
+                             }],
+                            timestamp: new Date(),
+                            footer: {
+                              icon_url: bot.user.avatarURL,
+                              text: "©"
+                            }
+                        }
+                    });
+                    break;
                 }
-            });
+            }
+        }
+    }
+    if(message.content.toString() === `${PREFIX}manga ${Manga}`) 
+    {
+        for (let k=0; k<DataMangaChap.length; k++)
+        {
+            for (let m=0; m<DataMangaName.length; m++)
+            {
+                let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ")
+                let splitMangaEn = DataMangaName[m].en.split(" ")
+
+                //next stape, link that to mysql db
+                if ((splitMangaEp[0] == Manga) && (splitMangaEn[0] == Manga))
+                {
+                    message.channel.send({embed: 
+                        {
+                            color: 3447003,
+                            author: {
+                              name: bot.user.username,
+                              icon_url: bot.user.avatarURL
+                            },
+                            fields:
+                            [{
+                                name: DataMangaName[m].en,
+                                value: "**__Le/Les chapitres sorties aujourdhui est/sont :__** " + DataMangaChap[k].next_epiosode
+                             }],
+                            timestamp: new Date(),
+                            footer: {
+                              icon_url: bot.user.avatarURL,
+                              text: "©"
+                            }
+                        }
+                    });
+                    break;
+                }
+            }
         }
     }
 });
