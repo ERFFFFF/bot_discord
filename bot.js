@@ -25,7 +25,6 @@ bot.on('ready', () =>
 
 bot.on('message', async message => 
 {
-
     if(!message.content.startsWith(PREFIX)) return;
     if(message.author.bot) return;
     let test = 'Ceci est un test.';
@@ -78,80 +77,96 @@ bot.on('message', async message =>
             }
         }
     }
-    if(message.content.toString() === `${PREFIX}manga`) 
+    if(message.content.startsWith(`${PREFIX}manga`)) 
     {
-        for (let k=0; k<DataMangaChap.length; k++)
-        {
-            for (let m=0; m<DataMangaName.length; m++)
-            {
-                let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ")
-                let splitMangaEn = DataMangaName[m].en.split(" ")
+        var Manga = message.content;
+        var splitManga = Manga.split(" ")
+        var LastValManga = splitManga[splitManga.length -1]
+        let bool = 0;
 
-                //next stape, link that to mysql db
-                if ((splitMangaEp[0] == splitMangaEn[0]))
+        if(LastValManga != "!manga")
+        {
+            //Un manga à été demandé : !manga One
+            //One pour One piece, mais on doit mettre seulement le premier mot du manga.
+            for (let k=0; k<DataMangaChap.length; k++)
+            {
+                for (let m=0; m<DataMangaName.length; m++)
                 {
-                    message.channel.send({embed: 
-                        {
-                            color: 3447003,
-                            author: {
-                              name: bot.user.username,
-                              icon_url: bot.user.avatarURL
-                            },
-                            fields:
-                            [{
-                                name: DataMangaName[m].en,
-                                value: "**__Le/Les chapitres sorties aujourdhui est/sont :__** " + DataMangaChap[k].next_epiosode
-                             }],
-                            timestamp: new Date(),
-                            footer: {
-                              icon_url: bot.user.avatarURL,
-                              text: "©"
+                    let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ")
+                    let splitMangaEn = DataMangaName[m].en.split(" ")
+
+                    //next stape, link that to mysql db
+                    if ((splitMangaEp[0] == LastValManga) && (splitMangaEn[0] == LastValManga))
+                    {
+                        message.channel.send({embed:
+                            {
+                                color: 3447003,
+                                author: {
+                                  name: bot.user.username,
+                                  icon_url: bot.user.avatarURL
+                                },
+                                fields:
+                                [{
+                                    name: DataMangaName[m].en,
+                                    value: "**__Le chapitre sélectionné sortit est :__** " + DataMangaChap[k].next_epiosode
+                                 }],
+                                timestamp: new Date(),
+                                footer: {
+                                  icon_url: bot.user.avatarURL,
+                                  text: "©"
+                                }
                             }
-                        }
-                    });
-                    break;
+                        });
+                        bool = 1;
+                        break;
+                    }
+                    if ((bool == 0) && (m == DataMangaName.length - 1) && (k == DataMangaChap.length - 1))
+                    {
+                        message.channel.send("Soit le manga séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot du manga avec les majuscules ainsi que les minuscules, exemple, pour le manga 'One piece' il faut taper : !manga One")
+                       // break;
+                    }
+                }
+            }      
+        }
+        else 
+        {
+            //Aucun manga n'a été demandé : !manga
+            //return TOUT les mangas sortits aujourdhui.
+            for (let k=0; k<DataMangaChap.length; k++)
+            {
+                for (let m=0; m<DataMangaName.length; m++)
+                {
+                    let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ")
+                    let splitMangaEn = DataMangaName[m].en.split(" ")
+
+                    //next stape, link that to mysql db
+                    if ((splitMangaEp[0] == splitMangaEn[0]))
+                    {
+                        message.channel.send({embed: 
+                            {
+                                color: 3447003,
+                                author: {
+                                  name: bot.user.username,
+                                  icon_url: bot.user.avatarURL
+                                },
+                                fields:
+                                [{
+                                    name: DataMangaName[m].en,
+                                    value: "**__Le/Les chapitres sorties aujourdhui est/sont :__** " + DataMangaChap[k].next_epiosode
+                                 }],
+                                timestamp: new Date(),
+                                footer: {
+                                  icon_url: bot.user.avatarURL,
+                                  text: "©"
+                                }
+                            }
+                        });
+                        break;
+                    }
                 }
             }
         }
     }
-    /*
-    if(message.content.toString() === `${PREFIX}manga ${Manga}`) 
-    {
-        for (let k=0; k<DataMangaChap.length; k++)
-        {
-            for (let m=0; m<DataMangaName.length; m++)
-            {
-                let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ")
-                let splitMangaEn = DataMangaName[m].en.split(" ")
-
-                //next stape, link that to mysql db
-                if ((splitMangaEp[0] == Manga) && (splitMangaEn[0] == Manga))
-                {
-                    message.channel.send({embed: 
-                        {
-                            color: 3447003,
-                            author: {
-                              name: bot.user.username,
-                              icon_url: bot.user.avatarURL
-                            },
-                            fields:
-                            [{
-                                name: DataMangaName[m].en,
-                                value: "**__Le/Les chapitres sorties aujourdhui est/sont :__** " + DataMangaChap[k].next_epiosode
-                             }],
-                            timestamp: new Date(),
-                            footer: {
-                              icon_url: bot.user.avatarURL,
-                              text: "©"
-                            }
-                        }
-                    });
-                    break;
-                }
-            }
-        }
-    }
-    */
 });
 
 //vocal bot music
