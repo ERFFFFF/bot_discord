@@ -12,8 +12,6 @@ var DataAnime = AnimeFunc.dataAnime
 //retrieve data from the function mangaFunc.js
 var DataMangaChap = MangaFunc.dataMangaChap
 var DataMangaName = MangaFunc.dataMangaName
-//only the first word of the manga name
-//var Manga="";
 
 bot.on('ready', () => 
 {
@@ -43,45 +41,95 @@ bot.on('message', async message =>
     {
         message.channel.send(Math.floor(Math.random() * 101));
     }
-    if(message.content.toString() === `${PREFIX}anime`) 
+    if(message.content.startsWith(`${PREFIX}anime`)) 
     {
-        //Print message to discord
-        for (let j=0; j<DataAnime.length; j++)
+        let Anime = message.content;
+        let splitAnime = Anime.split(" ");
+        let LastValAnime = splitAnime[splitAnime.length -1];
+        let bool = 0;
+        
+        if(LastValAnime != "!anime")
         {
-            //next stape, link that to mysql db
-            if ((DataAnime[j].en == "Tensei Shitara Slime Datta Ken") || (DataAnime[j].en == "Tate no Yuusha no Nariagari") || (DataAnime[j].en == "Mob Psycho 100 II") || (DataAnime[j].en == "Kakegurui ××") || (DataAnime[j].en == "Sword Art Online: Alicization"))
+            //Print message to discord
+            for (let j=0; j<DataAnime.length; j++)
             {
-                message.channel.send({embed: 
-                    {
-                        color: 3447003,
-                        author: {
-                          name: bot.user.username,
-                          icon_url: bot.user.avatarURL
-                        },
-                        image: 
+                let splitanime = DataAnime[j].en.split(" ")
+
+                //next stape, link that to mysql db
+                if ((splitanime[0] == LastValAnime))
+                {
+                    message.channel.send({embed: 
                         {
-                            url: DataAnime[j].image
-                        },
-                        fields:
-                        [{
-                            name: DataAnime[j].en,
-                            value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
-                         }],
-                        timestamp: new Date(),
-                        footer: {
-                          icon_url: bot.user.avatarURL,
-                          text: "©"
+                            color: 3447003,
+                            author: {
+                              name: bot.user.username,
+                              icon_url: bot.user.avatarURL
+                            },
+                            image: 
+                            {
+                                url: DataAnime[j].image
+                            },
+                            fields:
+                            [{
+                                name: DataAnime[j].en,
+                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
+                             }],
+                            timestamp: new Date(),
+                            footer: {
+                              icon_url: bot.user.avatarURL,
+                              text: "©"
+                            }
                         }
-                    }
-                });
+                    });
+                    bool = 1;
+                    break;
+                }
+                if ((bool == 0) && (j == DataAnime.length - 1))
+                {
+                    message.channel.send("Soit l'Animé séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot de l'animé avec les majuscules ainsi que les minuscules, exemple, pour l'animé 'Tensei Shitara Slime Datta Ken' il faut taper : !manga Tensei");
+                }
+            }
+        }
+        else 
+        {
+            //Print message to discord
+            for (let j=0; j<DataAnime.length; j++)
+            {
+                //next stape, link that to mysql db
+                if ((DataAnime[j].en == "Tensei Shitara Slime Datta Ken") || (DataAnime[j].en == "Tate no Yuusha no Nariagari") || (DataAnime[j].en == "Mob Psycho 100 II") || (DataAnime[j].en == "Kakegurui ××") || (DataAnime[j].en == "Sword Art Online: Alicization"))
+                {
+                    message.channel.send({embed: 
+                        {
+                            color: 3447003,
+                            author: {
+                              name: bot.user.username,
+                              icon_url: bot.user.avatarURL
+                            },
+                            image: 
+                            {
+                                url: DataAnime[j].image
+                            },
+                            fields:
+                            [{
+                                name: DataAnime[j].en,
+                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
+                             }],
+                            timestamp: new Date(),
+                            footer: {
+                              icon_url: bot.user.avatarURL,
+                              text: "©"
+                            }
+                        }
+                    });
+                }
             }
         }
     }
     if(message.content.startsWith(`${PREFIX}manga`)) 
     {
-        var Manga = message.content;
-        var splitManga = Manga.split(" ")
-        var LastValManga = splitManga[splitManga.length -1]
+        let Manga = message.content;
+        let splitManga = Manga.split(" ");
+        let LastValManga = splitManga[splitManga.length -1];
         let bool = 0;
 
         if(LastValManga != "!manga")
@@ -92,8 +140,8 @@ bot.on('message', async message =>
             {
                 for (let m=0; m<DataMangaName.length; m++)
                 {
-                    let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ")
-                    let splitMangaEn = DataMangaName[m].en.split(" ")
+                    let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ");
+                    let splitMangaEn = DataMangaName[m].en.split(" ");
 
                     //next stape, link that to mysql db
                     if ((splitMangaEp[0] == LastValManga) && (splitMangaEn[0] == LastValManga))
@@ -122,8 +170,7 @@ bot.on('message', async message =>
                     }
                     if ((bool == 0) && (m == DataMangaName.length - 1) && (k == DataMangaChap.length - 1))
                     {
-                        message.channel.send("Soit le manga séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot du manga avec les majuscules ainsi que les minuscules, exemple, pour le manga 'One piece' il faut taper : !manga One")
-                       // break;
+                        message.channel.send("Soit le manga séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot du manga avec les majuscules ainsi que les minuscules, exemple, pour le manga 'One piece' il faut taper : !manga One");
                     }
                 }
             }      
@@ -136,8 +183,8 @@ bot.on('message', async message =>
             {
                 for (let m=0; m<DataMangaName.length; m++)
                 {
-                    let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ")
-                    let splitMangaEn = DataMangaName[m].en.split(" ")
+                    let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ");
+                    let splitMangaEn = DataMangaName[m].en.split(" ");
 
                     //next stape, link that to mysql db
                     if ((splitMangaEp[0] == splitMangaEn[0]))
