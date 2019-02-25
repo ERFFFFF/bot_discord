@@ -2,16 +2,21 @@ const bot_settings = require('./bot_settings.json');
 const Discord = require('Discord.js');
 const AnimeFunc = require('./animeFunc.js'); 
 const MangaFunc = require('./mangaFunc.js'); 
-const YouTube = require('simple-youtube-api');
-const ytdl = require('ytdl-core');
 const bot = new Discord.Client({});
+
+//Prefix for the Bot
 const PREFIX = '!';
-const youtube = new YouTube(bot_settings.GOOGLE_API_KEY);
-//retrieve data from the function animeFunc.js
+
+//Retrieve data from the function animeFunc.js
 var DataAnime = AnimeFunc.dataAnime
-//retrieve data from the function mangaFunc.js
+
+//Retrieve data from the function mangaFunc.js
 var DataMangaChap = MangaFunc.dataMangaChap
 var DataMangaName = MangaFunc.dataMangaName
+
+//MUSIC BOT
+var opusscript = require("opusscript");
+bot.music = require("discord.js-musicbot-addon");
 
 bot.on('ready', () => 
 {
@@ -216,40 +221,31 @@ bot.on('message', async message =>
     }
 });
 
-//vocal bot music
-bot.on('message', async message => 
-{
-    const args = message.content.split(' ');
-    if (!message.guild) return;
+bot.music.start(bot, {
+  // Set the api key used for YouTube.
+  // This is required to run the bot.
+  youtubeKey: bot_settings.GOOGLE_API_KEY,
+  // The PLAY command Object.
+  play: {
+    // Usage text for the help command.
+    usage: "{{PREFIX}}play Youtube_links",
+    // Whether or not to exclude the command from the help command.
+    exclude: false  
+  },
 
-    if (message.content.startsWith(`${PREFIX}play`))
-    {
-        if (message.member.voiceChannel)
-        {
+  // Make it so anyone in the voice channel can skip the
+  // currently playing song.
+  anyoneCanSkip: true,
 
-            const connection = await message.member.voiceChannel.join();
+  // Make it so the owner (you) bypass permissions for music.
+  ownerOverMember: true,
+  ownerID: "yourDiscordId",
 
-            try 
-            {
-                const dispatcher = connection.playStream(ytdl(args[1], { filter: 'audioonly' }));
-                dispatcher.setVolume(0.5);
-            } catch (error) { console.error(error)};
-        }
-
-        else 
-        {
-          message.channel.send('Le bot ne peut pas rejoindre le channel vocal vu que tu es pas dedans. (fdp)');
-        }
+  // The cooldown Object.
+  cooldown: {
+    // This disables the cooldown. Not recommended.
+    enabled: false
   }
-
-  if (message.content.toString() === `${PREFIX}leave`) {
-
-    if (message.member.voiceChannel) {
-    const deconnection = await message.member.voiceChannel.leave();
-    
-    }
-  }
-  
 });
-    
+
 bot.login(bot_settings.token);
