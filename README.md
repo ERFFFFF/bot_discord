@@ -9,7 +9,7 @@ Avoir installé au préalable :
 6. npm install cheerio (implémentation des éléments de bases de jquery)
 7. npm i puppeteer (permet de naviguer sur une page web pour ensuite extraire des éléments)
 
-Si les commandes npm ne marchent pas, cela pourrait peut etre due au fait que npm ne soit pas dans les "variables d'environnements".
+Si les commandes npm ne marchent pas, cela pourrait peut etre due au fait que Nodejs ne soit pas dans les "variables d'environnements".
 Tous les npm install doivent êtres dans le dossier ou se situe le bot.
 
 Install de "FFMPEG" (permet au bot de se co au vocal et de play une musique) :
