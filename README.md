@@ -68,7 +68,7 @@ Hebergement du bot sous linux ubuntu :
   - npm update
 
 5. Rename discord.js : 
-  1. Aller dans le folder node_nodules
+    1. Aller dans le folder node_nodules
   - renommer le fichier discord.js en Discord.js (cp -r discord.js Discord.js)
 
 6. Fix pupetter error :
