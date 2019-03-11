@@ -40,8 +40,12 @@ Tous les npm install doivent êtres dans le dossier ou se situe le bot.
   - node bot.js ou pm2 start bot.js 
   - pm2 : pm2 restart all
   - pm2 usefull commands : pm2 show bot
-
+  
 Il est aussi possible d'utiliser nodemon afin de run le but h24 mais pm2 nous permet davoir des informations supplémentaire sur le status du bot, de le restart, ...
+
+Stop le bot avec pm2 :
+
+- pm2 stop all
 
 Si on désire Allumer le bot tout en voyant les console.log(); alors on doit le démarrrer de la manière suivant : 
 
