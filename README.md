@@ -1,5 +1,7 @@
-Avoir installé au préalable : 
-=============================
+Hebergement sous windows :
+==========================
+
+### Avoir installé au préalable : ###
 
 1. Node js (permet par la suite du pouvoir run des commandes "npm")
 2. npm install discord.js (disocrd.js obligatoire pour utiliser un bot discord)
@@ -12,8 +14,7 @@ Avoir installé au préalable :
 Si les commandes npm ne marchent pas, cela pourrait peut etre due au fait que Nodejs ne soit pas dans les "variables d'environnements".
 Tous les npm install doivent êtres dans le dossier ou se situe le bot.
 
-Install de "FFMPEG" (permet au bot de se co au vocal et de play une musique) :
-==============================================================================
+### Install de "FFMPEG" (permet au bot de se co au vocal et de play une musique) : ###
 
 - Aller sur le site officiel de FFMPEG (https://www.ffmpeg.org/)
 - Download la version de votre OS (certainement Wibdows)
@@ -22,8 +23,8 @@ Install de "FFMPEG" (permet au bot de se co au vocal et de play une musique) :
 - Mettre son sous-dossier "bin" dans les variables d'environnements. (donc ffmpeg/bin)
 - FIN
 
-Rappel pour les variables d'environnements :
-============================================
+### Rappel pour les variables d'environnements : ###
+
 - appuyer sur la touche "windows" ou aller dans le menu démarrer
 - tapper : "variables"
 - cliquer sur : "modifier les variables d'environnements systeme"
@@ -32,8 +33,7 @@ Rappel pour les variables d'environnements :
 - cliquer sur "nouveau"
 - Enfin, mettre le path du dossier voulu exemeple : C:\ffmpeg\bin
 
-Demarrage du bot :
-==================
+### Demarrage du bot : ###
 
 - Lancer le CMD en ADMINISTRATEUR
 - Aller dans le dossier du bot (cd ..)
@@ -67,3 +67,8 @@ Hebergement du bot sous linux ubuntu :
 4. Fix pupetter error :
 
 - sudo apt-get install gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
+
+### Install de "FFMPEG" sous linux : ###
+
+- sudo add-apt-repository ppa:jonathonf/ffmpeg-4
+- sudo apt-get install ffmpeg
