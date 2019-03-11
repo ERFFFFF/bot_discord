@@ -20,7 +20,7 @@
     "opusscript": "0.0.6",
     "phantom": "^6.0.3",
     "phantomjs-prebuilt": "^2.1.16",
-    "puppeteer": "^1.12.2",
+    "puppeteer": "^1.13.0",
     "simple-youtube-api": "^5.1.1",
     "split": "^1.0.1",
     "website-scraper": "^4.0.0",

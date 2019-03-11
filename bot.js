@@ -4,7 +4,7 @@ const AnimeFunc = require('./animeFunc.js');
 const MangaFunc = require('./mangaFunc.js'); 
 const bot = new Discord.Client({});
 
-//Prefix for the Bot
+//Prefix for the Botbrowser
 const PREFIX = '!';
 
 //Retrieve data from the function animeFunc.js

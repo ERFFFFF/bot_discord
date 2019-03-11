@@ -18,7 +18,7 @@ function manga()
     (async () => 
     {
         //launch pupeteer
-        const browser = await puppeteer.launch(/*{headless: false}*/);
+        const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
 
         //create a new page
         const page = await browser.newPage();
