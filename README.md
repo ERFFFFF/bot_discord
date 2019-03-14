@@ -70,6 +70,7 @@ Hebergement du bot sous linux ubuntu :
 5. **Installer Nodejs :**
    - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
    - sudo apt install -y nodejs
+_Le setup_10.x est la version du packet, installer la derniere version en ligne exemple : setup_12.x_
 
 6. **Installer tous les packets un par un avec npm ou alors si le package.json est déja rempli, executer la commande suivante :**
     - npm update
