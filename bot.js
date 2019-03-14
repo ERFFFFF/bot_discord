@@ -233,7 +233,8 @@ bot.on('message', async message =>
         var dataAnime = fs.readFile("test.json");
         var datafile = JSON.parse("dataAnime");
         console.log(datafile);*/
-        /* test git pc portable depuis sublime*/
+
+        /* TEST git pc portable depuis sublimedd/ */
     }
 });
 
