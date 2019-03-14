@@ -18,6 +18,8 @@ var DataMangaName = MangaFunc.dataMangaName
 var opusscript = require("opusscript");
 bot.music = require("discord.js-musicbot-addon");
 
+var fs = require("fs");
+
 bot.on('ready', () => 
 {
     let bot_connected = `Bot ${bot.user.username} is ready.`;
@@ -218,6 +220,19 @@ bot.on('message', async message =>
                 }
             }
         }
+    }
+    if(message.content.startsWith(`${PREFIX}add`))
+    {
+        var obj = { name: "John", age: 30, city: "New York" }; 
+        var myJSON = JSON.stringify(obj);
+        fs.writeFile("test.json", myJSON, function(err, result) {
+            if(err) console.log('error', err);
+        }
+        );
+        /*
+        var dataAnime = fs.readFile("test.json");
+        var datafile = JSON.parse("dataAnime");
+        console.log(datafile);*/
     }
 });
 
