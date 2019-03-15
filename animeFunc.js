@@ -24,7 +24,7 @@ function anime()
 
         //tell to the bot to go to the website
         await page.goto('https://www.livechart.me/', { waitUntil: 'networkidle2'});
-        await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
+       // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
 
         //Tell to the bot to scroll to the bottom of the page
         page.evaluate(_ => 

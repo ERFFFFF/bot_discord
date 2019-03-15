@@ -5,7 +5,7 @@ const MangaFunc = require('./mangaFunc.js');
 const bot = new Discord.Client({});
 
 //Prefix for the Botbrowser
-const PREFIX = '!';
+const PREFIX = '?';
 
 //Retrieve data from the function animeFunc.js
 var DataAnime = AnimeFunc.dataAnime
@@ -19,6 +19,8 @@ var opusscript = require("opusscript");
 bot.music = require("discord.js-musicbot-addon");
 
 var fs = require("fs");
+
+var list_AddNomAnime = 0;
 
 bot.on('ready', () => 
 {
@@ -55,16 +57,15 @@ bot.on('message', async message =>
         let LastValAnime = splitAnime[splitAnime.length -1];
         let bool = 0;
         
-        if(LastValAnime != "!anime")
+        if(LastValAnime != `${PREFIX}anime`)
         {
-            //Print message to discord
             for (let j=0; j<DataAnime.length; j++)
             {
                 let splitanime = DataAnime[j].en.split(" ")
-
                 //next stape, link that to mysql db
                 if ((splitanime[0] == LastValAnime))
                 {
+                    //Print message to discord
                     message.channel.send({embed: 
                         {
                             color: 3447003,
@@ -93,7 +94,7 @@ bot.on('message', async message =>
                 }
                 if ((bool == 0) && (j == DataAnime.length - 1))
                 {
-                    message.channel.send("Soit l'Animé séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot de l'animé avec les majuscules ainsi que les minuscules, exemple, pour l'animé 'Tensei Shitara Slime Datta Ken' il faut taper : !manga Tensei");
+                    message.channel.send("Soit l'Animé séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot de l'animé avec les majuscules ainsi que les minuscules, exemple, pour l'animé 'Tensei Shitara Slime Datta Ken' il faut taper : !manga Tensei");   
                 }
             }
         }
@@ -139,7 +140,7 @@ bot.on('message', async message =>
         let LastValManga = splitManga[splitManga.length -1];
         let bool = 0;
 
-        if(LastValManga != "!manga")
+        if(LastValManga != `${PREFIX}manga`)
         {
             //Un manga à été demandé : !manga One
             //One pour One piece, mais on doit mettre seulement le premier mot du manga.
@@ -223,18 +224,87 @@ bot.on('message', async message =>
     }
     if(message.content.startsWith(`${PREFIX}add`))
     {
-        var obj = { name: "John", age: 30, city: "New York" }; 
-        var myJSON = JSON.stringify(obj);
-        fs.writeFile("test.json", myJSON, function(err, result) {
-            if(err) console.log('error', err);
-        }
-        );
+        // GET user id
+        var user_id_addAnime = message.author.id
+        // GET message
+        let AddAnime = message.content;
+        // Split message and get last word the user entered
+        let splitAddAnime = AddAnime.split(" ");
+        let LastValAddAnime = splitAddAnime[splitAddAnime.length -1];
+        let bool = 0;
+        let list_Addanime=[]
+        // Send Message to a price User.
         /*
-        var dataAnime = fs.readFile("test.json");
-        var datafile = JSON.parse("dataAnime");
-        console.log(datafile);*/
+        let MessageUser = bot.users.get("ID USER");
+        MessageUser.send("You need to wake up my friend! your id is : " + "ID USER");
+        */
+        if(LastValAddAnime != `${PREFIX}add`)
+        {
+            for (let h=0; h<DataAnime.length; h++)
+            {
+                let splitaddanime = DataAnime[h].en.split(" ")
+                //next stape, link that to mysql db
+                if ((splitaddanime[0] == LastValAddAnime))
+                {
+                    let contentAddAnime = fs.readFileSync('ListeAnime.json')
+                    let parsedAddAnime = JSON.parse(contentAddAnime);
+                    let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en }; 
+                    parsedAddAnime.push(list_anime)
+                    let JSON_anime = JSON.stringify(parsedAddAnime);
+                    fs.writeFile("ListeAnime.json", JSON_anime, function(err, result) {
+                        if(err) console.log('error', err);
+                    });
+                    bool = 1;
+                    break;
+                }
+                if ((bool == 0) && (h == DataAnime.length - 1))
+                {
+                    message.channel.send("Soit l'Animé séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot de l'animé avec les majuscules ainsi que les minuscules, exemple, pour l'animé 'Tensei Shitara Slime Datta Ken' il faut taper : !manga Tensei");   
+                }
+            }
+        }
+    }
+    if(message.content.toString() === `${PREFIX}listeanime`)
+    {
+        // Get user id
+        let user_id_getAnime = message.author.id
+        // Read file
+        var contentGetAnime = fs.readFileSync('ListeAnime.json')
+        // Transorm json file into array
+        var parsedGetAnime = JSON.parse(contentGetAnime);
 
-        /* TEST git pc portable depuis sublimedd/ */
+        for (let j=0; j<DataAnime.length; j++)
+        {
+            for (let m=0; m<parsedGetAnime.length; m++)
+            {
+                if ((DataAnime[j].en == parsedGetAnime[m].name_anime) && (parsedGetAnime[m].user_id == user_id_getAnime))
+                {
+                    message.channel.send({embed: 
+                        {
+                            color: 3447003,
+                            author: {
+                              name: bot.user.username,
+                              icon_url: bot.user.avatarURL
+                            },
+                            image: 
+                            {
+                                url: DataAnime[j].image
+                            },
+                            fields:
+                            [{
+                                name: DataAnime[j].en,
+                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
+                             }],
+                            timestamp: new Date(),
+                            footer: {
+                              icon_url: bot.user.avatarURL,
+                              text: "©"
+                            }
+                        }
+                    });
+                }
+            }
+        }   
     }
 });
 
@@ -266,3 +336,9 @@ bot.music.start(bot, {
 });
 
 bot.login(bot_settings.token);
+
+// token ainz 
+//"token": "NDUzNjY5MTY1MzYyODM5NTYz.D0NtqQ.H6SAH8RDMC2bmUmF7IY6JBI6vXA",
+
+// token putine
+//"token": "MjI1MjE2MzY5ODIwNTY1NTA0.D2zv7A.S_qZGgKDhKyPEEaw5LM-SPI-7s8",
