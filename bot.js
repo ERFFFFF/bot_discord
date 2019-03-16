@@ -306,6 +306,37 @@ bot.on('message', async message =>
             }
         }   
     }
+    if(message.content.startsWith(`${PREFIX}cctl`))  
+    {
+        let randomcctl = message.content;
+        let splitrandomcctl = randomcctl.split(" ");
+        let LastValrandomcctl = splitrandomcctl[splitrandomcctl.length -1];
+        let intrandomcctl = parseInt(LastValrandomcctl)
+        let valuecctl = Math.floor(Math.random() * intrandomcctl) + 1;
+
+        switch (LastValrandomcctl)
+        {
+            case "2":
+                message.channel.send("D'après le théorème du pif, la question " + valuecctl + " est la bonne réponse."); 
+                break;
+
+            case "3":
+                message.channel.send("D'après le théorème du pif, la question " + valuecctl + " est la bonne réponse."); 
+                break;
+
+            case "4":
+                message.channel.send("D'après le théorème du pif, la question " + valuecctl + " est la bonne réponse."); 
+                break;
+
+            case "5":
+                message.channel.send("D'après le théorème du pif, la question " + valuecctl + " est la bonne réponse.");
+                break;
+
+            default:
+                message.channel.send("Hey déso mais jai pas de théorème quand il y a " + intrandomcctl  + " questions :'( rip")
+                break;
+        }
+    }
 });
 
 bot.music.start(bot, {
