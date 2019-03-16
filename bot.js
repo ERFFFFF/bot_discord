@@ -103,34 +103,27 @@ bot.on('message', async message =>
             //Print message to discord
             for (let j=0; j<DataAnime.length; j++)
             {
-                //next stape, link that to mysql db
-                if ((DataAnime[j].en == "Tensei Shitara Slime Datta Ken") || (DataAnime[j].en == "Tate no Yuusha no Nariagari") || (DataAnime[j].en == "Mob Psycho 100 II") || (DataAnime[j].en == "Kakegurui ××") || (DataAnime[j].en == "Sword Art Online: Alicization"))
-                {
-                    message.channel.send({embed: 
-                        {
-                            color: 3447003,
-                            author: {
-                              name: bot.user.username,
-                              icon_url: bot.user.avatarURL
-                            },
-                            image: 
-                            {
-                                url: DataAnime[j].image
-                            },
-                            fields:
-                            [{
-                                name: DataAnime[j].en,
-                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
-                             }],
-                            timestamp: new Date(),
-                            footer: {
-                              icon_url: bot.user.avatarURL,
-                              text: "©"
-                            }
+                
+                message.channel.send({embed: 
+                    {
+                        color: 3447003,
+                        author: {
+                          name: bot.user.username,
+                          icon_url: bot.user.avatarURL
+                        },
+                        fields:
+                        [{
+                            name: "Anime List : ",
+                            value: "=> " + DataAnime[j].en
+                         }],
+                        timestamp: new Date(),
+                        footer: {
+                          icon_url: bot.user.avatarURL,
+                          text: "©"
                         }
-                    });
-                }
-            }
+                    }
+                });
+            }        
         }
     }
     if(message.content.startsWith(`${PREFIX}manga`)) 
