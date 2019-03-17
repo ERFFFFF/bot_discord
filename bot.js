@@ -100,25 +100,12 @@ bot.on('message', async message =>
         }
         else 
         {
-            let dividedAnimeBeginning = [];
-            let dividedAnimeEnd = [];
-            let dividedAnimeMid = [];
-            let list_allAnimeBegin = [];
-            let list_allAnimeEnd = [];
-            let list_allAnimeMid = [];
+            let dividedAnimeBeginning = [], dividedAnimeMid = [], dividedAnimeEnd = [], list_allAnimeBegin = [], list_allAnimeMid = [], list_allAnimeEnd = [];
 
             let dataintdividedby3 = DataAnime.length/3;
             let dataintdividedby1p5 = DataAnime.length/1.5;
 
-            let datafloatdividedby3 = 0;
-            let datafloatdividedby1p5 = 0;
-
-            let j = 0;
-            let k = 0;
-            let l = 0;
-
-            // On sépare la liste Dataanime en trois, discord ne peut pas afficher plus de 1024 caracteres
-            // environ 60 animés, que l'on divise en trois parties donc 20/20/20
+            let j = k = l = datafloatdividedby3 = datafloatdividedby1p5 = 0;
 
             // Si le résultat du module est diferrent de zero, c'est un float donc on le transforme en int.
             if((dataintdividedby3 % 1) != 0)
@@ -132,135 +119,77 @@ bot.on('message', async message =>
                 dataintdividedby1p5 = dataintdividedby1p5 + datafloatdividedby1p5;
             }
 
+            // On sépare la liste Dataanime en trois, discord ne peut pas afficher plus de 1024 caracteres
+            // environ 60 animés, que l'on divise en trois parties donc 20/20/20
             for (let i=0; i<DataAnime.length; i++)
             {
                 if(i <= dataintdividedby3)
                 {
                     dividedAnimeBeginning.push({ en: DataAnime[i].en })
-                    list_allAnimeBegin.push("=> ")
-                    list_allAnimeBegin.push(dividedAnimeBeginning[j].en)
-                    list_allAnimeBegin.push("\n")
+                    list_allAnimeBegin.push("=> ", dividedAnimeBeginning[j].en, "\n")
                     j++
                 }
                 else if((i <= dataintdividedby1p5) && (i >= dataintdividedby3))
                 {
                     dividedAnimeMid.push({ en: DataAnime[i].en })                    
-                    list_allAnimeMid.push("=> ")
-                    list_allAnimeMid.push(dividedAnimeMid[k].en)
-                    list_allAnimeMid.push("\n")
+                    list_allAnimeMid.push("=> ", dividedAnimeMid[k].en, "\n")
                     k++
                 }
                 else if((i <= DataAnime.length) && (i >= dataintdividedby1p5))
                 {
                     dividedAnimeEnd.push({ en: DataAnime[i].en })
-                    list_allAnimeEnd.push("=> ")
-                    list_allAnimeEnd.push(dividedAnimeEnd[l].en)
-                    list_allAnimeEnd.push("\n")
+                    list_allAnimeEnd.push("=> ",dividedAnimeEnd[l].en, "\n")
                     l++
                 }
             }
 
-/*            for (let p=0; p<dataintdividedby3; p++)
-            {
-                dividedAnimeBeginning.push({ en: DataAnime[p].en })
-            }
-            for (let l=dataintdividedby3; l<dataintdividedby1p5; l++)
-            {
-                dividedAnimeMid.push({ en: DataAnime[l].en })
-            }
-            for (let u=dataintdividedby1p5; u<DataAnime.length; u++)
-            {
-                dividedAnimeEnd.push({ en: DataAnime[u].en })
-            }*/
+            // .join : array to string, .replace : on enleve TOUTES les virgules.
+            let final_listAnimeBegin = list_allAnimeBegin.join().replace(/,/g, " "); 
+            let final_listAnimeMid = list_allAnimeMid.join().replace(/,/g, " ");
+            let final_listAnimeEnd = list_allAnimeEnd.join().replace(/,/g, " ");
 
-            //mise en forme du embed message sur discord
-/*            for (let j=0; j<dividedAnimeBeginning.length; j++)
-            {
-                list_allAnimeBegin.push("=> ")
-                list_allAnimeBegin.push(dividedAnimeBeginning[j].en)
-                list_allAnimeBegin.push("\n")
-            }
-            for (let k=0; k<dividedAnimeMid.length; k++)
-            {
-                list_allAnimeMid.push("=> ")
-                list_allAnimeMid.push(dividedAnimeMid[k].en)
-                list_allAnimeMid.push("\n")
-            }
-            for (let k=0; k<dividedAnimeEnd.length; k++)
-            {
-                list_allAnimeEnd.push("=> ")
-                list_allAnimeEnd.push(dividedAnimeEnd[k].en)
-                list_allAnimeEnd.push("\n")
-            }*/
+            let displayAnime = "";
 
-            // array to string
-            let to_string_list_allAnimeBegin = list_allAnimeBegin.join();
-            let to_string_list_allAnimeEnd = list_allAnimeEnd.join();
-            let to_string_list_allAnimeMid = list_allAnimeMid.join();
-
-            // on enleve TOUTES les virgules.
-            let final_listAnimeBegin = to_string_list_allAnimeBegin.replace(/,/g, " "); 
-            let final_listAnimeEnd = to_string_list_allAnimeEnd.replace(/,/g, " ");
-            let final_listAnimeMid = to_string_list_allAnimeMid.replace(/,/g, " ");
-
-            //on print les données sur discord. 
-            message.channel.send({embed: 
+            // print on discord
+            for(let i=0; i<3; i++)
             {
-                color: 3447003,
-                author: {
-                  name: bot.user.username,
-                  icon_url: bot.user.avatarURL
-                },
-                fields:
-                [{
-                    name: "Anime List : ",
-                    value: " " + final_listAnimeBegin
-                 }],
-                timestamp: new Date(),
-                footer: {
-                  icon_url: bot.user.avatarURL,
-                  text: "©"
+
+                switch (i)
+                {
+                    case 0:
+                        displayAnime = final_listAnimeBegin;
+                        break;
+
+                    case 1:
+                        displayAnime = final_listAnimeMid;
+                        break;
+
+                    case 2:
+                        displayAnime = final_listAnimeEnd;
+                        break;
+                    default:
+                        message.channel.send("aieaie ERROR");
                 }
-            }
-            });
-            message.channel.send({embed: 
-            {
-                color: 3447003,
-                author: {
-                  name: bot.user.username,
-                  icon_url: bot.user.avatarURL
-                },
-                fields:
-                [{
-                    name: "Anime List : ",
-                    value: " " + final_listAnimeMid
-                 }],
-                timestamp: new Date(),
-                footer: {
-                  icon_url: bot.user.avatarURL,
-                  text: "©"
+                message.channel.send({embed: 
+                {
+                    color: 3447003,
+                    author: {
+                      name: bot.user.username,
+                      icon_url: bot.user.avatarURL
+                    },
+                    fields:
+                    [{
+                        name: "Anime List : ",
+                        value: " " + displayAnime
+                     }],
+                    timestamp: new Date(),
+                    footer: {
+                      icon_url: bot.user.avatarURL,
+                      text: "©"
+                    }
                 }
+                });
             }
-            });
-            message.channel.send({embed: 
-            {
-                color: 3447003,
-                author: {
-                  name: bot.user.username,
-                  icon_url: bot.user.avatarURL
-                },
-                fields:
-                [{
-                    name: "Anime List : ",
-                    value: " " + final_listAnimeEnd
-                 }],
-                timestamp: new Date(),
-                footer: {
-                  icon_url: bot.user.avatarURL,
-                  text: "©"
-                }
-            }
-            });
         }
     }
     if(message.content.startsWith(`${PREFIX}manga`)) 
