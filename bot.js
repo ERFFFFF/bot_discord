@@ -107,36 +107,60 @@ bot.on('message', async message =>
             let list_allAnimeEnd = [];
             let list_allAnimeMid = [];
 
-            let dataintdividedby4 = 0;
-            let dataintdividedby2 = 0;
-            let datafloatdividedby4 = 0;
-            let datafloatdividedby2 = 0;
-            let intanime = 0;
+            let dataintdividedby3 = DataAnime.length/3;
+            let dataintdividedby1p5 = DataAnime.length/1.5;
 
-            // On sépare la liste Dataanime en deux, discord ne peut pas afficher plus de 1024 caracteres dont on sépare la liste en deux.
+            let datafloatdividedby3 = 0;
+            let datafloatdividedby1p5 = 0;
 
-            if((DataAnime.length/3 % 1) == 0)
+            let j = 0;
+            let k = 0;
+            let l = 0;
+
+            // On sépare la liste Dataanime en trois, discord ne peut pas afficher plus de 1024 caracteres
+            // environ 60 animés, que l'on divise en trois parties donc 20/20/20
+
+            // Si le résultat du module est diferrent de zero, c'est un float donc on le transforme en int.
+            if((dataintdividedby3 % 1) != 0)
             {
-                dataintdividedby4 = DataAnime.length/3
+                datafloatdividedby3 = 1 - (dataintdividedby3 % 1);
+                dataintdividedby3 = dataintdividedby3 + datafloatdividedby3;
             }
-            if((DataAnime.length/3 % 1) != 0)
+            if((dataintdividedby1p5 % 1) != 0)
             {
-                intanime = DataAnime.length/3
-                datafloatdividedby3 = 1 -  (DataAnime.length/3 % 1)
-                dataintdividedby3 = intanime + datafloatdividedby3
-            }
-            if((DataAnime.length/1.5 % 1) == 0)
-            {
-                dataintdividedby1p5 = DataAnime.length/1.5
-            }
-            if((DataAnime.length/1.5 % 1) != 0)
-            {
-                intanime = DataAnime.length/1.5
-                datafloatdividedby1p5 = 1 -  (DataAnime.length/1.5 % 1)
-                dataintdividedby1p5 = intanime + datafloatdividedby1p5
+                datafloatdividedby1p5 = 1 - (dataintdividedby1p5 % 1);
+                dataintdividedby1p5 = dataintdividedby1p5 + datafloatdividedby1p5;
             }
 
-            for (let p=0; p<dataintdividedby3; p++)
+            for (let i=0; i<DataAnime.length; i++)
+            {
+                if(i <= dataintdividedby3)
+                {
+                    dividedAnimeBeginning.push({ en: DataAnime[i].en })
+                    list_allAnimeBegin.push("=> ")
+                    list_allAnimeBegin.push(dividedAnimeBeginning[j].en)
+                    list_allAnimeBegin.push("\n")
+                    j++
+                }
+                else if((i <= dataintdividedby1p5) && (i >= dataintdividedby3))
+                {
+                    dividedAnimeMid.push({ en: DataAnime[i].en })                    
+                    list_allAnimeMid.push("=> ")
+                    list_allAnimeMid.push(dividedAnimeMid[k].en)
+                    list_allAnimeMid.push("\n")
+                    k++
+                }
+                else if((i <= DataAnime.length) && (i >= dataintdividedby1p5))
+                {
+                    dividedAnimeEnd.push({ en: DataAnime[i].en })
+                    list_allAnimeEnd.push("=> ")
+                    list_allAnimeEnd.push(dividedAnimeEnd[l].en)
+                    list_allAnimeEnd.push("\n")
+                    l++
+                }
+            }
+
+/*            for (let p=0; p<dataintdividedby3; p++)
             {
                 dividedAnimeBeginning.push({ en: DataAnime[p].en })
             }
@@ -147,9 +171,10 @@ bot.on('message', async message =>
             for (let u=dataintdividedby1p5; u<DataAnime.length; u++)
             {
                 dividedAnimeEnd.push({ en: DataAnime[u].en })
-            }
+            }*/
+
             //mise en forme du embed message sur discord
-            for (let j=0; j<dividedAnimeBeginning.length; j++)
+/*            for (let j=0; j<dividedAnimeBeginning.length; j++)
             {
                 list_allAnimeBegin.push("=> ")
                 list_allAnimeBegin.push(dividedAnimeBeginning[j].en)
@@ -166,7 +191,7 @@ bot.on('message', async message =>
                 list_allAnimeEnd.push("=> ")
                 list_allAnimeEnd.push(dividedAnimeEnd[k].en)
                 list_allAnimeEnd.push("\n")
-            }
+            }*/
 
             // array to string
             let to_string_list_allAnimeBegin = list_allAnimeBegin.join();
