@@ -100,19 +100,66 @@ bot.on('message', async message =>
         }
         else 
         {
+            let dividedAnimeBeginning = [];
+            let dividedAnimeEnd = [];
+            let dividedAnimeMid = [];
             let list_allAnimeBegin = [];
             let list_allAnimeEnd = [];
+            let list_allAnimeMid = [];
+
+            let dataintdividedby4 = 0;
+            let dataintdividedby2 = 0;
+            let datafloatdividedby4 = 0;
+            let datafloatdividedby2 = 0;
+            let intanime = 0;
 
             // On sépare la liste Dataanime en deux, discord ne peut pas afficher plus de 1024 caracteres dont on sépare la liste en deux.
-            let dividedAnimeBeginning = DataAnime.splice(0, DataAnime.length/2);
-            let dividedAnimeEnd = DataAnime.splice(DataAnime.length/2, DataAnime.length/2);
 
-            // On ajoute aux arrays les noms des animes.
+            if((DataAnime.length/3 % 1) == 0)
+            {
+                dataintdividedby4 = DataAnime.length/3
+            }
+            if((DataAnime.length/3 % 1) != 0)
+            {
+                intanime = DataAnime.length/3
+                datafloatdividedby3 = 1 -  (DataAnime.length/3 % 1)
+                dataintdividedby3 = intanime + datafloatdividedby3
+            }
+            if((DataAnime.length/1.5 % 1) == 0)
+            {
+                dataintdividedby1p5 = DataAnime.length/1.5
+            }
+            if((DataAnime.length/1.5 % 1) != 0)
+            {
+                intanime = DataAnime.length/1.5
+                datafloatdividedby1p5 = 1 -  (DataAnime.length/1.5 % 1)
+                dataintdividedby1p5 = intanime + datafloatdividedby1p5
+            }
+
+            for (let p=0; p<dataintdividedby3; p++)
+            {
+                dividedAnimeBeginning.push({ en: DataAnime[p].en })
+            }
+            for (let l=dataintdividedby3; l<dataintdividedby1p5; l++)
+            {
+                dividedAnimeMid.push({ en: DataAnime[l].en })
+            }
+            for (let u=dataintdividedby1p5; u<DataAnime.length; u++)
+            {
+                dividedAnimeEnd.push({ en: DataAnime[u].en })
+            }
+            //mise en forme du embed message sur discord
             for (let j=0; j<dividedAnimeBeginning.length; j++)
             {
                 list_allAnimeBegin.push("=> ")
                 list_allAnimeBegin.push(dividedAnimeBeginning[j].en)
                 list_allAnimeBegin.push("\n")
+            }
+            for (let k=0; k<dividedAnimeMid.length; k++)
+            {
+                list_allAnimeMid.push("=> ")
+                list_allAnimeMid.push(dividedAnimeMid[k].en)
+                list_allAnimeMid.push("\n")
             }
             for (let k=0; k<dividedAnimeEnd.length; k++)
             {
@@ -122,12 +169,14 @@ bot.on('message', async message =>
             }
 
             // array to string
-            var to_string_list_allAnimeBegin = list_allAnimeBegin.join();
-            var to_string_list_allAnimeEnd = list_allAnimeEnd.join();
+            let to_string_list_allAnimeBegin = list_allAnimeBegin.join();
+            let to_string_list_allAnimeEnd = list_allAnimeEnd.join();
+            let to_string_list_allAnimeMid = list_allAnimeMid.join();
 
             // on enleve TOUTES les virgules.
-            var final_listAnimeBegin = to_string_list_allAnimeBegin.replace(/,/g, " "); 
-            var final_listAnimeEnd = to_string_list_allAnimeEnd.replace(/,/g, " ");
+            let final_listAnimeBegin = to_string_list_allAnimeBegin.replace(/,/g, " "); 
+            let final_listAnimeEnd = to_string_list_allAnimeEnd.replace(/,/g, " ");
+            let final_listAnimeMid = to_string_list_allAnimeMid.replace(/,/g, " ");
 
             //on print les données sur discord. 
             message.channel.send({embed: 
@@ -141,6 +190,25 @@ bot.on('message', async message =>
                 [{
                     name: "Anime List : ",
                     value: " " + final_listAnimeBegin
+                 }],
+                timestamp: new Date(),
+                footer: {
+                  icon_url: bot.user.avatarURL,
+                  text: "©"
+                }
+            }
+            });
+            message.channel.send({embed: 
+            {
+                color: 3447003,
+                author: {
+                  name: bot.user.username,
+                  icon_url: bot.user.avatarURL
+                },
+                fields:
+                [{
+                    name: "Anime List : ",
+                    value: " " + final_listAnimeMid
                  }],
                 timestamp: new Date(),
                 footer: {
@@ -301,18 +369,17 @@ bot.on('message', async message =>
             }
         }
     }
-    if(message.content.toString() === `${PREFIX}listeanime`)
+    if(message.content.toString() === `${PREFIX}mylistanime`)
     {
         // Get user id
         let user_id_getAnime = message.author.id
         // Read file
-        var contentGetAnime = fs.readFileSync('ListeAnime.json')
+        let contentGetAnime = fs.readFileSync('ListeAnime.json')
         // Transorm json file into array
-        var parsedGetAnime = JSON.parse(contentGetAnime);
+        let parsedGetAnime = JSON.parse(contentGetAnime);
 
         for (let j=0; j<DataAnime.length; j++)
         {
-            console.log("LISTEANIME : " + DataAnime.length)
             for (let m=0; m<parsedGetAnime.length; m++)
             {
                 if ((DataAnime[j].en == parsedGetAnime[m].name_anime) && (parsedGetAnime[m].user_id == user_id_getAnime))
