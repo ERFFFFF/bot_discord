@@ -25,8 +25,8 @@ function manga()
 
         //tell to the bot to go to the website
         await page.goto('https://www.japscan.to/', { waitUntil: 'networkidle2'});
-       	await delay(6000);
-       // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
+
+       	await delay(5500);
 
         //Tell to the bot to scroll to the bottom of the page
         page.evaluate(_ => 

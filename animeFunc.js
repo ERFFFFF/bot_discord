@@ -18,21 +18,27 @@ function anime()
     {
         //launch pupeteer
         const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-
+       // const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
+      
         //create a new page
         const page = await browser.newPage();
 
         //tell to the bot to go to the website
         await page.goto('https://www.livechart.me/', { waitUntil: 'networkidle2'});
-       // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
 
-        //Tell to the bot to scroll to the bottom of the page
-        page.evaluate(_ => 
+        // scroll bottom of the page and laod the data each time
+        for(let i=0; i<20; i++)
         {
-            window.scrollBy(0, window.innerHeight);
-        });
+            page.evaluate(_ => 
+            {
+                // scroll bottom of the page
+                //window.scrollTo(0,document.body.scrollHeight);
+                window.scrollBy(0, window.innerHeight);                
+            });
+            // wait loading
+            await delay(500)
+        }
 
-        await delay(3000);
         //get the data of the website
         let content = await page.content();
 

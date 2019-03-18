@@ -416,7 +416,7 @@ bot.music.start(bot, {
 
   // Make it so the owner (you) bypass permissions for music.
   ownerOverMember: true,
-  ownerID: "yourDiscordId",
+  ownerID: "157510824426995714",
 
   // The cooldown Object.
   cooldown: {
