@@ -7,9 +7,11 @@ const bot = new Discord.Client({});
 //Prefix for the Botbrowser
 const PREFIX = '?';
 
-//Retrieve data from the function animeFunc.js
-var DataAnime = AnimeFunc.dataAnime
-
+function delay(timeout) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+}
 //Retrieve data from the function mangaFunc.js
 var DataMangaChap = MangaFunc.dataMangaChap
 var DataMangaName = MangaFunc.dataMangaName
@@ -52,6 +54,10 @@ bot.on('message', async message =>
     }
     if(message.content.startsWith(`${PREFIX}anime`)) 
     {
+        //Retrieve data from the function animeFunc.js
+       // let DataAnime = AnimeFunc.anime()
+       // besoin dune promise pasque probleme avec asynchrone, résolution : promise qui fait du synchrone afin dattendre que la fonction ce soit bien executé pour continuer le programme
+        console.log(AnimeFunc.anime())
         let Anime = message.content;
         let splitAnime = Anime.split(" ");
         let LastValAnime = splitAnime[splitAnime.length -1];

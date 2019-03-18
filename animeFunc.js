@@ -9,17 +9,17 @@ function delay(timeout) {
     });
 }
 
-function anime()
+exports.anime = () =>
 {
-
-	//board that will contain our final data
-	var dataAnime=[];
+    console.log("oui")
+    //board that will contain our final data
+    var dataAnime=[];
     (async () => 
     {
         //launch pupeteer
         const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
        // const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
-      
+
         //create a new page
         const page = await browser.newPage();
 
@@ -62,13 +62,13 @@ function anime()
                     countdown:$element.find('.anime-card .poster-container time').text()
                 })
             }
-        })	       
+        })     
+        console.log("AIEEE : ")
+        console.log(dataAnime) 
         //close the browser
         browser.close();
-        console.log("Anime ready to use.")
+        return dataAnime
     })();
     //return/export data
-    module.exports = { dataAnime };
 }
 
-anime()
