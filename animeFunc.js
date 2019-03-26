@@ -11,6 +11,10 @@ function delay(timeout) {
 
 exports.anime = () =>
 {
+   var promise = new Promise(function (resolve)
+   {
+
+
     console.log("oui")
     //board that will contain our final data
     var dataAnime=[];
@@ -63,12 +67,14 @@ exports.anime = () =>
                 })
             }
         })     
-        console.log("AIEEE : ")
-        console.log(dataAnime) 
+
         //close the browser
         browser.close();
-        return dataAnime
+        
     })();
+    resolve(dataAnime)
     //return/export data
+    })
+   return promise
 }
 

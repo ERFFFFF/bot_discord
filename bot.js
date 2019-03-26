@@ -12,6 +12,14 @@ function delay(timeout) {
       setTimeout(resolve, timeout);
     });
 }
+
+/*function animeData() {
+    return new Promise((resolve) => {
+      var DataAnime = AnimeFunc.anime()
+      resolve(DataAnime)
+    });
+    console.log(DataAnime)
+}*/
 //Retrieve data from the function mangaFunc.js
 var DataMangaChap = MangaFunc.dataMangaChap
 var DataMangaName = MangaFunc.dataMangaName
@@ -57,7 +65,11 @@ bot.on('message', async message =>
         //Retrieve data from the function animeFunc.js
        // let DataAnime = AnimeFunc.anime()
        // besoin dune promise pasque probleme avec asynchrone, résolution : promise qui fait du synchrone afin dattendre que la fonction ce soit bien executé pour continuer le programme
-        console.log(AnimeFunc.anime())
+      //  await animeData();
+        let DataAnime;
+      AnimeFunc.anime().then((dataAnime) => {
+        table = dataAnime;
+    })
         let Anime = message.content;
         let splitAnime = Anime.split(" ");
         let LastValAnime = splitAnime[splitAnime.length -1];
