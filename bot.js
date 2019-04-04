@@ -66,15 +66,14 @@ bot.on('message', async message =>
        // let DataAnime = AnimeFunc.anime()
        // besoin dune promise pasque probleme avec asynchrone, résolution : promise qui fait du synchrone afin dattendre que la fonction ce soit bien executé pour continuer le programme
       //  await animeData();
-        let DataAnime;
       AnimeFunc.anime().then((dataAnime) => {
-        table = dataAnime;
-    })
+        let DataAnime = dataAnime;
         let Anime = message.content;
         let splitAnime = Anime.split(" ");
         let LastValAnime = splitAnime[splitAnime.length -1];
         let bool = 0;
-        
+        console.log(DataAnime)
+        console.log(dataAnime)
         if(LastValAnime != `${PREFIX}anime`)
         {
             for (let j=0; j<DataAnime.length; j++)
@@ -84,6 +83,7 @@ bot.on('message', async message =>
                 if ((splitanime[0] == LastValAnime))
                 {
                     //Print message to discord
+
                     message.channel.send({embed: 
                         {
                             color: 3447003,
@@ -209,6 +209,8 @@ bot.on('message', async message =>
                 });
             }
         }
+    })
+
     }
     if(message.content.startsWith(`${PREFIX}manga`)) 
     {
