@@ -14,7 +14,6 @@ exports.anime = () =>
    var promise = new Promise(function (resolve)
    {
 
-
     console.log("oui")
     //board that will contain our final data
     var dataAnime=[];

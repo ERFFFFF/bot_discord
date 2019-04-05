@@ -34,9 +34,7 @@ var list_AddNomAnime = 0;
 
 bot.on('ready', () => 
 {
-    let bot_connected = `Bot ${bot.user.username} is ready.`;
     var channel = bot.channels.get('315164681130213386');
-    channel.send(bot_connected);
     bot.user.setActivity('Peter des gueules');
 });
 
@@ -66,7 +64,7 @@ bot.on('message', async message =>
        // let DataAnime = AnimeFunc.anime()
        // besoin dune promise pasque probleme avec asynchrone, résolution : promise qui fait du synchrone afin dattendre que la fonction ce soit bien executé pour continuer le programme
       //  await animeData();
-      AnimeFunc.anime().then((dataAnime) => {
+      AnimeFunc.anime().then(function(dataAnime) {
         let DataAnime = dataAnime;
         let Anime = message.content;
         let splitAnime = Anime.split(" ");
@@ -415,6 +413,16 @@ bot.on('message', async message =>
                 message.channel.send("Hey déso mais jai pas de théorème quand il y a " + intrandomcctl  + " questions :'( rip")
                 break;
         }
+    }
+    //Delete X message on the current channel.
+    if(message.content.startsWith(`${PREFIX}prune`))
+    {
+        // GET message
+        let PruneMessage = message.content;
+        // Split message and get last word the user entered
+        let splitPrune = PruneMessage.split(" ");
+        let LastValPrune = splitPrune[splitPrune.length -1];
+        message.channel.bulkDelete(LastValPrune);
     }
 });
 
