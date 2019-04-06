@@ -7,22 +7,13 @@ const bot = new Discord.Client({});
 //Prefix for the Botbrowser
 const PREFIX = '?';
 
+// Delay, sleep, wait function.
 function delay(timeout) {
     return new Promise((resolve) => {
       setTimeout(resolve, timeout);
     });
 }
 
-/*function animeData() {
-    return new Promise((resolve) => {
-      var DataAnime = AnimeFunc.anime()
-      resolve(DataAnime)
-    });
-    console.log(DataAnime)
-}*/
-//Retrieve data from the function mangaFunc.js
-var DataMangaChap = MangaFunc.dataMangaChap
-var DataMangaName = MangaFunc.dataMangaName
 
 //MUSIC BOT
 var opusscript = require("opusscript");
@@ -37,6 +28,7 @@ bot.on('ready', () =>
     var channel = bot.channels.get('315164681130213386');
     bot.user.setActivity('Peter des gueules');
 });
+
 
 bot.on('message', async message => 
 {
@@ -53,25 +45,26 @@ bot.on('message', async message =>
     {
         message.channel.send(test);
     }
-
     if(message.content.toString() === `${PREFIX}random`) 
     {
         message.channel.send(Math.floor(Math.random() * 101));
     }
     if(message.content.startsWith(`${PREFIX}anime`)) 
     {
-        //Retrieve data from the function animeFunc.js
-       // let DataAnime = AnimeFunc.anime()
-       // besoin dune promise pasque probleme avec asynchrone, résolution : promise qui fait du synchrone afin dattendre que la fonction ce soit bien executé pour continuer le programme
-      //  await animeData();
-      AnimeFunc.anime().then(function(dataAnime) {
-        let DataAnime = dataAnime;
         let Anime = message.content;
         let splitAnime = Anime.split(" ");
         let LastValAnime = splitAnime[splitAnime.length -1];
         let bool = 0;
-        console.log(DataAnime)
-        console.log(dataAnime)
+
+        // Retrieve data from the function animeFunc.js
+        let DataAnime = AnimeFunc.anime();
+        
+        // if the array is not completed, waiting.
+        while(DataAnime.length == 0)
+        {
+            await delay(1)
+        }
+
         if(LastValAnime != `${PREFIX}anime`)
         {
             for (let j=0; j<DataAnime.length; j++)
@@ -81,7 +74,6 @@ bot.on('message', async message =>
                 if ((splitanime[0] == LastValAnime))
                 {
                     //Print message to discord
-
                     message.channel.send({embed: 
                         {
                             color: 3447003,
@@ -102,7 +94,7 @@ bot.on('message', async message =>
                             footer: {
                               icon_url: bot.user.avatarURL,
                               text: "©"
-                            }
+                           }
                         }
                     });
                     bool = 1;
@@ -207,8 +199,6 @@ bot.on('message', async message =>
                 });
             }
         }
-    })
-
     }
     if(message.content.startsWith(`${PREFIX}manga`)) 
     {
@@ -216,6 +206,16 @@ bot.on('message', async message =>
         let splitManga = Manga.split(" ");
         let LastValManga = splitManga[splitManga.length -1];
         let bool = 0;
+
+        let RetieveManga = MangaFunc.manga()
+        //Retrieve data from the function mangaFunc.js
+        let DataMangaChap = RetieveManga[0]
+        let DataMangaName = RetieveManga[1]
+        // if the array is not completed, waiting.
+        while((DataMangaChap.length == 0))
+        {
+            await delay(1);
+        }
 
         if(LastValManga != `${PREFIX}manga`)
         {
@@ -315,6 +315,13 @@ bot.on('message', async message =>
         let MessageUser = bot.users.get("ID USER");
         MessageUser.send("You need to wake up my friend! your id is : " + "ID USER");
         */
+        let DataAnime = AnimeFunc.anime();
+        
+        while(DataAnime.length == 0)
+        {
+            await delay(1)
+        }
+
         if(LastValAddAnime != `${PREFIX}add`)
         {
             for (let h=0; h<DataAnime.length; h++)
@@ -349,6 +356,13 @@ bot.on('message', async message =>
         let contentGetAnime = fs.readFileSync('ListeAnime.json')
         // Transorm json file into array
         let parsedGetAnime = JSON.parse(contentGetAnime);
+        
+        let DataAnime = AnimeFunc.anime();
+        
+        while(DataAnime.length == 0)
+        {
+            await delay(1)
+        }
 
         for (let j=0; j<DataAnime.length; j++)
         {
@@ -422,6 +436,7 @@ bot.on('message', async message =>
         // Split message and get last word the user entered
         let splitPrune = PruneMessage.split(" ");
         let LastValPrune = splitPrune[splitPrune.length -1];
+        // Delete X message
         message.channel.bulkDelete(LastValPrune);
     }
 });

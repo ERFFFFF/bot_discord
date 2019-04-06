@@ -9,24 +9,32 @@ function delay(timeout) {
     });
 }
 
-function manga()
+exports.manga = () =>
 {
-	//board that will contain our final data
+	// array that will contain our final data
 	var dataMangaChap=[];
 	var dataMangaName=[];
 
     (async () => 
     {
         //launch pupeteer
-        const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-
+        //const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+         const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
+        
         //create a new page
         const page = await browser.newPage();
 
-        //tell to the bot to go to the website
-        await page.goto('https://www.japscan.to/', { waitUntil: 'networkidle2'});
+        // Some sites require this header to be set in order to work. (this one for exemple need it)
+        await page.setExtraHTTPHeaders({
+            'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
+        });
 
-       	await delay(5500);
+        //tell to the bot to go to the website
+        await page.goto('https://www.japscan.to/', { waitUntil: 'networkidle0'});
+
+        await page.waitForNavigation( { waitUntil : 'networkidle0' } );
+
+       //	await delay(8000);
 
         //Tell to the bot to scroll to the bottom of the page
         page.evaluate(_ => 
@@ -71,10 +79,8 @@ function manga()
         })		       
         //close the browser
         browser.close();
-        console.log("Manga ready to use.")
     })();
-    //return/export data
-    module.exports = { dataMangaChap, dataMangaName };
-}
 
-manga()
+    // Return data
+    return [dataMangaChap, dataMangaName];
+}

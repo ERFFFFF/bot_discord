@@ -11,18 +11,16 @@ function delay(timeout) {
 
 exports.anime = () =>
 {
-   var promise = new Promise(function (resolve)
-   {
 
-    console.log("oui")
-    //board that will contain our final data
+    // array that will contain our final data
     var dataAnime=[];
+
     (async () => 
     {
         //launch pupeteer
         const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
        // const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
-
+      
         //create a new page
         const page = await browser.newPage();
 
@@ -39,7 +37,7 @@ exports.anime = () =>
                 window.scrollBy(0, window.innerHeight);                
             });
             // wait loading
-            await delay(500)
+            await delay(100)
         }
 
         //get the data of the website
@@ -65,15 +63,12 @@ exports.anime = () =>
                     countdown:$element.find('.anime-card .poster-container time').text()
                 })
             }
-        })     
-
+        })         
         //close the browser
         browser.close();
-        
     })();
-    resolve(dataAnime)
-    //return/export data
-    })
-   return promise
+
+    return dataAnime;
 }
+
 
