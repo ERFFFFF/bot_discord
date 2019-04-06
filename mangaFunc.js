@@ -18,8 +18,8 @@ exports.manga = () =>
     (async () => 
     {
         //launch pupeteer
-        //const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-         const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
+        const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+        //const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
         
         //create a new page
         const page = await browser.newPage();
