@@ -466,6 +466,28 @@ bot.on('message', async message =>
         // Delete X message
         message.channel.bulkDelete(LastValPrune);
     }
+    if(message.content.toString() === `${PREFIX}help`)
+    {
+        message.channel.send({embed: 
+            {
+                color: 3447003,
+                author: {
+                  name: bot.user.username,
+                  icon_url: bot.user.avatarURL
+                },
+                fields:
+                [
+                    { name: "bonjour", value: "oui"},
+                    { name: "ahhhh", value: "non"}
+                ],
+                timestamp: new Date(),
+                footer: {
+                  icon_url: bot.user.avatarURL,
+                  text: "©"
+                }
+            }
+        });
+    }
 });
 
 bot.music.start(bot, {
