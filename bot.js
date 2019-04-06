@@ -299,7 +299,7 @@ bot.on('message', async message =>
             }
         }
     }
-    if(message.content.startsWith(`${PREFIX}add`))
+    if(message.content.startsWith(`${PREFIX}addanime`))
     {
         // GET user id
         var user_id_addAnime = message.author.id
@@ -322,7 +322,7 @@ bot.on('message', async message =>
             await delay(1)
         }
 
-        if(LastValAddAnime != `${PREFIX}add`)
+        if(LastValAddAnime != `${PREFIX}addanime`)
         {
             for (let h=0; h<DataAnime.length; h++)
             {
@@ -348,7 +348,34 @@ bot.on('message', async message =>
             }
         }
     }
-    if(message.content.toString() === `${PREFIX}mylistanime`)
+    if(message.content.startsWith(`${PREFIX}delanime`))
+    {
+        // Get user id
+        let user_id_getAnime = message.author.id
+        // Read file
+        let contentGetAnime = fs.readFileSync('ListeAnime.json')
+        // Transorm json file into array
+        let parsedGetAnime = JSON.parse(contentGetAnime);
+        // GET message
+        let DelAnime = message.content;
+        // Split message and get last word the user entered
+        let splitDelAnime = DelAnime.split(" ");
+        let LastValDelAnime = splitDelAnime[splitDelAnime.length -1];
+        
+        for (let m=0; m<parsedGetAnime.length; m++)
+        {
+            let splitDelanime = parsedGetAnime[m].name_anime.split(" ")
+            if((LastValDelAnime == splitDelanime[0]) && (parsedGetAnime[m].user_id == user_id_getAnime))
+            {
+                parsedGetAnime.splice(m, 1)
+                let JSON_anime = JSON.stringify(parsedGetAnime);
+                fs.writeFile("ListeAnime.json", JSON_anime, function(err, result) {
+                    if(err) console.log('error', err);
+                });
+            }
+        }
+    }
+    if(message.content.toString() === `${PREFIX}myanimelist`)
     {
         // Get user id
         let user_id_getAnime = message.author.id
