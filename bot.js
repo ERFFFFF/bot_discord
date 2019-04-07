@@ -14,11 +14,11 @@ function delay(timeout) {
     });
 }
 
-
 //MUSIC BOT
 var opusscript = require("opusscript");
 bot.music = require("discord.js-musicbot-addon");
 
+// File reader, writer
 var fs = require("fs");
 
 var list_AddNomAnime = 0;
@@ -62,14 +62,14 @@ bot.on('message', async message =>
         // if the array is not completed, waiting.
         while(DataAnime.length == 0)
         {
-            await delay(1)
+            await delay(1);
         }
 
         if(LastValAnime != `${PREFIX}anime`)
         {
             for (let j=0; j<DataAnime.length; j++)
             {
-                let splitanime = DataAnime[j].en.split(" ")
+                let splitanime = DataAnime[j].en.split(" ");
                 //next stape, link that to mysql db
                 if ((splitanime[0] == LastValAnime))
                 {
@@ -133,21 +133,21 @@ bot.on('message', async message =>
             {
                 if(i <= dataintdividedby3)
                 {
-                    dividedAnimeBeginning.push({ en: DataAnime[i].en })
-                    list_allAnimeBegin.push("=> ", dividedAnimeBeginning[j].en, "\n")
-                    j++
+                    dividedAnimeBeginning.push({ en: DataAnime[i].en });
+                    list_allAnimeBegin.push("=> ", dividedAnimeBeginning[j].en, "\n");
+                    j++;
                 }
                 else if((i <= dataintdividedby1p5) && (i >= dataintdividedby3))
                 {
-                    dividedAnimeMid.push({ en: DataAnime[i].en })                    
-                    list_allAnimeMid.push("=> ", dividedAnimeMid[k].en, "\n")
-                    k++
+                    dividedAnimeMid.push({ en: DataAnime[i].en });     
+                    list_allAnimeMid.push("=> ", dividedAnimeMid[k].en, "\n");
+                    k++;
                 }
                 else if((i <= DataAnime.length) && (i >= dataintdividedby1p5))
                 {
-                    dividedAnimeEnd.push({ en: DataAnime[i].en })
-                    list_allAnimeEnd.push("=> ",dividedAnimeEnd[l].en, "\n")
-                    l++
+                    dividedAnimeEnd.push({ en: DataAnime[i].en });
+                    list_allAnimeEnd.push("=> ",dividedAnimeEnd[l].en, "\n");
+                    l++;
                 }
             }
 
@@ -207,10 +207,10 @@ bot.on('message', async message =>
         let LastValManga = splitManga[splitManga.length -1];
         let bool = 0;
 
-        let RetieveManga = MangaFunc.manga()
+        let RetieveManga = MangaFunc.manga();
         //Retrieve data from the function mangaFunc.js
-        let DataMangaChap = RetieveManga[0]
-        let DataMangaName = RetieveManga[1]
+        let DataMangaChap = RetieveManga[0];
+        let DataMangaName = RetieveManga[1];
         // if the array is not completed, waiting.
         while((DataMangaChap.length == 0))
         {
@@ -302,14 +302,14 @@ bot.on('message', async message =>
     if(message.content.startsWith(`${PREFIX}addanime`))
     {
         // GET user id
-        var user_id_addAnime = message.author.id
+        var user_id_addAnime = message.author.id;
         // GET message
         let AddAnime = message.content;
         // Split message and get last word the user entered
         let splitAddAnime = AddAnime.split(" ");
         let LastValAddAnime = splitAddAnime[splitAddAnime.length -1];
         let bool = 0;
-        let list_Addanime=[]
+        let list_Addanime=[];
         // Send Message to a price User.
         /*
         let MessageUser = bot.users.get("ID USER");
@@ -319,7 +319,7 @@ bot.on('message', async message =>
         
         while(DataAnime.length == 0)
         {
-            await delay(1)
+            await delay(1);
         }
 
         if(LastValAddAnime != `${PREFIX}addanime`)
@@ -330,10 +330,10 @@ bot.on('message', async message =>
                 //next stape, link that to mysql db
                 if ((splitaddanime[0] == LastValAddAnime))
                 {
-                    let contentAddAnime = fs.readFileSync('ListeAnime.json')
+                    let contentAddAnime = fs.readFileSync('ListeAnime.json');
                     let parsedAddAnime = JSON.parse(contentAddAnime);
                     let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en }; 
-                    parsedAddAnime.push(list_anime)
+                    parsedAddAnime.push(list_anime);
                     let JSON_anime = JSON.stringify(parsedAddAnime);
                     fs.writeFile("ListeAnime.json", JSON_anime, function(err, result) {
                         if(err) console.log('error', err);
@@ -356,9 +356,9 @@ bot.on('message', async message =>
     if(message.content.startsWith(`${PREFIX}delanime`))
     {
         // Get user id
-        let user_id_getAnime = message.author.id
+        let user_id_getAnime = message.author.id;
         // Read file
-        let contentGetAnime = fs.readFileSync('ListeAnime.json')
+        let contentGetAnime = fs.readFileSync('ListeAnime.json');
         // Transorm json file into array
         let parsedGetAnime = JSON.parse(contentGetAnime);
         // GET message
@@ -373,22 +373,21 @@ bot.on('message', async message =>
         {
             for (let m=0; m<parsedGetAnime.length; m++)
             {
-                let splitDelanime = parsedGetAnime[m].name_anime.split(" ")
+                let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
                 if((LastValDelAnime == splitDelanime[0]) && (parsedGetAnime[m].user_id == user_id_getAnime))
                 {                    
-                    message.channel.send("L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !")
-                    parsedGetAnime.splice(m, 1)
+                    message.channel.send("L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !");
+                    parsedGetAnime.splice(m, 1);
                     let JSON_anime = JSON.stringify(parsedGetAnime);
                     fs.writeFile("ListeAnime.json", JSON_anime, function(err, result) {
                         if(err) console.log('error', err);
                     });
-                    bool = 1
+                    bool = 1;
                     break;
                 }
                 if ((bool == 0) && (m == parsedGetAnime.length - 1))
                 {
-                    // SA BUG, FAIRE UN BOOL COMME DANS ADDANIME
-                    message.channel.send("Déso gros mais tu essaye de supprimer un animé n'étant pas dans ta liste personelle. (spoiler : du coup tu supprime R)")
+                    message.channel.send("Déso gros mais tu essaye de supprimer un animé n'étant pas dans ta liste personelle. (spoiler : du coup tu supprime R)");
                 }
             }
         }
@@ -400,9 +399,9 @@ bot.on('message', async message =>
     if(message.content.toString() === `${PREFIX}myanimelist`)
     {
         // Get user id
-        let user_id_getAnime = message.author.id
+        let user_id_getAnime = message.author.id;
         // Read file
-        let contentGetAnime = fs.readFileSync('ListeAnime.json')
+        let contentGetAnime = fs.readFileSync('ListeAnime.json');
         // Transorm json file into array
         let parsedGetAnime = JSON.parse(contentGetAnime);
         
@@ -410,7 +409,7 @@ bot.on('message', async message =>
         
         while(DataAnime.length == 0)
         {
-            await delay(1)
+            await delay(1);
         }
 
         for (let j=0; j<DataAnime.length; j++)
@@ -451,7 +450,7 @@ bot.on('message', async message =>
         let randomcctl = message.content;
         let splitrandomcctl = randomcctl.split(" ");
         let LastValrandomcctl = splitrandomcctl[splitrandomcctl.length -1];
-        let intrandomcctl = parseInt(LastValrandomcctl)
+        let intrandomcctl = parseInt(LastValrandomcctl);
         let valuecctl = Math.floor(Math.random() * intrandomcctl) + 1;
 
         switch (LastValrandomcctl)
