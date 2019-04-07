@@ -339,13 +339,18 @@ bot.on('message', async message =>
                         if(err) console.log('error', err);
                     });
                     bool = 1;
+                    message.channel.send("L'animé " + DataAnime[h].en + " à bien été ajouté à ta liste personelle !")
                     break;
                 }
                 if ((bool == 0) && (h == DataAnime.length - 1))
                 {
-                    message.channel.send("Soit l'Animé séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot de l'animé avec les majuscules ainsi que les minuscules, exemple, pour l'animé 'Tensei Shitara Slime Datta Ken' il faut taper : !manga Tensei");   
+                    message.channel.send("Désolé mais ton animé existe pas gros (soit il est pas entrain de sortir sois tu l'as mal ortographié)");   
                 }
             }
+        }
+        else
+        {
+            message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}addanime sa fais rien du tout`);
         }
     }
     if(message.content.startsWith(`${PREFIX}delanime`))
@@ -361,18 +366,35 @@ bot.on('message', async message =>
         // Split message and get last word the user entered
         let splitDelAnime = DelAnime.split(" ");
         let LastValDelAnime = splitDelAnime[splitDelAnime.length -1];
-        
-        for (let m=0; m<parsedGetAnime.length; m++)
+
+        let bool = 0;
+
+        if(LastValDelAnime != `${PREFIX}delanime`)
         {
-            let splitDelanime = parsedGetAnime[m].name_anime.split(" ")
-            if((LastValDelAnime == splitDelanime[0]) && (parsedGetAnime[m].user_id == user_id_getAnime))
+            for (let m=0; m<parsedGetAnime.length; m++)
             {
-                parsedGetAnime.splice(m, 1)
-                let JSON_anime = JSON.stringify(parsedGetAnime);
-                fs.writeFile("ListeAnime.json", JSON_anime, function(err, result) {
-                    if(err) console.log('error', err);
-                });
+                let splitDelanime = parsedGetAnime[m].name_anime.split(" ")
+                if((LastValDelAnime == splitDelanime[0]) && (parsedGetAnime[m].user_id == user_id_getAnime))
+                {                    
+                    message.channel.send("L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !")
+                    parsedGetAnime.splice(m, 1)
+                    let JSON_anime = JSON.stringify(parsedGetAnime);
+                    fs.writeFile("ListeAnime.json", JSON_anime, function(err, result) {
+                        if(err) console.log('error', err);
+                    });
+                    bool = 1
+                    break;
+                }
+                if ((bool == 0) && (m == parsedGetAnime.length - 1))
+                {
+                    // SA BUG, FAIRE UN BOOL COMME DANS ADDANIME
+                    message.channel.send("Déso gros mais tu essaye de supprimer un animé n'étant pas dans ta liste personelle. (spoiler : du coup tu supprime R)")
+                }
             }
+        }
+        else
+        {
+            message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}delanime sa fais rien du tout`);
         }
     }
     if(message.content.toString() === `${PREFIX}myanimelist`)
@@ -435,23 +457,23 @@ bot.on('message', async message =>
         switch (LastValrandomcctl)
         {
             case "2":
-                message.channel.send("D'après le théorème du pif, la question " + valuecctl + " est la bonne réponse."); 
+                message.channel.send("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse."); 
                 break;
 
             case "3":
-                message.channel.send("D'après le théorème du pif, la question " + valuecctl + " est la bonne réponse."); 
+                message.channel.send("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse."); 
                 break;
 
             case "4":
-                message.channel.send("D'après le théorème du pif, la question " + valuecctl + " est la bonne réponse."); 
+                message.channel.send("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse."); 
                 break;
 
             case "5":
-                message.channel.send("D'après le théorème du pif, la question " + valuecctl + " est la bonne réponse.");
+                message.channel.send("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse.");
                 break;
 
             default:
-                message.channel.send("Hey déso mais jai pas de théorème quand il y a " + intrandomcctl  + " questions :'( rip")
+                message.channel.send("Hey déso mais le théorème de Syd ne marche pas quand il y a " + intrandomcctl  + " questions :'( rip")
                 break;
         }
     }
@@ -477,8 +499,17 @@ bot.on('message', async message =>
                 },
                 fields:
                 [
-                    { name: "bonjour", value: "oui"},
-                    { name: "ahhhh", value: "non"}
+                    { name: `${PREFIX}anime`, value: "Liste les animés en cours de paritions"},
+                    { name: `${PREFIX}anime nom_anime`, value: "Permet de voir en dérail un animé. nom_anime = premier mot de l'animé. exemple : One piece -> One"},
+                    { name: `${PREFIX}rs`, value: "Restart le bot."},
+                    { name: `${PREFIX}random`, value: "Fais un random entre 0 et 100."},
+                    { name: `${PREFIX}manga`, value: "Liste les mangas qui sont sorties aujourdhui"},
+                    { name: `${PREFIX}manga nom_manga`, value: "Permet de voir en dérail un manga. nom_manga = premier mot du manga. exemple : One piece -> One"},
+                    { name: `${PREFIX}addanime nom_anime`, value: "Permet d'ajouter un animé à votre liste personnelle. nom_anime = premier mot de l'animé. exemple : One piece -> One"},
+                    { name: `${PREFIX}delanime nom_anime`, value: "Permet de supprimer un animé de votre liste personnelle. nom_anime = premier mot de l'animé. exemple : One piece -> One"},
+                    { name: `${PREFIX}myanimelist`, value: "Liste les animés de votre liste personnelle"},
+                    { name: `${PREFIX}cctl x`, value: "Utilise un algorithme mathématique permettant de déterminer la réponse à une question de N'IMPORTE quel cctl. x = nombre de questions possibles (nombre entre 2 et 5)"},
+                    { name: `${PREFIX}prune x`, value: "Permet de supprimer x messages dans un channel. x = nombres de messages à supprimer"}
                 ],
                 timestamp: new Date(),
                 footer: {
