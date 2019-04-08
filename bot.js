@@ -330,12 +330,12 @@ bot.on('message', async message =>
                 //next stape, link that to mysql db
                 if ((splitaddanime[0] == LastValAddAnime))
                 {
-                    let contentAddAnime = fs.readFileSync('ListeAnime.json');
+                    let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
                     let parsedAddAnime = JSON.parse(contentAddAnime);
                     let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en }; 
                     parsedAddAnime.push(list_anime);
                     let JSON_anime = JSON.stringify(parsedAddAnime);
-                    fs.writeFile("ListeAnime.json", JSON_anime, function(err, result) {
+                    fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
                         if(err) console.log('error', err);
                     });
                     bool = 1;
@@ -358,7 +358,7 @@ bot.on('message', async message =>
         // Get user id
         let user_id_getAnime = message.author.id;
         // Read file
-        let contentGetAnime = fs.readFileSync('ListeAnime.json');
+        let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
         // Transorm json file into array
         let parsedGetAnime = JSON.parse(contentGetAnime);
         // GET message
@@ -379,7 +379,7 @@ bot.on('message', async message =>
                     message.channel.send("L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !");
                     parsedGetAnime.splice(m, 1);
                     let JSON_anime = JSON.stringify(parsedGetAnime);
-                    fs.writeFile("ListeAnime.json", JSON_anime, function(err, result) {
+                    fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
                         if(err) console.log('error', err);
                     });
                     bool = 1;
@@ -401,7 +401,7 @@ bot.on('message', async message =>
         // Get user id
         let user_id_getAnime = message.author.id;
         // Read file
-        let contentGetAnime = fs.readFileSync('ListeAnime.json');
+        let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
         // Transorm json file into array
         let parsedGetAnime = JSON.parse(contentGetAnime);
         
