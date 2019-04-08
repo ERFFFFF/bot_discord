@@ -64,4 +64,4 @@ typings/
 ffmpeg/
 
 # database anime
-ListeAnime.json
+/ListeAnime.json
