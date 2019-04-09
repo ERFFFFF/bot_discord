@@ -34,11 +34,17 @@ bot.on('message', async message =>
 {
     if(!message.content.startsWith(PREFIX)) return;
     if(message.author.bot) return;
-    let test = 'Ceci est un test.';
+    let test = 'Ceci est un test. oui';
 
     if(message.content.toString() === `${PREFIX}rs`) 
     {
-        process.exit();
+        let user_id_addAnime = message.author.id;
+        if(user_id_addAnime = "157510824426995714")
+        {
+            message.channel.send("Bot restarting....");
+            process.exit();
+        }
+        
     }
 
     if(message.content.toString() === `${PREFIX}test`) 
@@ -302,7 +308,7 @@ bot.on('message', async message =>
     if(message.content.startsWith(`${PREFIX}addanime`))
     {
         // GET user id
-        var user_id_addAnime = message.author.id;
+        let user_id_addAnime = message.author.id;
         // GET message
         let AddAnime = message.content;
         // Split message and get last word the user entered
@@ -324,29 +330,54 @@ bot.on('message', async message =>
 
         if(LastValAddAnime != `${PREFIX}addanime`)
         {
-            for (let h=0; h<DataAnime.length; h++)
+            let user_id_getAnime = message.author.id;
+            // Read file
+            let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
+            // Transorm json file into array
+            let parsedGetAnime = JSON.parse(contentGetAnime);
+            // GET message
+            let DelAnime = message.content;
+            // Split message and get last word the user entered
+            let splitDelAnime = DelAnime.split(" ");
+            let LastValDelAnime = splitDelAnime[splitDelAnime.length -1];
+            let bool = 1;
+
+            for (let m=0; m<parsedGetAnime.length; m++)
             {
-                let splitaddanime = DataAnime[h].en.split(" ")
-                //next stape, link that to mysql db
-                if ((splitaddanime[0] == LastValAddAnime))
-                {
-                    let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
-                    let parsedAddAnime = JSON.parse(contentAddAnime);
-                    let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en }; 
-                    parsedAddAnime.push(list_anime);
-                    let JSON_anime = JSON.stringify(parsedAddAnime);
-                    fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
-                        if(err) console.log('error', err);
-                    });
-                    bool = 1;
-                    message.channel.send("L'animé " + DataAnime[h].en + " à bien été ajouté à ta liste personelle !")
-                    break;
-                }
-                if ((bool == 0) && (h == DataAnime.length - 1))
-                {
-                    message.channel.send("Désolé mais ton animé existe pas gros (soit il est pas entrain de sortir sois tu l'as mal ortographié)");   
+                let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
+                if((LastValDelAnime == splitDelanime[0]) && (parsedGetAnime[m].user_id == user_id_getAnime))
+                {  
+                    message.channel.send("tutututu kestufé, tu as déjà ajouté cet animé à ta liste perso, essaie pas de m'arnaquer.");
+                    bool = 0;
                 }
             }
+            if(bool == 1)
+            {
+                for (let h=0; h<DataAnime.length; h++)
+                {
+                    let splitaddanime = DataAnime[h].en.split(" ")
+                    //next stape, link that to mysql db
+                    if ((splitaddanime[0] == LastValAddAnime))
+                    {
+                        let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
+                        let parsedAddAnime = JSON.parse(contentAddAnime);
+                        let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en }; 
+                        parsedAddAnime.push(list_anime);
+                        let JSON_anime = JSON.stringify(parsedAddAnime);
+                        fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
+                            if(err) console.log('error', err);
+                        });
+                        bool = 1;
+                        message.channel.send("<@!" +  user_id_addAnime + ">, " + "L'animé " + DataAnime[h].en + " à bien été ajouté à ta liste personelle !");
+                        break;
+                    }
+                    if ((bool == 0) && (h == DataAnime.length - 1))
+                    {
+                        message.channel.send("Désolé mais ton animé existe pas gros (soit il est pas entrain de sortir sois tu l'as mal ortographié)");   
+                    }                
+                }               
+            }
+
         }
         else
         {
@@ -376,7 +407,7 @@ bot.on('message', async message =>
                 let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
                 if((LastValDelAnime == splitDelanime[0]) && (parsedGetAnime[m].user_id == user_id_getAnime))
                 {                    
-                    message.channel.send("L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !");
+                    message.channel.send("<@!" +  user_id_addAnime + ">, " + "L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !");
                     parsedGetAnime.splice(m, 1);
                     let JSON_anime = JSON.stringify(parsedGetAnime);
                     fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
@@ -479,13 +510,18 @@ bot.on('message', async message =>
     //Delete X message on the current channel.
     if(message.content.startsWith(`${PREFIX}prune`))
     {
-        // GET message
-        let PruneMessage = message.content;
-        // Split message and get last word the user entered
-        let splitPrune = PruneMessage.split(" ");
-        let LastValPrune = splitPrune[splitPrune.length -1];
-        // Delete X message
-        message.channel.bulkDelete(LastValPrune);
+        let user_id_addAnime = message.author.id;
+        if(user_id_addAnime = "157510824426995714")
+        {
+            // GET message
+            let PruneMessage = message.content;
+            // Split message and get last word the user entered
+            let splitPrune = PruneMessage.split(" ");
+            let LastValPrune = splitPrune[splitPrune.length -1];
+            // Delete X message
+            message.channel.bulkDelete(LastValPrune);
+        }
+
     }
     if(message.content.toString() === `${PREFIX}help`)
     {
