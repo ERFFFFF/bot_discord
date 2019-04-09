@@ -39,7 +39,7 @@ bot.on('message', async message =>
     if(message.content.toString() === `${PREFIX}rs`) 
     {
         let user_id_addAnime = message.author.id;
-        if(user_id_addAnime = "157510824426995714")
+        if(user_id_addAnime == "157510824426995714")
         {
             message.channel.send("Bot restarting....");
             process.exit();
@@ -511,7 +511,7 @@ bot.on('message', async message =>
     if(message.content.startsWith(`${PREFIX}prune`))
     {
         let user_id_addAnime = message.author.id;
-        if(user_id_addAnime = "157510824426995714")
+        if(user_id_addAnime == "157510824426995714")
         {
             // GET message
             let PruneMessage = message.content;
