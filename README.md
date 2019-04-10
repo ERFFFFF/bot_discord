@@ -87,3 +87,9 @@ _Le setup_10.x est la version du packet, installer la derniere version en ligne 
 9. **Install de "FFMPEG" sous linux :**
     - sudo add-apt-repository ppa:jonathonf/ffmpeg-4
     - sudo apt-get install ffmpeg
+
+
+Global setup :
+==============
+
+Créé un dossier nommé "DatabaseList" à la racine du projet. Puis créé le fichier "ListeAnime.json" dans le dossier DatabaseList. (mettre dans le fichier ListeAnime.json la phrase suivante : [])
