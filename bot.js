@@ -77,7 +77,7 @@ bot.on('message', async message =>
             {
                 let splitanime = DataAnime[j].en.split(" ");
                 //next stape, link that to mysql db
-                if ((splitanime[0] == LastValAnime))
+                if ((splitanime[0].toLowerCase() == LastValAnime.toLowerCase()))
                 {
                     //Print message to discord
                     message.channel.send({embed: 
@@ -235,7 +235,7 @@ bot.on('message', async message =>
                     let splitMangaEn = DataMangaName[m].en.split(" ");
 
                     //next stape, link that to mysql db
-                    if ((splitMangaEp[0] == LastValManga) && (splitMangaEn[0] == LastValManga))
+                    if ((splitMangaEp[0].toLowerCase() == LastValManga.toLowerCase()) && (splitMangaEn[0].toLowerCase() == LastValManga.toLowerCase()))
                     {
                         message.channel.send({embed:
                             {
@@ -330,7 +330,6 @@ bot.on('message', async message =>
 
         if(LastValAddAnime != `${PREFIX}addanime`)
         {
-            let user_id_getAnime = message.author.id;
             // Read file
             let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
             // Transorm json file into array
@@ -345,7 +344,7 @@ bot.on('message', async message =>
             for (let m=0; m<parsedGetAnime.length; m++)
             {
                 let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
-                if((LastValDelAnime == splitDelanime[0]) && (parsedGetAnime[m].user_id == user_id_getAnime))
+                if((LastValDelAnime.toLowerCase() == splitDelanime[0].toLowerCase()) && (parsedGetAnime[m].user_id == user_id_addAnime))
                 {  
                     message.channel.send("tutututu kestufé, tu as déjà ajouté cet animé à ta liste perso, essaie pas de m'arnaquer.");
                     bool = 0;
@@ -357,7 +356,7 @@ bot.on('message', async message =>
                 {
                     let splitaddanime = DataAnime[h].en.split(" ")
                     //next stape, link that to mysql db
-                    if ((splitaddanime[0] == LastValAddAnime))
+                    if ((splitaddanime[0].toLowerCase() == LastValAddAnime.toLowerCase()))
                     {
                         let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
                         let parsedAddAnime = JSON.parse(contentAddAnime);
@@ -387,7 +386,7 @@ bot.on('message', async message =>
     if(message.content.startsWith(`${PREFIX}delanime`))
     {
         // Get user id
-        let user_id_getAnime = message.author.id;
+        let user_id_delanime = message.author.id;
         // Read file
         let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
         // Transorm json file into array
@@ -405,9 +404,9 @@ bot.on('message', async message =>
             for (let m=0; m<parsedGetAnime.length; m++)
             {
                 let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
-                if((LastValDelAnime == splitDelanime[0]) && (parsedGetAnime[m].user_id == user_id_getAnime))
+                if((LastValDelAnime.toLowerCase() == splitDelanime[0].toLowerCase()) && (parsedGetAnime[m].user_id == user_id_delanime))
                 {                    
-                    message.channel.send("<@!" +  user_id_addAnime + ">, " + "L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !");
+                    message.channel.send("<@!" +  user_id_delanime + ">, " + "L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !");
                     parsedGetAnime.splice(m, 1);
                     let JSON_anime = JSON.stringify(parsedGetAnime);
                     fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
