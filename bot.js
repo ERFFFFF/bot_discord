@@ -589,3 +589,24 @@ bot.login(bot_settings.token);
 
 // token putine
 //"token": "MjI1MjE2MzY5ODIwNTY1NTA0.D2zv7A.S_qZGgKDhKyPEEaw5LM-SPI-7s8",
+
+
+// New method for get words of an user for the commands
+
+/*let Anime = message.content;
+let splitAnime = Anime.split(" ");
+if((splitAnime[0] == "!anime") && (splitAnime[1] == null))
+{
+    // !anime
+    console.log("je suis juste !anime")
+}
+if(((splitAnime[0] == "!anime") && (splitAnime[1] != null)) && (splitAnime[2] == null))
+{
+    // !anime Tensei
+    console.log("je suis juste !anime anime")
+}
+if(((splitAnime[0] == "!anime") && (splitAnime[1] != null)) && (splitAnime[2] != null))
+{
+    // !anime Tensei
+    console.log("je suis juste !anime anime anime")
+}*/
