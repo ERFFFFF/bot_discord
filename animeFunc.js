@@ -60,7 +60,8 @@ exports.anime = () =>
                     en:$element.find('.anime-card .main-title a').text(),
                     image:$element.find('.anime-card .poster-container img').attr('src'),//.slice(21, -1),
                     next_epiosode:$element.find('.anime-card .poster-container .episode-countdown').text().slice(2, 4),
-                    countdown:$element.find('.anime-card .poster-container time').text()
+                    countdown:$element.find('.anime-card .poster-container time').text(),
+                    description:$element.find('.anime-card .anime-info .anime-synopsis p').text()
                 })
             }
         })         

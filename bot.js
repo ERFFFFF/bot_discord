@@ -94,7 +94,7 @@ bot.on('message', async message =>
                             fields:
                             [{
                                 name: DataAnime[j].en,
-                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
+                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown + "\n" + DataAnime[j].description
                              }],
                             timestamp: new Date(),
                             footer: {
@@ -135,7 +135,7 @@ bot.on('message', async message =>
                             fields:
                             [{
                                 name: DataAnime[j].en,
-                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
+                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown + "\n" + DataAnime[j].description
                              }],
                             timestamp: new Date(),
                             footer: {
