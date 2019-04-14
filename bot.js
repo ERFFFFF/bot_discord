@@ -58,8 +58,7 @@ bot.on('message', async message =>
     if(message.content.startsWith(`${PREFIX}anime`)) 
     {
         let Anime = message.content;
-        let splitAnime = Anime.split(" ");
-        let LastValAnime = splitAnime[splitAnime.length -1];
+        let sentenceAnime = Anime.split(" ");
         let bool = 0;
 
         // Retrieve data from the function animeFunc.js
@@ -71,13 +70,14 @@ bot.on('message', async message =>
             await delay(1);
         }
 
-        if(LastValAnime != `${PREFIX}anime`)
+        //si le premier mot est égale = !anime et que le deuxime est null (que le deuxieme mot n'existe pas)
+        if((sentenceAnime[0] == `${PREFIX}anime`) && (sentenceAnime[1] != null) && (sentenceAnime[2] == null))
         {
             for (let j=0; j<DataAnime.length; j++)
             {
                 let splitanime = DataAnime[j].en.split(" ");
                 //next stape, link that to mysql db
-                if ((splitanime[0].toLowerCase() == LastValAnime.toLowerCase()))
+                if ((splitanime[0].toLowerCase() == sentenceAnime[1].toLowerCase()))
                 {
                     //Print message to discord
                     message.channel.send({embed: 
@@ -112,7 +112,48 @@ bot.on('message', async message =>
                 }
             }
         }
-        else 
+        if((sentenceAnime[0] == `${PREFIX}anime`) && (sentenceAnime[1] != null) && (sentenceAnime[2] != null))
+        {
+            for (let j=0; j<DataAnime.length; j++)
+            {
+                let splitanime = DataAnime[j].en.split(" ");
+                //next stape, link that to mysql db
+                if ((splitanime[0].toLowerCase() == sentenceAnime[1].toLowerCase()) && (splitanime[1].toLowerCase() == sentenceAnime[2].toLowerCase()))
+                {
+                    //Print message to discord
+                    message.channel.send({embed: 
+                        {
+                            color: 3447003,
+                            author: {
+                              name: bot.user.username,
+                              icon_url: bot.user.avatarURL
+                            },
+                            image: 
+                            {
+                                url: DataAnime[j].image
+                            },
+                            fields:
+                            [{
+                                name: DataAnime[j].en,
+                                value: "Sortie de l'épisode numéro " + DataAnime[j].next_epiosode + " dans : " + DataAnime[j].countdown
+                             }],
+                            timestamp: new Date(),
+                            footer: {
+                              icon_url: bot.user.avatarURL,
+                              text: "©"
+                           }
+                        }
+                    });
+                    bool = 1;
+                    break;
+                }
+                if ((bool == 0) && (j == DataAnime.length - 1))
+                {
+                    message.channel.send("Soit l'Animé séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot de l'animé avec les majuscules ainsi que les minuscules, exemple, pour l'animé 'Tensei Shitara Slime Datta Ken' il faut taper : !manga Tensei");   
+                }
+            }
+        }
+        if((sentenceAnime[0] == `${PREFIX}anime`) && (sentenceAnime[1] == null)) 
         {
             let dividedAnimeBeginning = [], dividedAnimeMid = [], dividedAnimeEnd = [], list_allAnimeBegin = [], list_allAnimeMid = [], list_allAnimeEnd = [];
 
@@ -209,8 +250,7 @@ bot.on('message', async message =>
     if(message.content.startsWith(`${PREFIX}manga`)) 
     {
         let Manga = message.content;
-        let splitManga = Manga.split(" ");
-        let LastValManga = splitManga[splitManga.length -1];
+        let sentenceManga = Manga.split(" ");
         let bool = 0;
 
         let RetieveManga = MangaFunc.manga();
@@ -223,7 +263,7 @@ bot.on('message', async message =>
             await delay(1);
         }
 
-        if(LastValManga != `${PREFIX}manga`)
+        if((sentenceManga[0] == `${PREFIX}manga`) && (sentenceManga[1] != null) && (sentenceManga[2] == null))
         {
             //Un manga à été demandé : !manga One
             //One pour One piece, mais on doit mettre seulement le premier mot du manga.
@@ -235,7 +275,7 @@ bot.on('message', async message =>
                     let splitMangaEn = DataMangaName[m].en.split(" ");
 
                     //next stape, link that to mysql db
-                    if ((splitMangaEp[0].toLowerCase() == LastValManga.toLowerCase()) && (splitMangaEn[0].toLowerCase() == LastValManga.toLowerCase()))
+                    if ((splitMangaEp[0].toLowerCase() == sentenceManga[1].toLowerCase()) && (splitMangaEn[0].toLowerCase() == sentenceManga[1].toLowerCase()))
                     {
                         message.channel.send({embed:
                             {
@@ -266,7 +306,50 @@ bot.on('message', async message =>
                 }
             }      
         }
-        else 
+        if((sentenceManga[0] == `${PREFIX}manga`) && (sentenceManga[1] != null) && (sentenceManga[2] != null))
+        {
+            //Un manga à été demandé : !manga One
+            //One pour One piece, mais on doit mettre seulement le premier mot du manga.
+            for (let k=0; k<DataMangaChap.length; k++)
+            {
+                for (let m=0; m<DataMangaName.length; m++)
+                {
+                    let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ");
+                    let splitMangaEn = DataMangaName[m].en.split(" ");
+
+                    //next stape, link that to mysql db
+                    if ((splitMangaEp[0].toLowerCase() == sentenceManga[1].toLowerCase()) && (splitMangaEn[0].toLowerCase() == sentenceManga[1].toLowerCase()) && (splitMangaEp[1].toLowerCase() == sentenceManga[2].toLowerCase()) && (splitMangaEn[1].toLowerCase() == sentenceManga[2].toLowerCase()))
+                    {
+                        message.channel.send({embed:
+                            {
+                                color: 3447003,
+                                author: {
+                                  name: bot.user.username,
+                                  icon_url: bot.user.avatarURL
+                                },
+                                fields:
+                                [{
+                                    name: DataMangaName[m].en,
+                                    value: "**__Le chapitre sélectionné sortit est :__** " + DataMangaChap[k].next_epiosode
+                                 }],
+                                timestamp: new Date(),
+                                footer: {
+                                  icon_url: bot.user.avatarURL,
+                                  text: "©"
+                                }
+                            }
+                        });
+                        bool = 1;
+                        break;
+                    }
+                    if ((bool == 0) && (m == DataMangaName.length - 1) && (k == DataMangaChap.length - 1))
+                    {
+                        message.channel.send("Soit le manga séléctionné n'est pas encore sortit aujourdhui soit vous avez fais une érreur d'ortographe ! veuillez mettre seulement le premier mot du manga avec les majuscules ainsi que les minuscules, exemple, pour le manga 'One piece' il faut taper : !manga One");
+                    }
+                }
+            }      
+        }
+        if((sentenceManga[0] == `${PREFIX}manga`) && (sentenceManga[1] == null)) 
         {
             //Aucun manga n'a été demandé : !manga
             //return TOUT les mangas sortits aujourdhui.
@@ -312,9 +395,7 @@ bot.on('message', async message =>
         // GET message
         let AddAnime = message.content;
         // Split message and get last word the user entered
-        let splitAddAnime = AddAnime.split(" ");
-        let LastValAddAnime = splitAddAnime[splitAddAnime.length -1];
-        let bool = 0;
+        let sentenceAddAnime = AddAnime.split(" ");
         let list_Addanime=[];
         // Send Message to a price User.
         /*
@@ -328,7 +409,7 @@ bot.on('message', async message =>
             await delay(1);
         }
 
-        if(LastValAddAnime != `${PREFIX}addanime`)
+        if((sentenceAddAnime[0] == `${PREFIX}addanime`) && (sentenceAddAnime[1] != null) && (sentenceAddAnime[2] == null)) 
         {
             // Read file
             let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
@@ -337,14 +418,13 @@ bot.on('message', async message =>
             // GET message
             let DelAnime = message.content;
             // Split message and get last word the user entered
-            let splitDelAnime = DelAnime.split(" ");
-            let LastValDelAnime = splitDelAnime[splitDelAnime.length -1];
+            let sentenceDelAnime = DelAnime.split(" ");
             let bool = 1;
 
             for (let m=0; m<parsedGetAnime.length; m++)
             {
                 let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
-                if((LastValDelAnime.toLowerCase() == splitDelanime[0].toLowerCase()) && (parsedGetAnime[m].user_id == user_id_addAnime))
+                if((sentenceDelAnime[1].toLowerCase() == splitDelanime[0].toLowerCase()) && (parsedGetAnime[m].user_id == user_id_addAnime))
                 {  
                     message.channel.send("tutututu kestufé, tu as déjà ajouté cet animé à ta liste perso, essaie pas de m'arnaquer.");
                     bool = 0;
@@ -356,7 +436,7 @@ bot.on('message', async message =>
                 {
                     let splitaddanime = DataAnime[h].en.split(" ")
                     //next stape, link that to mysql db
-                    if ((splitaddanime[0].toLowerCase() == LastValAddAnime.toLowerCase()))
+                    if ((splitaddanime[0].toLowerCase() == sentenceAddAnime[1].toLowerCase()))
                     {
                         let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
                         let parsedAddAnime = JSON.parse(contentAddAnime);
@@ -378,7 +458,56 @@ bot.on('message', async message =>
             }
 
         }
-        else
+        if((sentenceAddAnime[0] == `${PREFIX}addanime`) && (sentenceAddAnime[1] != null) && (sentenceAddAnime[2] != null)) 
+        {
+            // Read file
+            let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
+            // Transorm json file into array
+            let parsedGetAnime = JSON.parse(contentGetAnime);
+            // GET message
+            let DelAnime = message.content;
+            // Split message and get last word the user entered
+            let sentenceDelAnime = DelAnime.split(" ");
+            let bool = 1;
+
+            for (let m=0; m<parsedGetAnime.length; m++)
+            {
+                let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
+                if((sentenceDelAnime[1].toLowerCase() == splitDelanime[0].toLowerCase()) && (parsedGetAnime[m].user_id == user_id_addAnime) && (sentenceDelAnime[2].toLowerCase() == splitDelanime[1].toLowerCase()))
+                {  
+                    message.channel.send("tutututu kestufé, tu as déjà ajouté cet animé à ta liste perso, essaie pas de m'arnaquer.");
+                    bool = 0;
+                }
+            }
+            if(bool == 1)
+            {
+                for (let h=0; h<DataAnime.length; h++)
+                {
+                    let splitaddanime = DataAnime[h].en.split(" ")
+                    //next stape, link that to mysql db
+                    if ((splitaddanime[0].toLowerCase() == sentenceAddAnime[1].toLowerCase()) && (splitaddanime[1].toLowerCase() == sentenceAddAnime[2].toLowerCase()))
+                    {
+                        let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
+                        let parsedAddAnime = JSON.parse(contentAddAnime);
+                        let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en }; 
+                        parsedAddAnime.push(list_anime);
+                        let JSON_anime = JSON.stringify(parsedAddAnime);
+                        fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
+                            if(err) console.log('error', err);
+                        });
+                        bool = 1;
+                        message.channel.send("<@!" +  user_id_addAnime + ">, " + "L'animé " + DataAnime[h].en + " à bien été ajouté à ta liste personelle !");
+                        break;
+                    }
+                    if ((bool == 0) && (h == DataAnime.length - 1))
+                    {
+                        message.channel.send("Désolé mais ton animé existe pas gros (soit il est pas entrain de sortir sois tu l'as mal ortographié)");   
+                    }                
+                }               
+            }
+
+        }
+        if((sentenceAddAnime[0] == `${PREFIX}addanime`) && (sentenceAddAnime[1] == null))
         {
             message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}addanime sa fais rien du tout`);
         }
@@ -394,17 +523,16 @@ bot.on('message', async message =>
         // GET message
         let DelAnime = message.content;
         // Split message and get last word the user entered
-        let splitDelAnime = DelAnime.split(" ");
-        let LastValDelAnime = splitDelAnime[splitDelAnime.length -1];
+        let sentenceDelAnime = DelAnime.split(" ");
 
         let bool = 0;
 
-        if(LastValDelAnime != `${PREFIX}delanime`)
+        if((sentenceDelAnime[0] == `${PREFIX}delanime`) && (sentenceDelAnime[1] != null) && (sentenceDelAnime[2] == null))
         {
             for (let m=0; m<parsedGetAnime.length; m++)
             {
                 let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
-                if((LastValDelAnime.toLowerCase() == splitDelanime[0].toLowerCase()) && (parsedGetAnime[m].user_id == user_id_delanime))
+                if((sentenceDelAnime[1].toLowerCase() == splitDelanime[0].toLowerCase()) && (parsedGetAnime[m].user_id == user_id_delanime))
                 {                    
                     message.channel.send("<@!" +  user_id_delanime + ">, " + "L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !");
                     parsedGetAnime.splice(m, 1);
@@ -421,7 +549,29 @@ bot.on('message', async message =>
                 }
             }
         }
-        else
+        if((sentenceDelAnime[0] == `${PREFIX}delanime`) && (sentenceDelAnime[1] != null) && (sentenceDelAnime[2] != null))
+        {
+            for (let m=0; m<parsedGetAnime.length; m++)
+            {
+                let splitDelanime = parsedGetAnime[m].name_anime.split(" ");
+                if((sentenceDelAnime[1].toLowerCase() == splitDelanime[0].toLowerCase()) && (parsedGetAnime[m].user_id == user_id_delanime) && (sentenceDelAnime[2].toLowerCase() == splitDelanime[1].toLowerCase()))
+                {                    
+                    message.channel.send("<@!" +  user_id_delanime + ">, " + "L'animé " + parsedGetAnime[m].name_anime + " à bien été supprimer de ta liste personelle !");
+                    parsedGetAnime.splice(m, 1);
+                    let JSON_anime = JSON.stringify(parsedGetAnime);
+                    fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
+                        if(err) console.log('error', err);
+                    });
+                    bool = 1;
+                    break;
+                }
+                if ((bool == 0) && (m == parsedGetAnime.length - 1))
+                {
+                    message.channel.send("Déso gros mais tu essaye de supprimer un animé n'étant pas dans ta liste personelle. (spoiler : du coup tu supprime R)");
+                }
+            }
+        }
+        if((sentenceDelAnime[0] == `${PREFIX}delanime`) && (sentenceDelAnime[1] == null))
         {
             message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}delanime sa fais rien du tout`);
         }
