@@ -5,7 +5,7 @@ const MangaFunc = require('./mangaFunc.js');
 const bot = new Discord.Client({});
 
 //Prefix for the Botbrowser
-const PREFIX = '!';
+const PREFIX = ',';
 
 // Delay, sleep, wait function.
 function delay(timeout) {
@@ -683,17 +683,17 @@ bot.on('message', async message =>
                 },
                 fields:
                 [
-                    { name: `${PREFIX}anime`, value: "Liste les animés en cours de paritions"},
-                    { name: `${PREFIX}anime nom_anime`, value: "Permet de voir en dérail un animé. nom_anime = premier mot de l'animé. exemple : One piece -> One"},
+                    { name: `${PREFIX}anime`, value: "Liste les animés en cours de parutions"},
+                    { name: `${PREFIX}anime nom_anime`, value: "Permets de voir en détail un animé. \n nom_anime = premier mot ou premier & deuxieme mot de l'animé. \n Exemple : Tate no Yuusha no Nariagari \n -> Tate \n -> Tate no"},
                     { name: `${PREFIX}rs`, value: "Restart le bot."},
-                    { name: `${PREFIX}random`, value: "Fais un random entre 0 et 100."},
+                    { name: `${PREFIX}random`, value: "Nombre random entre 0 et 100."},
                     { name: `${PREFIX}manga`, value: "Liste les mangas qui sont sorties aujourdhui"},
-                    { name: `${PREFIX}manga nom_manga`, value: "Permet de voir en dérail un manga. nom_manga = premier mot du manga. exemple : One piece -> One"},
-                    { name: `${PREFIX}addanime nom_anime`, value: "Permet d'ajouter un animé à votre liste personnelle. nom_anime = premier mot de l'animé. exemple : One piece -> One"},
-                    { name: `${PREFIX}delanime nom_anime`, value: "Permet de supprimer un animé de votre liste personnelle. nom_anime = premier mot de l'animé. exemple : One piece -> One"},
+                    { name: `${PREFIX}manga nom_manga`, value: "Permets de voir en détail un manga. \n nom_manga = premier mot ou premier & deuxieme mot du manga. \n Exemple : Tate no Yuusha no Nariagari \n -> Tate \n -> Tate no"},
+                    { name: `${PREFIX}addanime nom_anime`, value: "Permet d'ajouter un animé à votre liste personnelle. \n nom_anime = premier mot ou premier & deuxieme mot de l'animé. \n Exemple : Tate no Yuusha no Nariagari \n -> Tate \n -> Tate no"},
+                    { name: `${PREFIX}delanime nom_anime`, value: "Permet de supprimer un animé de votre liste personnelle. \n nom_anime = premier mot ou premier & deuxieme mot de l'animé. \n Exemple : Tate no Yuusha no Nariagari \n -> Tate \n -> Tate no"},
                     { name: `${PREFIX}myanimelist`, value: "Liste les animés de votre liste personnelle"},
-                    { name: `${PREFIX}cctl x`, value: "Utilise un algorithme mathématique permettant de déterminer la réponse à une question de N'IMPORTE quel cctl. x = nombre de questions possibles (nombre entre 2 et 5)"},
-                    { name: `${PREFIX}prune x`, value: "Permet de supprimer x messages dans un channel. x = nombres de messages à supprimer"}
+                    { name: `${PREFIX}cctl x`, value: "Utilise un algorithme mathématique permettant de déterminer la réponse à une question de N'IMPORTE quel cctl. \n x = nombre de questions possibles (nombre entre 2 et 5)"},
+                    { name: `${PREFIX}prune x`, value: "Permet de supprimer x messages dans un channel.\n x = nombres de messages à supprimer"}
                 ],
                 timestamp: new Date(),
                 footer: {
