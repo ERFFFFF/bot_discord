@@ -5,7 +5,7 @@ const MangaFunc = require('./mangaFunc.js');
 const bot = new Discord.Client({});
 
 //Prefix for the Botbrowser
-const PREFIX = ',';
+const PREFIX = '?';
 
 // Delay, sleep, wait function.
 function delay(timeout) {
