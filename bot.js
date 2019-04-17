@@ -5,7 +5,7 @@ const MangaFunc = require('./mangaFunc.js');
 const bot = new Discord.Client({});
 
 //Prefix for the Botbrowser
-const PREFIX = '?';
+const PREFIX = ',';
 
 // Delay, sleep, wait function.
 function delay(timeout) {
@@ -625,6 +625,62 @@ bot.on('message', async message =>
             }
         }   
     }
+    if(message.content.startsWith(`${PREFIX}addmanga`))
+    {
+        // GET user id
+        let user_id_addManga = message.author.id;
+        let Manga = message.content;
+        let sentenceAddManga = Manga.split(" ");
+        let bool = 0;
+
+        let RetieveManga = MangaFunc.manga();
+        let DataManga = RetieveManga[1];
+        // if the array is not completed, waiting.
+        while((DataManga.length == 0))
+        {
+            await delay(1);
+        }
+
+        if((sentenceAddManga[0] == `${PREFIX}addmanga`) && (sentenceAddManga[1] != null) && (sentenceAddManga[2] != null)) 
+        {
+            // Read file
+            let contentGetManga = fs.readFileSync('./DatabaseList/ListeManga.json');
+            // Transorm json file into array
+            let parsedGetManga = JSON.parse(contentGetManga);
+            // GET message
+            let DelManga = message.content;
+            // Split message and get last word the user entered
+            let sentenceDelManga = DelManga.split(" ");
+            let bool = 1;
+
+            for (let m=0; m<parsedGetManga.length; m++)
+            {
+                let splitDelManga = parsedGetManga[m].name_manga.split(" ");
+                if((sentenceDelManga[1].toLowerCase() == splitDelManga[0].toLowerCase()) && (parsedGetManga[m].user_id == user_id_addManga) && (sentenceDelManga[2].toLowerCase() == splitDelManga[1].toLowerCase()))
+                {  
+                    message.channel.send("tutututu kestufé, tu as déjà ajouté cee manga à ta liste perso, essaie pas de m'arnaquer.");
+                    bool = 0;
+                }
+            }
+            if(bool == 1)
+            {
+                let contentAddManga = fs.readFileSync('./DatabaseList/ListeManga.json');
+                let parsedAddManga = JSON.parse(contentAddManga);
+                let list_Manga = { user_id: user_id_addManga, name_manga: sentenceAddManga[1], next_epiosode: sentenceAddManga[2] }; 
+                parsedAddManga.push(list_Manga);
+                let JSON_Manga = JSON.stringify(parsedAddManga);
+                fs.writeFile("./DatabaseList/ListeManga.json", JSON_Manga, function(err, result) {
+                    if(err) console.log('error', err);
+                });
+                bool = 1;
+                message.channel.send("<@!" +  user_id_addManga + ">, " + "le manga " + sentenceAddManga[1] + " à bien été ajouté à ta liste personelle !");          
+            }              
+        }
+        if((sentenceAddManga[0] == `${PREFIX}addmanga`) && (sentenceAddManga[1] == null))
+        {
+            message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}addmanga sa fais rien du tout`);
+        }
+    }    
     if(message.content.startsWith(`${PREFIX}cctl`))  
     {
         let randomcctl = message.content;
