@@ -24,6 +24,7 @@ exports.manga = () =>
         //create a new page
         const page = await browser.newPage();
 
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
         // Some sites require this header to be set in order to work. (this one for exemple need it)
         await page.setExtraHTTPHeaders({
             'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
