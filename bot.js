@@ -257,6 +257,7 @@ bot.on('message', async message =>
         //Retrieve data from the function mangaFunc.js
         let DataMangaChap = RetieveManga[0];
         let DataMangaName = RetieveManga[1];
+        
         // if the array is not completed, waiting.
         while((DataMangaChap.length == 0))
         {
@@ -353,6 +354,7 @@ bot.on('message', async message =>
         {
             //Aucun manga n'a été demandé : !manga
             //return TOUT les mangas sortits aujourdhui.
+            console.log("ggg")
             for (let k=0; k<DataMangaChap.length; k++)
             {
                 for (let m=0; m<DataMangaName.length; m++)
@@ -360,7 +362,6 @@ bot.on('message', async message =>
                     let splitMangaEp = DataMangaChap[k].next_epiosode.split(" ");
                     let splitMangaEn = DataMangaName[m].en.split(" ");
 
-                    //next stape, link that to mysql db
                     if ((splitMangaEp[0] == splitMangaEn[0]))
                     {
                         message.channel.send({embed: 
@@ -633,14 +634,6 @@ bot.on('message', async message =>
         let sentenceAddManga = Manga.split(" ");
         let bool = 0;
 
-        let RetieveManga = MangaFunc.manga();
-        let DataManga = RetieveManga[1];
-        // if the array is not completed, waiting.
-        while((DataManga.length == 0))
-        {
-            await delay(1);
-        }
-
         if((sentenceAddManga[0] == `${PREFIX}addmanga`) && (sentenceAddManga[1] != null) && (sentenceAddManga[2] != null)) 
         {
             // Read file
@@ -658,29 +651,79 @@ bot.on('message', async message =>
                 let splitDelManga = parsedGetManga[m].name_manga.split(" ");
                 if((sentenceDelManga[1].toLowerCase() == splitDelManga[0].toLowerCase()) && (parsedGetManga[m].user_id == user_id_addManga) && (sentenceDelManga[2].toLowerCase() == splitDelManga[1].toLowerCase()))
                 {  
-                    message.channel.send("tutututu kestufé, tu as déjà ajouté cee manga à ta liste perso, essaie pas de m'arnaquer.");
+                    message.channel.send("tutututu kestufé, tu as déjà ajouté ce manga à ta liste perso, essaie pas de m'arnaquer.");
                     bool = 0;
                 }
             }
             if(bool == 1)
             {
-                let contentAddManga = fs.readFileSync('./DatabaseList/ListeManga.json');
-                let parsedAddManga = JSON.parse(contentAddManga);
-                let list_Manga = { user_id: user_id_addManga, name_manga: sentenceAddManga[1], next_epiosode: sentenceAddManga[2] }; 
-                parsedAddManga.push(list_Manga);
-                let JSON_Manga = JSON.stringify(parsedAddManga);
-                fs.writeFile("./DatabaseList/ListeManga.json", JSON_Manga, function(err, result) {
-                    if(err) console.log('error', err);
-                });
-                bool = 1;
-                message.channel.send("<@!" +  user_id_addManga + ">, " + "le manga " + sentenceAddManga[1] + " à bien été ajouté à ta liste personelle !");          
+                if(!isNaN(sentenceAddManga[2]))
+                {
+                    let contentAddManga = fs.readFileSync('./DatabaseList/ListeManga.json');
+                    let parsedAddManga = JSON.parse(contentAddManga);
+                    let list_Manga = { user_id: user_id_addManga, name_manga: sentenceAddManga[1].toLowerCase(), next_epiosode: sentenceAddManga[2] }; 
+                    parsedAddManga.push(list_Manga);
+                    let JSON_Manga = JSON.stringify(parsedAddManga);
+                    fs.writeFile("./DatabaseList/ListeManga.json", JSON_Manga, function(err, result) {
+                        if(err) console.log('error', err);
+                    });
+                    bool = 1;
+                    message.channel.send("<@!" +  user_id_addManga + ">, " + "le manga " + sentenceAddManga[1] + " à bien été ajouté à ta liste personelle !");                    
+                }
+                else
+                {
+                    message.channel.send(sentenceAddManga[2] + " n'est pas un nombre.");
+                }
+          
             }              
         }
         if((sentenceAddManga[0] == `${PREFIX}addmanga`) && (sentenceAddManga[1] == null))
         {
             message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}addmanga sa fais rien du tout`);
         }
-    }    
+    }
+    if(message.content.startsWith(`${PREFIX}delmanga`))
+    {
+        // Get user id
+        let user_id_delmanga = message.author.id;
+        // Read file
+        let contentGetmanga = fs.readFileSync('./DatabaseList/ListeManga.json');
+        // Transorm json file into array
+        let parsedGetmanga = JSON.parse(contentGetmanga);
+        // GET message
+        let Delmanga = message.content;
+        // Split message and get last word the user entered
+        let sentenceDelmanga = Delmanga.split(" ");
+
+        let bool = 0;
+
+        if((sentenceDelmanga[0] == `${PREFIX}delmanga`) && (sentenceDelmanga[1] != null) && (sentenceDelmanga[2] == null))
+        {
+            for (let m=0; m<parsedGetmanga.length; m++)
+            {
+                let splitDelmanga = parsedGetmanga[m].name_manga
+                if((sentenceDelmanga[1].toLowerCase() == splitDelmanga[0].toLowerCase()) && (parsedGetmanga[m].user_id == user_id_delmanga))
+                {
+                    message.channel.send("<@!" +  user_id_delmanga + ">, " + "le manga " + parsedGetmanga[m].name_manga + " à bien été supprimer de ta liste personelle !");
+                    parsedGetmanga.splice(m, 1);
+                    let JSON_manga = JSON.stringify(parsedGetmanga);
+                    fs.writeFile("./DatabaseList/ListeManga.json", JSON_manga, function(err, result) {
+                        if(err) console.log('error', err);
+                    });
+                    bool = 1;
+                    break;
+                }
+                if ((bool == 0) && (m == parsedGetmanga.length - 1))
+                {
+                    message.channel.send("Déso gros mais tu essaye de supprimer un manga n'étant pas dans ta liste personelle. (spoiler : du coup tu supprime R)");
+                }
+            }
+        }
+        if((sentenceDelmanga[0] == `${PREFIX}delmanga`) && (sentenceDelmanga[1] == null))
+        {
+            message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}delmanga sa fais rien du tout`);
+        }
+    }
     if(message.content.startsWith(`${PREFIX}cctl`))  
     {
         let randomcctl = message.content;
@@ -749,7 +792,9 @@ bot.on('message', async message =>
                     { name: `${PREFIX}delanime nom_anime`, value: "Permet de supprimer un animé de votre liste personnelle. \n nom_anime = premier mot ou premier & deuxieme mot de l'animé. \n Exemple : Tate no Yuusha no Nariagari \n -> Tate \n -> Tate no"},
                     { name: `${PREFIX}myanimelist`, value: "Liste les animés de votre liste personnelle"},
                     { name: `${PREFIX}cctl x`, value: "Utilise un algorithme mathématique permettant de déterminer la réponse à une question de N'IMPORTE quel cctl. \n x = nombre de questions possibles (nombre entre 2 et 5)"},
-                    { name: `${PREFIX}prune x`, value: "Permet de supprimer x messages dans un channel.\n x = nombres de messages à supprimer"}
+                    { name: `${PREFIX}prune x`, value: "Permet de supprimer x messages dans un channel.\n x = nombres de messages à supprimer"},
+                    { name: `${PREFIX}addmanga nom_manga nombre_chapitre`, value: "ajoute un manga à votre lise personnelle. \n nom_manga = nom du manga mettre un _ à la place des espaces. \n nombre_chapitre = numéro du chapitre auquel vous etes. \n Exemple : addmanga one_piece 934"},
+                    { name: `${PREFIX}delmanga nom_manga`, value: "Permet de supprimer un manga de votre liste personnelle \n Exemple : delmanga one_piece \n Le nom du manga que vous supprimer doit être le même que le nom du manga dans votre liste personnelle."}
                 ],
                 timestamp: new Date(),
                 footer: {
