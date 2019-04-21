@@ -648,8 +648,7 @@ bot.on('message', async message =>
 
             for (let m=0; m<parsedGetManga.length; m++)
             {
-                let splitDelManga = parsedGetManga[m].name_manga.split(" ");
-                if((sentenceDelManga[1].toLowerCase() == splitDelManga[0].toLowerCase()) && (parsedGetManga[m].user_id == user_id_addManga) && (sentenceDelManga[2].toLowerCase() == splitDelManga[1].toLowerCase()))
+                if((sentenceDelManga[1].toLowerCase() == parsedGetManga[m].name_manga) && (parsedGetManga[m].user_id == user_id_addManga))
                 {  
                     message.channel.send("tutututu kestufé, tu as déjà ajouté ce manga à ta liste perso, essaie pas de m'arnaquer.");
                     bool = 0;
@@ -677,6 +676,10 @@ bot.on('message', async message =>
           
             }              
         }
+        if((sentenceAddManga[0] == `${PREFIX}addmanga`) && (sentenceAddManga[1] != null) && (sentenceAddManga[2] == null)) 
+        {
+            message.channel.send(`Il faut entrer un numéro de chapitres. Exemple : one_piece 150`);
+        }
         if((sentenceAddManga[0] == `${PREFIX}addmanga`) && (sentenceAddManga[1] == null))
         {
             message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}addmanga sa fais rien du tout`);
@@ -701,8 +704,7 @@ bot.on('message', async message =>
         {
             for (let m=0; m<parsedGetmanga.length; m++)
             {
-                let splitDelmanga = parsedGetmanga[m].name_manga
-                if((sentenceDelmanga[1].toLowerCase() == splitDelmanga[0].toLowerCase()) && (parsedGetmanga[m].user_id == user_id_delmanga))
+                if((sentenceDelmanga[1].toLowerCase() == parsedGetmanga[m].name_manga) && (parsedGetmanga[m].user_id == user_id_delmanga))
                 {
                     message.channel.send("<@!" +  user_id_delmanga + ">, " + "le manga " + parsedGetmanga[m].name_manga + " à bien été supprimer de ta liste personelle !");
                     parsedGetmanga.splice(m, 1);
@@ -722,6 +724,41 @@ bot.on('message', async message =>
         if((sentenceDelmanga[0] == `${PREFIX}delmanga`) && (sentenceDelmanga[1] == null))
         {
             message.channel.send(`kestu fais gros, si tu fais juste la commande ${PREFIX}delmanga sa fais rien du tout`);
+        }
+    }
+    if(message.content.toString() === `${PREFIX}mymangalist`)
+    {
+        // Get user id
+        let user_id_getmanga = message.author.id;
+        // Read file
+        let contentGetmanga = fs.readFileSync('./DatabaseList/ListeManga.json');
+        // Transorm json file into array
+        let parsedGetmanga = JSON.parse(contentGetmanga);
+
+        for (let m=0; m<parsedGetmanga.length; m++)
+        {
+            if ((parsedGetmanga[m].user_id == user_id_getmanga))
+            {
+                message.channel.send({embed: 
+                    {
+                        color: 3447003,
+                        author: {
+                          name: bot.user.username,
+                          icon_url: bot.user.avatarURL
+                        },
+                        fields:
+                        [{
+                            name: parsedGetmanga[m].name_manga,
+                            value: "vous etes actuellement au chapitre : " + parsedGetmanga[m].next_epiosode
+                         }],
+                        timestamp: new Date(),
+                        footer: {
+                          icon_url: bot.user.avatarURL,
+                          text: "©"
+                        }
+                    }
+                });
+            }
         }
     }
     if(message.content.startsWith(`${PREFIX}cctl`))  
