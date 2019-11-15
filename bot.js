@@ -316,7 +316,6 @@ bot.on('message', async message =>
                     }                
                 }               
             }
-
         }
         if((sentenceAddAnime[0] == `${PREFIX}addanime`) && (sentenceAddAnime[1] != null) && (sentenceAddAnime[2] != null)) 
         {
@@ -365,7 +364,6 @@ bot.on('message', async message =>
                     }                
                 }               
             }
-
         }
         if((sentenceAddAnime[0] == `${PREFIX}addanime`) && (sentenceAddAnime[1] == null))
         {
@@ -532,6 +530,109 @@ bot.on('message', async message =>
         }
 
     }
+    if(message.content.startsWith(`${PREFIX}mymemo`))
+    {
+        // Read file
+        let contentGetMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
+        // Transorm json file into array
+        let parsedGetMemo = JSON.parse(contentGetMemo);
+        list_memo = []
+        for (let i=0; i<parsedGetMemo.length; i++)
+        {
+            list_memo.push("=> ", parsedGetMemo[i].name_memo, "\n");
+        }
+
+        let string_memo = list_memo.join().replace(/,/g, " ");
+        
+        message.channel.send({embed: 
+        {
+            color: 3447003,
+            author: {
+              name: bot.user.username,
+              icon_url: bot.user.avatarURL
+            },
+            fields:
+            [{
+                name: "Memo List : ",
+                value: " " + string_memo
+             }],
+            timestamp: new Date(),
+            footer: {
+              icon_url: bot.user.avatarURL,
+              text: "©"
+            }
+        }})
+    }
+    if(message.content.startsWith(`${PREFIX}addtitlememo`))
+    {
+        // GET user id
+        let user_id_addMemo = message.author.id;
+        // GET message
+        let AddMemo = message.content;
+        // Split message and get last word the user entered
+        let sentenceAddMemo = AddMemo.split(" ");
+        let list_AddMemo=[];
+        // Send Message to a price User.
+        /*
+        let MessageUser = bot.users.get("ID USER");
+        MessageUser.send("You need to wake up my friend! your id is : " + "ID USER");
+        */
+
+        if((sentenceAddMemo[0] == `${PREFIX}addtitlememo`) && (sentenceAddMemo[1] != null)) 
+        {
+            // Read file
+            let contentGetMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
+            // Transorm json file into array
+            let parsedGetMemo = JSON.parse(contentGetMemo);
+
+            let bool = 1;
+            
+            let titleMemo = "";
+            for (let h=1; h<sentenceAddMemo.length; h++)
+            {
+                tempMemo = sentenceAddMemo[h];
+                titleMemo = titleMemo + " " + tempMemo;
+            }
+            
+            for (let m=0; m<parsedGetMemo.length; m++)
+            {
+                if((titleMemo.toLowerCase() == parsedGetMemo[m].name_memo.toLowerCase()) && (parsedGetMemo[m].user_id == user_id_addMemo))
+                {  
+                    message.channel.send("tutututu kestufé, tu as déjà ajouté ce mémo à ta liste perso, essaie pas de m'arnaquer.");
+                    bool = 0;
+                }
+            }
+            if(bool == 1)
+            {
+                let contentAddMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
+                let parsedAddMemo = JSON.parse(contentAddMemo);
+                let list_Memo = { user_id: user_id_addMemo, name_memo: titleMemo }; 
+                parsedAddMemo.push(list_Memo);
+                let JSON_memo = JSON.stringify(parsedAddMemo);
+                fs.writeFile("./DatabaseList/ListeMemo.json", JSON_memo, function(err, result) {
+                    if(err) console.log('error', err);
+                });
+                bool = 1;
+                message.channel.send("<@!" +  user_id_addMemo + ">, " + "Le mémo " + titleMemo + " à bien été ajouté à ta liste personelle !");
+                    
+            }
+        }   
+    }
+    if(message.content.startsWith(`${PREFIX}delmemo`))
+    {
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
     if(message.content.toString() === `${PREFIX}help`)
     {
         message.channel.send({embed: 
@@ -594,7 +695,7 @@ bot.music.start(bot, {
   }
 });
 
-function notifAnime()
+/*function notifAnime()
 {
     // Read file
     let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
@@ -641,11 +742,12 @@ function notifAnime()
 
 notifAnime()
 
+var myvar = setInterval(notifAnime, 30000);*/
+
 /*repeat()
   .do(() => oui())
   .every(60000);*/
 
-var myvar = setInterval(notifAnime, 30000);
 bot.login(bot_settings.token);
 
 // token ainz 
