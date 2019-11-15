@@ -530,16 +530,22 @@ bot.on('message', async message =>
         }
 
     }
-    if(message.content.startsWith(`${PREFIX}mymemo`))
+    if(message.content.toString() === `${PREFIX}mymemo`)
     {
+        let user_id_memo = message.author.id;
         // Read file
         let contentGetMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
         // Transorm json file into array
         let parsedGetMemo = JSON.parse(contentGetMemo);
-        list_memo = []
+        let list_memo = []
+        let id_memo = 0;
         for (let i=0; i<parsedGetMemo.length; i++)
         {
-            list_memo.push("=> ", parsedGetMemo[i].name_memo, "\n");
+            if(parsedGetMemo[i].user_id == user_id_memo)
+            {
+                id_memo++
+                list_memo.push(id_memo, "**",parsedGetMemo[i].name_memo, "** \n",parsedGetMemo[i].content_memo, "\n");
+            }
         }
 
         let string_memo = list_memo.join().replace(/,/g, " ");
@@ -554,7 +560,7 @@ bot.on('message', async message =>
             fields:
             [{
                 name: "Memo List : ",
-                value: " " + string_memo
+                value: "" + string_memo
              }],
             timestamp: new Date(),
             footer: {
@@ -563,7 +569,7 @@ bot.on('message', async message =>
             }
         }})
     }
-    if(message.content.startsWith(`${PREFIX}addtitlememo`))
+    if(message.content.startsWith(`${PREFIX}addmemo`))
     {
         // GET user id
         let user_id_addMemo = message.author.id;
@@ -578,7 +584,7 @@ bot.on('message', async message =>
         MessageUser.send("You need to wake up my friend! your id is : " + "ID USER");
         */
 
-        if((sentenceAddMemo[0] == `${PREFIX}addtitlememo`) && (sentenceAddMemo[1] != null)) 
+        if((sentenceAddMemo[0] == `${PREFIX}addmemo`) && (sentenceAddMemo[1] != null)) 
         {
             // Read file
             let contentGetMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
@@ -587,16 +593,16 @@ bot.on('message', async message =>
 
             let bool = 1;
             
-            let titleMemo = "";
-            for (let h=1; h<sentenceAddMemo.length; h++)
+            let contentMemo = "";
+            for (let h=2; h<sentenceAddMemo.length; h++)
             {
                 tempMemo = sentenceAddMemo[h];
-                titleMemo = titleMemo + " " + tempMemo;
+                contentMemo = contentMemo + " " + tempMemo;
             }
             
             for (let m=0; m<parsedGetMemo.length; m++)
             {
-                if((titleMemo.toLowerCase() == parsedGetMemo[m].name_memo.toLowerCase()) && (parsedGetMemo[m].user_id == user_id_addMemo))
+                if((sentenceAddMemo[1].toLowerCase() == parsedGetMemo[m].name_memo.toLowerCase()) && (parsedGetMemo[m].user_id == user_id_addMemo))
                 {  
                     message.channel.send("tutututu kestufé, tu as déjà ajouté ce mémo à ta liste perso, essaie pas de m'arnaquer.");
                     bool = 0;
@@ -606,32 +612,22 @@ bot.on('message', async message =>
             {
                 let contentAddMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
                 let parsedAddMemo = JSON.parse(contentAddMemo);
-                let list_Memo = { user_id: user_id_addMemo, name_memo: titleMemo }; 
+                let list_Memo = { user_id: user_id_addMemo, name_memo: sentenceAddMemo[1], content_memo: contentMemo}; 
                 parsedAddMemo.push(list_Memo);
                 let JSON_memo = JSON.stringify(parsedAddMemo);
                 fs.writeFile("./DatabaseList/ListeMemo.json", JSON_memo, function(err, result) {
                     if(err) console.log('error', err);
                 });
                 bool = 1;
-                message.channel.send("<@!" +  user_id_addMemo + ">, " + "Le mémo " + titleMemo + " à bien été ajouté à ta liste personelle !");
-                    
+                message.channel.send("<@!" +  user_id_addMemo + ">, " + "Le mémo **" + sentenceAddMemo[1] + "** avec le contenu : **" + contentMemo + "** à bien été ajouté à ta liste personelle !");
             }
+
         }   
     }
     if(message.content.startsWith(`${PREFIX}delmemo`))
     {
         
     }
-
-
-
-
-
-
-
-
-
-
 
     if(message.content.toString() === `${PREFIX}help`)
     {
@@ -657,6 +653,9 @@ bot.on('message', async message =>
                     { name: `${PREFIX}prune x`, value: "Permet de supprimer x messages dans un channel.\n x = nombres de messages à supprimer"},
                     { name: `${PREFIX}addmanga nom_manga nombre_chapitre`, value: "ajoute un manga à votre lise personnelle. \n nom_manga = nom du manga mettre un _ à la place des espaces. \n nombre_chapitre = numéro du chapitre auquel vous etes. \n Exemple : addmanga one_piece 934"},
                     { name: `${PREFIX}delmanga nom_manga`, value: "Permet de supprimer un manga de votre liste personnelle \n Exemple : delmanga one_piece \n Le nom du manga que vous supprimer doit être le même que le nom du manga dans votre liste personnelle."}
+                    { name: `${PREFIX}addmemo titre content`, value: "Permet d'ajouter un mémo. \n titre = Je_suis_un_titre (le titre doit être un seul mot) \n content = je suis un paragraphe. (paragraphe/phrase à mettre dans le mémo)"},
+                    { name: `${PREFIX}mymemo`, value: "Permet d'afficher votre liste de mémo.'"},
+                  
                 ],
                 timestamp: new Date(),
                 footer: {
