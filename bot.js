@@ -652,9 +652,9 @@ bot.on('message', async message =>
                     { name: `${PREFIX}cctl x`, value: "Utilise un algorithme mathématique permettant de déterminer la réponse à une question de N'IMPORTE quel cctl. \n x = nombre de questions possibles (nombre entre 2 et 5)"},
                     { name: `${PREFIX}prune x`, value: "Permet de supprimer x messages dans un channel.\n x = nombres de messages à supprimer"},
                     { name: `${PREFIX}addmanga nom_manga nombre_chapitre`, value: "ajoute un manga à votre lise personnelle. \n nom_manga = nom du manga mettre un _ à la place des espaces. \n nombre_chapitre = numéro du chapitre auquel vous etes. \n Exemple : addmanga one_piece 934"},
-                    { name: `${PREFIX}delmanga nom_manga`, value: "Permet de supprimer un manga de votre liste personnelle \n Exemple : delmanga one_piece \n Le nom du manga que vous supprimer doit être le même que le nom du manga dans votre liste personnelle."}
+                    { name: `${PREFIX}delmanga nom_manga`, value: "Permet de supprimer un manga de votre liste personnelle \n Exemple : delmanga one_piece \n Le nom du manga que vous supprimer doit être le même que le nom du manga dans votre liste personnelle."},
                     { name: `${PREFIX}addmemo titre content`, value: "Permet d'ajouter un mémo. \n titre = Je_suis_un_titre (le titre doit être un seul mot) \n content = je suis un paragraphe. (paragraphe/phrase à mettre dans le mémo)"},
-                    { name: `${PREFIX}mymemo`, value: "Permet d'afficher votre liste de mémo.'"},
+                    { name: `${PREFIX}mymemo`, value: "Permet d'afficher votre liste de mémo.'"}
                   
                 ],
                 timestamp: new Date(),
@@ -665,6 +665,13 @@ bot.on('message', async message =>
             }
         });
     }
+    
+// TTS MESSAGE
+/*   if(message.content.toString() === `${PREFIX}tts`)
+   {
+        //console.log("yes")
+        message.channel.send("text", {tts:true})
+   }*/
 });
 
 bot.music.start(bot, {
