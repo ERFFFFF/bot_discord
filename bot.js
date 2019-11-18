@@ -33,11 +33,10 @@ bot.on('message', async message =>
     if(!message.content.startsWith(PREFIX)) return;
     if(message.author.bot) return;
     let test = 'Ceci est un test. oui';
-
     if(message.content.toString() === `${PREFIX}rs`) 
     {
-        let user_id_addAnime = message.author.id;
-        if(user_id_addAnime == "157510824426995714")
+        let admin_id = message.author.id;
+        if(admin_id == "157510824426995714")
         {
             message.channel.send("Bot restarting....");
             process.exit();
@@ -756,7 +755,7 @@ var myvar = setInterval(notifAnime, 30000);*/
 /*repeat()
   .do(() => oui())
   .every(60000);*/
-notifAnime.notif(bot, msg)
+//notifAnime.notif(bot, msg)
 bot.login(bot_settings.token);
 
 // token ainz 
