@@ -4,6 +4,12 @@ const AnimeFunc = require('./animeFunc.js');
 const MangaFunc = require('./mangaFunc.js'); 
 const repeat = require("repeat");
 const bot = new Discord.Client({});
+const notifAnime = require('./comparateAnime.js');
+// File reader, writer
+var fs = require("fs");
+//MUSIC BOT
+var opusscript = require("opusscript");
+bot.music = require("discord.js-musicbot-addon");
 
 //Prefix for the Botbrowser
 const PREFIX = ',';
@@ -15,21 +21,12 @@ function delay(timeout) {
     });
 }
 
-//MUSIC BOT
-var opusscript = require("opusscript");
-bot.music = require("discord.js-musicbot-addon");
-
-// File reader, writer
-var fs = require("fs");
-
 var list_AddNomAnime = 0;
-
 bot.on('ready', () => 
 {
     var channel = bot.channels.get('315164681130213386');
     bot.user.setActivity('Peter des gueules');
 });
-
 
 bot.on('message', async message => 
 {
@@ -45,9 +42,7 @@ bot.on('message', async message =>
             message.channel.send("Bot restarting....");
             process.exit();
         }
-        
     }
-
     if(message.content.toString() === `${PREFIX}test`) 
     {
         message.channel.send(test);
@@ -300,7 +295,7 @@ bot.on('message', async message =>
                     {
                         let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
                         let parsedAddAnime = JSON.parse(contentAddAnime);
-                        let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en }; 
+                        let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en, number_anime: DataAnime[h].next_epiosode.replace(":", "")}; 
                         parsedAddAnime.push(list_anime);
                         let JSON_anime = JSON.stringify(parsedAddAnime);
                         fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
@@ -538,18 +533,19 @@ bot.on('message', async message =>
         // Transorm json file into array
         let parsedGetMemo = JSON.parse(contentGetMemo);
         let list_memo = []
-        let id_memo = 0;
+
+        let sexe = []
+
         for (let i=0; i<parsedGetMemo.length; i++)
         {
             if(parsedGetMemo[i].user_id == user_id_memo)
             {
-                id_memo++
-                list_memo.push(id_memo, "**",parsedGetMemo[i].name_memo, "** \n",parsedGetMemo[i].content_memo, "\n");
+                list_memo.push(i, "**",parsedGetMemo[i].name_memo, "** \n",parsedGetMemo[i].content_memo, "\n");
+                sexe.push({name: parsedGetMemo[i].name_memo, value: parsedGetMemo[i].content_memo})
             }
         }
-
         let string_memo = list_memo.join().replace(/,/g, " ");
-        
+         
         message.channel.send({embed: 
         {
             color: 3447003,
@@ -557,11 +553,7 @@ bot.on('message', async message =>
               name: bot.user.username,
               icon_url: bot.user.avatarURL
             },
-            fields:
-            [{
-                name: "Memo List : ",
-                value: "" + string_memo
-             }],
+            fields: sexe,
             timestamp: new Date(),
             footer: {
               icon_url: bot.user.avatarURL,
@@ -608,20 +600,26 @@ bot.on('message', async message =>
                     bool = 0;
                 }
             }
-            if(bool == 1)
+            if((sentenceAddMemo[1].length <=256) && (contentMemo.length <=1024))
             {
-                let contentAddMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
-                let parsedAddMemo = JSON.parse(contentAddMemo);
-                let list_Memo = { user_id: user_id_addMemo, name_memo: sentenceAddMemo[1], content_memo: contentMemo}; 
-                parsedAddMemo.push(list_Memo);
-                let JSON_memo = JSON.stringify(parsedAddMemo);
-                fs.writeFile("./DatabaseList/ListeMemo.json", JSON_memo, function(err, result) {
-                    if(err) console.log('error', err);
-                });
-                bool = 1;
-                message.channel.send("<@!" +  user_id_addMemo + ">, " + "Le mémo **" + sentenceAddMemo[1] + "** avec le contenu : **" + contentMemo + "** à bien été ajouté à ta liste personelle !");
+                if(bool == 1)
+                {
+                    let contentAddMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
+                    let parsedAddMemo = JSON.parse(contentAddMemo);
+                    let list_Memo = { user_id: user_id_addMemo, name_memo: sentenceAddMemo[1], content_memo: contentMemo}; 
+                    parsedAddMemo.push(list_Memo);
+                    let JSON_memo = JSON.stringify(parsedAddMemo);
+                    fs.writeFile("./DatabaseList/ListeMemo.json", JSON_memo, function(err, result) {
+                        if(err) console.log('error', err);
+                    });
+                    bool = 1;
+                    message.channel.send("<@!" +  user_id_addMemo + ">, " + "Le mémo **" + sentenceAddMemo[1] + "** avec le contenu : **" + contentMemo + "** à bien été ajouté à ta liste personelle !");
+                }                
             }
-
+            else
+            {
+                message.channel.send("tutututu kestufé, ta cru tu voulais réécrire la bible fdp, fais un titre et un content plus cours sale chien, pour un titre c'est max 256 characteres et la t'en as " + sentenceAddMemo[1].length + " et dans le content c'est max 1026 charactères et la t'en as " + contentMemo.length);
+            }
         }   
     }
     if(message.content.startsWith(`${PREFIX}delmemo`))
@@ -701,6 +699,11 @@ bot.music.start(bot, {
   }
 });
 
+function msg(msgs)
+{
+    message.channel.send(msgs)
+}
+
 /*function notifAnime()
 {
     // Read file
@@ -753,7 +756,7 @@ var myvar = setInterval(notifAnime, 30000);*/
 /*repeat()
   .do(() => oui())
   .every(60000);*/
-
+notifAnime.notif(bot, msg)
 bot.login(bot_settings.token);
 
 // token ainz 
@@ -782,3 +785,4 @@ if(((splitAnime[0] == "!anime") && (splitAnime[1] != null)) && (splitAnime[2] !=
     // !anime Tensei
     console.log("je suis juste !anime anime anime")
 }*/
+
