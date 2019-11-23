@@ -22,6 +22,7 @@ function delay(timeout) {
 }
 
 var list_AddNomAnime = 0;
+
 bot.on('ready', () => 
 {
     var channel = bot.channels.get('315164681130213386');
