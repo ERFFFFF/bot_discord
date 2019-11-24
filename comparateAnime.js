@@ -24,14 +24,17 @@ async function comparateAnime(bot, msg)
         {
             if ((DataAnime[j].en == parsedAddAnime[m].name_anime))
             {
-				console.log("name\t" + parsedAddAnime[m].name_anime)
+            	//print the anime name, the data inside ListAnime.json and the real data online
+				/*console.log("name\t" + parsedAddAnime[m].name_anime)
 				console.log("bdd\t" + parsedAddAnime[m].number_anime)
-				console.log("irl\t" + DataAnime[j].next_epiosode.replace(":",""))
+				console.log("irl\t" + DataAnime[j].next_epiosode.replace(":",""))*/
 				
+				if (parsedAddAnime[m].number_anime != DataAnime[j].next_epiosode.replace(":","")) 
+				{
+					msg("Hey <@!" +  parsedAddAnime[m].user_id + ">, " + "un nouvel épisode de " + parsedAddAnime[m].name_anime + " vient de sortir !")
+				}
 			}
 		}
 	}
-	msg("yes")
-	console.log("oui")
 }
 exports.notif = (bot, msg) => { var varnotif = setInterval(comparateAnime, 5000, bot, msg); }

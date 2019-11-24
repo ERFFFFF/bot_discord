@@ -21,13 +21,17 @@ function delay(timeout) {
     });
 }
 
-notifAnime.notif()
-
 var list_AddNomAnime = 0;
 
 bot.on('ready', () => 
 {
-    var channel = bot.channels.get('315164681130213386');
+    var channel = bot.channels.get('589224223470256129')
+    function msg(msgs)
+    {
+        channel.send(msgs);
+    }
+    notifAnime.notif(bot, msg)
+    
     bot.user.setActivity('Peter des gueules');
 });
 
@@ -701,10 +705,7 @@ bot.music.start(bot, {
   }
 });
 
-function msg(msgs)
-{
-    message.channel.send(msgs)
-}
+
 
 bot.login(bot_settings.token);
 
