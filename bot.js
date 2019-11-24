@@ -349,7 +349,7 @@ bot.on('message', async message =>
                     {
                         let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
                         let parsedAddAnime = JSON.parse(contentAddAnime);
-                        let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en }; 
+                        let list_anime = { user_id: user_id_addAnime, name_anime: DataAnime[h].en, number_anime: DataAnime[h].next_epiosode.replace(":", "")}; 
                         parsedAddAnime.push(list_anime);
                         let JSON_anime = JSON.stringify(parsedAddAnime);
                         fs.writeFile("./DatabaseList/ListeAnime.json", JSON_anime, function(err, result) {
