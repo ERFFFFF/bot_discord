@@ -21,6 +21,8 @@ function delay(timeout) {
     });
 }
 
+notifAnime.notif()
+
 var list_AddNomAnime = 0;
 
 bot.on('ready', () => 
@@ -704,59 +706,6 @@ function msg(msgs)
     message.channel.send(msgs)
 }
 
-/*function notifAnime()
-{
-    // Read file
-    let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
-    // Transorm json file into array
-    let parsedGetAnime = JSON.parse(contentGetAnime);
-
-    let LastvalNextEpisode = []
-
-    var DataAnime = AnimeFunc.anime();
-
-    while(DataAnime.length == 0)
-    {
-        delay(1);
-    }
-
-    console.log(DataAnime.length)
-    // Last episode
-    for (let j=0; j<DataAnime.length; j++)
-    {
-        for (let m=0; m<parsedGetAnime.length; m++)
-        {
-            if (DataAnime[j].en == parsedGetAnime[m].name_anime)
-            {
-                LastvalNextEpisode.push({ nomLastAnime: parsedGetAnime[m].name_anime, lastep: DataAnime[i].next_epiosode });
-            }                
-        }
-    }
-
-    // next episode
-    for (let j=0; j<DataAnime.length; j++)
-    {
-        for (let m=0; m<parsedGetAnime.length; m++)
-        {
-            for(let h=0; h<LastvalNextEpisode.length; h++)
-            {
-                if ((DataAnime[j].en == parsedGetAnime[m].name_anime) && ((DataAnime[j].next_epiosode != LastvalNextEpisode[h].lastep) && (DataAnime[j].en == LastvalNextEpisode[h].nomLastAnime)))
-                {
-                    message.channel.send("Hey " + " <@!" +  parsedGetAnime[m].user_id + ">, " + " L'animé " + parsedGetAnime[m].name_anime + " vient de sortir ! (attends genre 1h ou 2 pour la traduction)");
-                }                
-            }
-        }
-    }
-}
-
-notifAnime()
-
-var myvar = setInterval(notifAnime, 30000);*/
-
-/*repeat()
-  .do(() => oui())
-  .every(60000);*/
-//notifAnime.notif(bot, msg)
 bot.login(bot_settings.token);
 
 // token ainz 
