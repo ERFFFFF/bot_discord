@@ -526,8 +526,15 @@ bot.on('message', async message =>
             // Split message and get last word the user entered
             let splitPrune = PruneMessage.split(" ");
             let LastValPrune = splitPrune[splitPrune.length -1];
-            // Delete X message
-            message.channel.bulkDelete(LastValPrune);
+            if(LastValPrune <= 100)
+            {
+                // Delete X message
+                message.channel.bulkDelete(LastValPrune);
+            }
+            else
+            {
+                message.channel.send("Erreur, la taille maximale pour un prune est de 100.")
+            }
         }
 
     }
