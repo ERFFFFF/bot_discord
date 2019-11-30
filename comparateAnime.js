@@ -33,6 +33,7 @@ async function comparateAnime(bot, msg)
 	let parsedAddAnimeTemp = JSON.parse(contentAddAnimeTemp);
 
 	let changeData = false
+	let keepData = false
 
     for (let j=0; j<DataAnime.length; j++)
     {
@@ -54,6 +55,13 @@ async function comparateAnime(bot, msg)
                     let new_list_anime = { user_id: parsedAddAnime[m].user_id , name_anime: parsedAddAnime[m].name_anime, number_anime: DataAnime[j].next_epiosode.replace(":", "")}
                     parsedAddAnimeTemp.push(new_list_anime);
                     changeData = true
+                    keepData = true
+				}
+				else
+				{
+					//add the keeping data inside an array
+                    let new_list_anime = { user_id: parsedAddAnime[m].user_id , name_anime: parsedAddAnime[m].name_anime, number_anime: DataAnime[j].next_epiosode.replace(":", "")}
+                    parsedAddAnimeTemp.push(new_list_anime);
 				}
 			}
 		}
@@ -83,6 +91,7 @@ async function comparateAnime(bot, msg)
 		  }
 		});
 		changeData = false
+        keepData = false
 	}
 }
 exports.notif = (bot, msg) => { var varnotif = setInterval(comparateAnime, 5000, bot, msg); }
