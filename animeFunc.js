@@ -1,13 +1,13 @@
-const bot_settings = require("./bot_settings.json");
-const Discord = require("Discord.js");
+//const bot_settings = require("./bot_settings.json");
+//const Discord = require("Discord.js");
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
-
-function delay(timeout) {
+const delay = require("./delay.js");
+/*function delay(timeout) {
     return new Promise((resolve) => {
       setTimeout(resolve, timeout);
     });
-}
+}*/
 
 exports.anime = () =>
 {
@@ -37,7 +37,7 @@ exports.anime = () =>
                 window.scrollBy(0, window.innerHeight);                
             });
             // wait loading
-            await delay(100)
+            await delay.delay(100)
         }
 
         //get the data of the website

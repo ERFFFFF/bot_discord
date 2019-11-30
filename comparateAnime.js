@@ -1,12 +1,13 @@
 
 const AnimeFunc = require('./animeFunc.js');
 var fs = require("fs");
-// Delay, sleep, wait function.
-function delay(timeout) {
+const delay = require('./delay.js');
+// delay.delay, sleep, wait function.
+/*function delay(timeout) {
     return new Promise((resolve) => {
       setTimeout(resolve, timeout);
     });
-}
+}*/
 function replaceContents(file, replacement, cb) {
 
   fs.readFile(replacement, (err, contents) => {
@@ -21,7 +22,7 @@ async function comparateAnime(bot, msg)
 	let DataAnime = AnimeFunc.anime();
 	while(DataAnime.length == 0)
 	{
-	    await delay(1);
+	    await delay.delay(1);
 	}
 
 	let contentAddAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');

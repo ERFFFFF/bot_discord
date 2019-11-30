@@ -1,10 +1,10 @@
 const bot_settings = require('./bot_settings.json');
 const Discord = require('Discord.js');
 const AnimeFunc = require('./animeFunc.js'); 
-const MangaFunc = require('./mangaFunc.js'); 
-const repeat = require("repeat");
+const MangaFunc = require('./mangaFunc.js');
 const bot = new Discord.Client({});
 const notifAnime = require('./comparateAnime.js');
+const delay = require("./delay.js");
 // File reader, writer
 var fs = require("fs");
 //MUSIC BOT
@@ -14,12 +14,12 @@ bot.music = require("discord.js-musicbot-addon");
 //Prefix for the Botbrowser
 const PREFIX = ',';
 
-// Delay, sleep, wait function.
-function delay(timeout) {
+// delay.delay, sleep, wait function.
+/*function delay.delay(timeout) {
     return new Promise((resolve) => {
       setTimeout(resolve, timeout);
     });
-}
+}*/
 
 var list_AddNomAnime = 0;
 
@@ -69,7 +69,7 @@ bot.on('message', async message =>
         // if the array is not completed, waiting.
         while(DataAnime.length == 0)
         {
-            await delay(1);
+            await delay.delay(1);
         }
 
         //si le premier mot est égale = !anime et que le deuxime est null (que le deuxieme mot n'existe pas)
@@ -267,7 +267,7 @@ bot.on('message', async message =>
         
         while(DataAnime.length == 0)
         {
-            await delay(1);
+            await delay.delay(1);
         }
 
         if((sentenceAddAnime[0] == `${PREFIX}addanime`) && (sentenceAddAnime[1] != null) && (sentenceAddAnime[2] == null)) 
@@ -448,7 +448,7 @@ bot.on('message', async message =>
         
         while(DataAnime.length == 0)
         {
-            await delay(1);
+            await delay.delay(1);
         }
 
         for (let j=0; j<DataAnime.length; j++)
