@@ -1,13 +1,6 @@
-//const bot_settings = require("./bot_settings.json");
-//const Discord = require("Discord.js");
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const delay = require("./delay.js");
-/*function delay(timeout) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, timeout);
-    });
-}*/
 
 exports.anime = () =>
 {

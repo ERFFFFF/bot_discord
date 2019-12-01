@@ -14,13 +14,6 @@ bot.music = require("discord.js-musicbot-addon");
 //Prefix for the Botbrowser
 const PREFIX = ',';
 
-// delay.delay, sleep, wait function.
-/*function delay.delay(timeout) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, timeout);
-    });
-}*/
-
 var list_AddNomAnime = 0;
 
 bot.on('ready', () => 
@@ -631,15 +624,47 @@ bot.on('message', async message =>
             }
             else
             {
-                message.channel.send("tutututu kestufé, ta cru tu voulais réécrire la bible fdp, fais un titre et un content plus cours sale chien, pour un titre c'est max 256 characteres et la t'en as " + sentenceAddMemo[1].length + " et dans le content c'est max 1026 charactères et la t'en as " + contentMemo.length);
+                message.channel.send("tutututu kestufé, ta cru tu voulais réécrire la bible fdp, fais un titre et un content plus cours sale chien, pour un titre c'est max 256 characteres et la t'en as " + sentenceAddMemo[1].length + " et dans le content c'est max 1024 charactères et la t'en as " + contentMemo.length);
             }
         }   
     }
     if(message.content.startsWith(`${PREFIX}delmemo`))
     {
-        
-    }
+        // Get user id
+        let user_id_delmemo = message.author.id;
+        // Read file
+        let contentGetMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
+        // Transorm json file into array
+        let parsedGetMemo = JSON.parse(contentGetAnime);
+        // GET message
+        let DelMemo = message.content;
+        // Split message and get last word the user entered
+        let sentenceDelMemo = DelMemo.split(" ");
 
+        let bool = 0;
+
+        if((sentenceDelMemo[0] == `${PREFIX}delmemo`) && (sentenceDelAnime[1] != null) && (sentenceDelAnime[2] == null))
+        {
+            for (let m=0; m<parsedGetMemo.length; m++)
+            {
+                if((sentenceDelMemo[1].toLowerCase() == parsedGetMemo[m].toLowerCase()) && (parsedGetMemo[m].user_id == user_id_delmemo))
+                {                    
+                    message.channel.send("<@!" +  user_id_delmemo + ">, " + "Le Mémo " + parsedGetMemo[m].name_anime + " à bien été supprimer de ta liste personelle !");
+                    parsedGetMemo.splice(m, 1);
+                    let JSON_Memo = JSON.stringify(parsedGetMemo);
+                    fs.writeFile("./DatabaseList/ListeAnime.json", JSON_Memo, function(err, result) {
+                        if(err) console.log('error', err);
+                    });
+                    bool = 1;
+                    break;
+                }
+                if ((bool == 0) && (m == parsedGetMemo.length - 1))
+                {
+                    message.channel.send("Déso gros mais tu essaye de supprimer un animé n'étant pas dans ta liste personelle. (spoiler : du coup tu supprime R)");
+                }
+            }
+        }
+    }
     if(message.content.toString() === `${PREFIX}help`)
     {
         message.channel.send({embed: 
