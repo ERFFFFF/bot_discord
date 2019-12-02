@@ -1,3 +1,5 @@
+// get the data of the anime online and store it.
+
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 const delay = require("./delay.js");

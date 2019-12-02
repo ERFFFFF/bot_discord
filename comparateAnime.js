@@ -1,3 +1,4 @@
+// Notify the user when a new anime ep is out, and update the database.
 
 const AnimeFunc = require('./animeFunc.js');
 var fs = require("fs");
