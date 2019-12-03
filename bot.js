@@ -41,6 +41,9 @@ bot.on('message', async message =>
         message.channel.send(msg);
     }
 
+    //¨PRIVATE MESSAGE
+    bot.users.get("157510824426995714").send("poulet")
+
     if(!message.content.startsWith(PREFIX)) return;
     if(message.author.bot) return;
     let test = 'Ceci est un test. oui';
