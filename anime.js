@@ -19,6 +19,7 @@ exports.anime = (bot, msg, Anime, PREFIX) =>
 {
 	(async () => 
     {
+        let Anime = message.content;
 	    let sentenceAnime = Anime.split(" ");
 	    let bool = 0;
 
@@ -214,6 +215,10 @@ exports.addanime = (bot, msg, PREFIX, user_id_addAnime, AddAnime) =>
 {
 	(async () => 
     {
+    	// GET user id
+        let user_id_addAnime = message.author.id;
+        // GET message
+        let AddAnime = message.content;
         // Split message and get last word the user entered
         let sentenceAddAnime = AddAnime.split(" ");
         // Send Message to a price User.
@@ -331,6 +336,10 @@ exports.delanime = (bot, msg, PREFIX, user_id_delanime, DelAnime) =>
 {
 	(async () => 
     {
+    	// Get user id
+        let user_id_delanime = message.author.id;
+        // GET message
+        let DelAnime = message.content;
         // Read file
         let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
         // Transorm json file into array
@@ -395,6 +404,8 @@ exports.myanimelist = (bot, msg, PREFIX, user_id_getAnime) =>
 {
 	(async () => 
     {
+    	// Get user id
+        let user_id_getAnime = message.author.id;
         // Read file
         let contentGetAnime = fs.readFileSync('./DatabaseList/ListeAnime.json');
         // Transorm json file into array
@@ -448,17 +459,3 @@ exports.myanimelist = (bot, msg, PREFIX, user_id_getAnime) =>
     	}
 	})();
 }
-/*exports.addanime = (bot, msg, PREFIX, user_id_addAnime, AddAnime) =>
-{
-	(async () => 
-    {
-
-	})();
-}
-exports.addanime = (bot, msg, PREFIX, user_id_addAnime, AddAnime) =>
-{
-	(async () => 
-    {
-
-	})();
-}*/
