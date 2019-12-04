@@ -1,14 +1,22 @@
-const bot_settings = require('./bot_settings.json');
+//discord
 const Discord = require('Discord.js');
+const bot = new Discord.Client({});
+
+//bot settings
+const bot_settings = require('./bot_settings.json');
+
+// created commands
 const AnimeFunc = require('./animeFunc.js'); 
 const MangaFunc = require('./mangaFunc.js');
-const bot = new Discord.Client({});
 const notifAnime = require('./comparateAnime.js');
 const delay = require("./delay.js");
 const anime = require("./anime.js");
 const cctl = require("./cctl.js");
 const prune = require("./prune.js");
 const memo = require("./memo.js");
+const help = require("./help.js");
+const restart = require("./restart.js");
+
 // File reader, writer
 var fs = require("fs");
 //MUSIC BOT
@@ -49,18 +57,13 @@ bot.on('message', async message =>
 
     if(!message.content.startsWith(PREFIX)) return;
     if(message.author.bot) return;
-    let test = 'Ceci est un test. oui';
     if(message.content.toString() === `${PREFIX}rs`) 
     {
-        let admin_id = message.author.id;
-        if(admin_id == "157510824426995714")
-        {
-            msgs("Bot restarting....");
-            process.exit();
-        }
+        restart.rs(bot, msg, message)
     }
     if(message.content.toString() === `${PREFIX}test`) 
     {
+        let test = 'Ceci est un test. oui';
         msgs(test);
     }
     if(message.content.toString() === `${PREFIX}random`) 
