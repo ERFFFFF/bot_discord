@@ -101,7 +101,7 @@ bot.on('message', async message =>
     }
     if(message.content.startsWith(`${PREFIX}addmemo`))
     {
-        memo.addmemo(bot, msgs, message)
+        memo.addmemo(bot, msgs, message, PREFIX)
     }
     if(message.content.startsWith(`${PREFIX}delmemo`))
     {
@@ -109,7 +109,7 @@ bot.on('message', async message =>
     }
     if(message.content.toString() === `${PREFIX}help`)
     {
-        help.help(bot, msg, PREFIX)
+        help.help(bot, msgs, PREFIX)
     }
 });
 

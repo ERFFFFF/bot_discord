@@ -1,3 +1,4 @@
+var fs = require("fs");
 exports.mymemo = (bot, msg, message) =>
 {
 	(async () => 
@@ -37,7 +38,7 @@ exports.mymemo = (bot, msg, message) =>
         }})
 	})();
 }
-exports.addmemo = (bot, msg, message) =>
+exports.addmemo = (bot, msg, message, PREFIX) =>
 {
 	(async () => 
     {
@@ -110,7 +111,7 @@ exports.delmemo = (bot, msg, PREFIX, message) =>
         // Read file
         let contentGetMemo = fs.readFileSync('./DatabaseList/ListeMemo.json');
         // Transorm json file into array
-        let parsedGetMemo = JSON.parse(contentGetAnime);
+        let parsedGetMemo = JSON.parse(contentGetMemo);
         // GET message
         let DelMemo = message.content;
         // Split message and get last word the user entered
@@ -118,7 +119,7 @@ exports.delmemo = (bot, msg, PREFIX, message) =>
 
         let bool = 0;
 
-        if((sentenceDelMemo[0] == `${PREFIX}delmemo`) && (sentenceDelAnime[1] != null) && (sentenceDelAnime[2] == null))
+        if((sentenceDelMemo[0] == `${PREFIX}delmemo`) && (sentenceDelMemo[1] != null) && (sentenceDelMemo[2] == null))
         {
             for (let m=0; m<parsedGetMemo.length; m++)
             {
