@@ -53,13 +53,16 @@ bot.on('message', async message =>
     }
 
     //¨PRIVATE MESSAGE
+    // erfffff
     //bot.users.get("157510824426995714").send("poulet")
+    // hiroi
+    //bot.users.get("160835265928232961").send("poulet")
 
     if(!message.content.startsWith(PREFIX)) return;
     if(message.author.bot) return;
     if(message.content.toString() === `${PREFIX}rs`) 
     {
-        restart.rs(bot, msg, message)
+        restart.rs(bot, msgs, message)
     }
     if(message.content.toString() === `${PREFIX}test`) 
     {
@@ -72,19 +75,19 @@ bot.on('message', async message =>
     }
     if(message.content.startsWith(`${PREFIX}anime`)) 
     {
-        anime.anime(bot,msgs,Anime, PREFIX, message)
+        anime.anime(bot, msgs, PREFIX, message)
     }
     if(message.content.startsWith(`${PREFIX}addanime`))
     {
-        anime.addanime(bot, msgs, PREFIX, user_id_addAnime, AddAnime, message)
+        anime.addanime(bot, msgs, PREFIX, message)
     }
     if(message.content.startsWith(`${PREFIX}delanime`))
     {
-        anime.delanime(bot, msgs, PREFIX, user_id_delanime, DelAnime)
+        anime.delanime(bot, msgs, PREFIX, message)
     }
     if(message.content.toString() === `${PREFIX}myanimelist`)
     {
-        anime.myanimelist(bot, msgs, PREFIX, user_id_getAnime)
+        anime.myanimelist(bot, msgs, PREFIX, message)
     }
     if(message.content.startsWith(`${PREFIX}cctl`))  
     {

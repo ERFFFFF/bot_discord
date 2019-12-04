@@ -1,4 +1,5 @@
 var fs = require("fs");
+
 exports.mymemo = (bot, msg, message) =>
 {
 	(async () => 
@@ -10,18 +11,14 @@ exports.mymemo = (bot, msg, message) =>
         let parsedGetMemo = JSON.parse(contentGetMemo);
         let list_memo = []
 
-        let sexe = []
-
         for (let i=0; i<parsedGetMemo.length; i++)
         {
             if(parsedGetMemo[i].user_id == user_id_memo)
             {
-                list_memo.push(i, "**",parsedGetMemo[i].name_memo, "** \n",parsedGetMemo[i].content_memo, "\n");
-                sexe.push({name: parsedGetMemo[i].name_memo, value: parsedGetMemo[i].content_memo})
+                list_memo.push({name: "**" + parsedGetMemo[i].name_memo + "**", value: parsedGetMemo[i].content_memo})
             }
         }
-        let string_memo = list_memo.join().replace(/,/g, " ");
-         
+
         msg({embed: 
         {
             color: 3447003,
@@ -29,7 +26,7 @@ exports.mymemo = (bot, msg, message) =>
               name: bot.user.username,
               icon_url: bot.user.avatarURL
             },
-            fields: sexe,
+            fields: list_memo,
             timestamp: new Date(),
             footer: {
               icon_url: bot.user.avatarURL,
@@ -123,12 +120,12 @@ exports.delmemo = (bot, msg, PREFIX, message) =>
         {
             for (let m=0; m<parsedGetMemo.length; m++)
             {
-                if((sentenceDelMemo[1].toLowerCase() == parsedGetMemo[m].toLowerCase()) && (parsedGetMemo[m].user_id == user_id_delmemo))
+                if((sentenceDelMemo[1].toLowerCase() == parsedGetMemo[m].name_memo.toLowerCase()) && (parsedGetMemo[m].user_id == user_id_delmemo))
                 {                    
                     msg("<@!" +  user_id_delmemo + ">, " + "Le Mémo " + parsedGetMemo[m].name_anime + " à bien été supprimer de ta liste personelle !");
                     parsedGetMemo.splice(m, 1);
                     let JSON_Memo = JSON.stringify(parsedGetMemo);
-                    fs.writeFile("./DatabaseList/ListeAnime.json", JSON_Memo, function(err, result) {
+                    fs.writeFile("./DatabaseList/ListeMemo.json", JSON_Memo, function(err, result) {
                         if(err) console.log('error', err);
                     });
                     bool = 1;

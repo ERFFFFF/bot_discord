@@ -45,7 +45,8 @@ async function comparateAnime(bot, msg)
 				if (parsedAddAnime[m].number_anime != DataAnime[j].next_epiosode.replace(":","")) 
 				{
                     //notify the user
-					msg("Hey <@!" +  parsedAddAnime[m].user_id + ">, " + "l'épisode numéro " + DataAnime[j].next_epiosode.replace(":", "") + " de " + parsedAddAnime[m].name_anime + " vient de sortir !")
+                    bot.users.get(parsedAddAnime[m].user_id).send("l'épisode numéro " + DataAnime[j].next_epiosode.replace(":", "") + " de " + parsedAddAnime[m].name_anime + " vient de sortir !")
+					//msg("Hey <@!" +  parsedAddAnime[m].user_id + ">, " + "l'épisode numéro " + DataAnime[j].next_epiosode.replace(":", "") + " de " + parsedAddAnime[m].name_anime + " vient de sortir !")
 
 					//add the new data inside an array
                     let new_list_anime = { user_id: parsedAddAnime[m].user_id , name_anime: parsedAddAnime[m].name_anime, number_anime: DataAnime[j].next_epiosode.replace(":", "")}

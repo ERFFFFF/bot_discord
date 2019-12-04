@@ -11,11 +11,8 @@ function replaceContents(file, replacement, cb) {
   });
 
 }
-function cl(Message)
-{
-    console.log(Message)
-}
-exports.anime = (bot, msg, Anime, PREFIX) =>
+
+exports.anime = (bot, msg, PREFIX, message) =>
 {
 	(async () => 
     {
@@ -211,7 +208,7 @@ exports.anime = (bot, msg, Anime, PREFIX) =>
 	})();
 }
 
-exports.addanime = (bot, msg, PREFIX, user_id_addAnime, AddAnime) =>
+exports.addanime = (bot, msg, PREFIX, message) =>
 {
 	(async () => 
     {
@@ -332,7 +329,7 @@ exports.addanime = (bot, msg, PREFIX, user_id_addAnime, AddAnime) =>
     
 	})();
 }
-exports.delanime = (bot, msg, PREFIX, user_id_delanime, DelAnime) =>
+exports.delanime = (bot, msg, PREFIX, message) =>
 {
 	(async () => 
     {
@@ -400,7 +397,7 @@ exports.delanime = (bot, msg, PREFIX, user_id_delanime, DelAnime) =>
         }
 	})();
 }
-exports.myanimelist = (bot, msg, PREFIX, user_id_getAnime) =>
+exports.myanimelist = (bot, msg, PREFIX, message) =>
 {
 	(async () => 
     {
