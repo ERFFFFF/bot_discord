@@ -122,7 +122,7 @@ exports.delmemo = (bot, msg, PREFIX, message) =>
             {
                 if((sentenceDelMemo[1].toLowerCase() == parsedGetMemo[m].name_memo.toLowerCase()) && (parsedGetMemo[m].user_id == user_id_delmemo))
                 {                    
-                    msg("<@!" +  user_id_delmemo + ">, " + "Le Mémo " + parsedGetMemo[m].name_anime + " à bien été supprimer de ta liste personelle !");
+                    msg("<@!" +  user_id_delmemo + ">, " + "Le Mémo " + parsedGetMemo[m].name_memo + " à bien été supprimer de ta liste personelle !");
                     parsedGetMemo.splice(m, 1);
                     let JSON_Memo = JSON.stringify(parsedGetMemo);
                     fs.writeFile("./DatabaseList/ListeMemo.json", JSON_Memo, function(err, result) {
