@@ -9,24 +9,15 @@
   "author": "ERFFFFF",
   "license": "ISC",
   "dependencies": {
-    "anilist-api-pt": "^1.0.0",
-    "axios": "^0.18.1",
     "cheerio": "^1.0.0-rc.2",
     "discord.js": "^11.5.1",
     "discord.js-musicbot-addon": "^13.4.5",
     "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^3.2.2",
-    "jsdom": "^13.2.0",
     "opusscript": "0.0.6",
-    "phantom": "^6.0.3",
-    "phantomjs-prebuilt": "^2.1.16",
-    "puppeteer": "^1.13.0",
-    "repeat": "^1.1.4",
-    "simple-youtube-api": "^5.1.1",
-    "split": "^1.0.1",
-    "website-scraper": "^4.0.0",
-    "winston": "^3.2.1",
-    "xmlhttprequest": "^1.8.0",
-    "ytdl-core": "^0.20.4"
-  }
+    "puppeteer": "^1.13.0"
+  },
+  "optionalDependencies": {}
 }
+// delete a package :
+// npm uninstall NAME_PACKAGE -S -D -O
