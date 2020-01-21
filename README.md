@@ -68,13 +68,13 @@ Hebergement du bot sous linux ubuntu :
     - cd dossier_du_repo
 
 5. **Installer Nodejs :**
-   - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+   - curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
    - sudo apt install -y nodejs
    
-_Le setup_10.x est la version du packet, installer la derniere version en ligne exemple : setup_12.x_
+_Le setup_13.x est la version du packet, installer la derniere version en ligne exemple : setup_15.x_
 
 6. **Installer tous les packets un par un avec npm ou alors si le package.json est déja rempli, executer la commande suivante :**
-    - npm update
+    - npm install
 
 7. **Renommer le fichier discord.js :**
     - Aller dans le folder node_nodules
