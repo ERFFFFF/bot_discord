@@ -93,3 +93,11 @@ Global setup :
 ==============
 
 Créé un dossier nommé "DatabaseList" à la racine du projet. Puis créé le fichier "ListeAnime.json" dans le dossier DatabaseList. (mettre dans le fichier ListeAnime.json la phrase suivante : [])
+
+### TOKEN ###
+Créé un fichier **bot_settings.json** et mettre le token du bot ainsi que l'API google :
+> {
+> 	"token": "TOKEN",
+> 	"GOOGLE_API_KEY": "TOKEN_GOOGLE"
+> 	
+> }
