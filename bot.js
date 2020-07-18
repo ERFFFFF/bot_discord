@@ -3,7 +3,7 @@ const Discord = require('Discord.js');
 const bot = new Discord.Client({});
 
 //bot settings
-const bot_settings = require('./bot_settings.json');
+const bot_settings = require('./settings/bot_settings.json');
 
 // created commands
 const AnimeFunc = require('./animeFunc.js'); 
