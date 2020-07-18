@@ -14,6 +14,7 @@
     "discord.js-musicbot-addon": "^13.4.5",
     "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^3.2.2",
+    "mal-scraper": "^2.7.1",
     "opusscript": "0.0.6",
     "puppeteer": "^1.13.0"
   },

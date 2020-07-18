@@ -23,6 +23,11 @@ var fs = require("fs");
 var opusscript = require("opusscript");
 bot.music = require("discord.js-musicbot-addon");
 
+
+const malScraper = require('mal-scraper')
+
+
+
 //Prefix for the Botbrowser
 const PREFIX = ',';
 
@@ -114,6 +119,23 @@ bot.on('message', async message =>
     {
         help.help(bot, msgs, PREFIX)
     }
+
+    if(message.content.toString() === `${PREFIX}yes`)
+    {
+        const name = 'Fugou Keiji: Balance:Unlimited'
+        // get data of an anime
+         malScraper.getInfoFromName(name)
+          .then((data) => { console.log(data.picture);
+                            message.channel.send(data.picture); })
+          .catch((err) => console.log(err))
+
+        // get list of aired on a particular anime 
+        malScraper.getEpisodesList(name)
+          .then((data) => console.log(data))
+          .catch((err) => console.log(err))
+
+    }
+
 });
 
 bot.music.start(bot, {
