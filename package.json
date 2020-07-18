@@ -19,5 +19,3 @@
   },
   "optionalDependencies": {}
 }
-// delete a package :
-// npm uninstall NAME_PACKAGE -S -D -O

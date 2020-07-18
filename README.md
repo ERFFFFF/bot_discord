@@ -103,3 +103,8 @@ Créé un fichier **bot_settings.json** et mettre le token du bot ainsi que l'AP
 > 	"GOOGLE_API_KEY": "TOKEN_GOOGLE"
 > 	
 > }
+
+
+### Uninctall package ###
+delete a package :
+> npm uninstall NAME_PACKAGE -S -D -O
