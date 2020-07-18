@@ -97,7 +97,9 @@ Créé un dossier nommé "DatabaseList" à la racine du projet. Puis créé le f
 ### TOKEN ###
 Créé un fichier **bot_settings.json** et mettre le token du bot ainsi que l'API google :
 > {
+>
 > 	"token": "TOKEN",
+>
 > 	"GOOGLE_API_KEY": "TOKEN_GOOGLE"
 > 	
 > }
