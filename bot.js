@@ -145,13 +145,6 @@ bot.music.start(bot, {
 
 bot.login(bot_settings.token);
 
-// token ainz 
-//"token": "NDUzNjY5MTY1MzYyODM5NTYz.D0NtqQ.H6SAH8RDMC2bmUmF7IY6JBI6vXA",
-
-// token putine
-//"token": "MjI1MjE2MzY5ODIwNTY1NTA0.D2zv7A.S_qZGgKDhKyPEEaw5LM-SPI-7s8",
-
-
 // New method for get words of an user for the commands
 
 /*let Anime = message.content;
