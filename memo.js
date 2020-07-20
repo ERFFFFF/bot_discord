@@ -51,32 +51,61 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
         .toArray(function (err, result) {
           if (err) throw err;
           if (result != []) {
-            for (let index = 0; index < result.length; index++) {
-              console.log(result[index].title);
-              list_memo.push(` => ${result[index].title} \n`);
-            }
-            // .join : array to string, .replace : on enleve TOUTES les virgules.
-            let stringval = list_memo.join().replace(/,/g, ' ');
-            msg({
-              embed: {
-                color: 3447003,
-                author: {
-                  name: bot.user.username,
-                  icon_url: bot.user.avatarURL,
-                },
-                fields: [
-                  {
-                    name: 'List de tes Mémos perso : ',
-                    value: stringval,
+            for (var index = 0; index < result.length; index++) {
+              // .join : array to string, .replace : on enleve TOUTES les virgules.
+              let stringval = list_memo.join().replace(/,/g, ' ');
+              if (stringval.length >= 1000) {
+                list_memo.splice(-1, 1);
+                msg({
+                  embed: {
+                    color: 3447003,
+                    author: {
+                      name: bot.user.username,
+                      icon_url: bot.user.avatarURL,
+                    },
+                    fields: [
+                      {
+                        name: 'List de tes Mémos perso : ',
+                        value: stringval,
+                      },
+                    ],
+                    timestamp: new Date(),
+                    footer: {
+                      icon_url: bot.user.avatarURL,
+                      text: '©',
+                    },
                   },
-                ],
-                timestamp: new Date(),
-                footer: {
-                  icon_url: bot.user.avatarURL,
-                  text: '©',
+                });
+                stringval = '';
+                list_memo = [];
+              } else {
+                list_memo.push(` => [${index}] ${result[index].title} \n`);
+              }
+            }
+            if (index == result.length) {
+              // .join : array to string, .replace : on enleve TOUTES les virgules.
+              let stringval = list_memo.join().replace(/,/g, ' ');
+              msg({
+                embed: {
+                  color: 3447003,
+                  author: {
+                    name: bot.user.username,
+                    icon_url: bot.user.avatarURL,
+                  },
+                  fields: [
+                    {
+                      name: 'List de tes Mémos perso : ',
+                      value: stringval,
+                    },
+                  ],
+                  timestamp: new Date(),
+                  footer: {
+                    icon_url: bot.user.avatarURL,
+                    text: '©',
+                  },
                 },
-              },
-            });
+              });
+            }
           } else {
             msg('aucun item dans ta liste perso de mémo.');
           }
