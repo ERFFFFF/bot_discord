@@ -51,6 +51,7 @@ bot.on('ready', () => {
   }
   //notifAnime.notif(bot, msg);
 
+  //msg('Bot is up !');
   bot.user.setActivity('Peter des gueules');
 });
 var db = null;
