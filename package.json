@@ -15,6 +15,7 @@
     "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^3.2.2",
     "mal-scraper": "^2.7.1",
+    "mongodb": "^3.5.9",
     "opusscript": "0.0.6",
     "puppeteer": "^1.13.0"
   },

@@ -23,13 +23,27 @@ var fs = require("fs");
 var opusscript = require("opusscript");
 bot.music = require("discord.js-musicbot-addon");
 
-
+// scraper for MyAnimeList
 const malScraper = require('mal-scraper')
-
-
 
 //Prefix for the Botbrowser
 const PREFIX = ',';
+
+
+// connection to the database
+const MongoClient = require('mongodb').MongoClient;
+const NameDB = bot_settings.DatabaseNameMongo
+const uri = `mongodb+srv://${bot_settings.UsernameMongo}:${bot_settings.PasswordMongo}@cluster0.skkqx.mongodb.net/${NameDB}?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect(err => {
+    console.log("Connected to Atlas Mongo.")
+    const db = client.db(NameDB);
+    const collection = db.collection("test");
+    collection.insertOne( { item: "toto", qty: 15 } )
+    // perform actions on the collection object
+    
+});
+client.close();
 
 var list_AddNomAnime = 0;
 
