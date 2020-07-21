@@ -6,25 +6,27 @@ const bot = new Discord.Client({});
 const bot_settings = require('./settings/bot_settings.json');
 
 // created commands
-const AnimeFunc = require('./animeFunc.js');
-const MangaFunc = require('./mangaFunc.js');
-const notifAnime = require('./comparateAnime.js');
+//const AnimeFunc = require('./animeFunc.js');
+//const MangaFunc = require('./mangaFunc.js');
+//const notifAnime = require('./comparateAnime.js');
 const delay = require('./delay.js');
-const anime = require('./anime.js');
+//const anime = require('./anime.js');
 const cctl = require('./cctl.js');
 const prune = require('./prune.js');
 const memo = require('./memo.js');
 const help = require('./help.js');
 const restart = require('./restart.js');
 
+// bot music
+const ytdl = require('ytdl-core-discord');
 // File reader, writer
 var fs = require('fs');
 //MUSIC BOT
-var opusscript = require('opusscript');
-bot.music = require('discord.js-musicbot-addon');
+//bot.music = require('discord.js-musicbot-addon');
 
 // scraper for MyAnimeList
 const malScraper = require('mal-scraper');
+const { VoiceChannel } = require('discord.js');
 
 //Prefix for the Botbrowser
 const PREFIX = ',';
@@ -38,6 +40,8 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 
+// list with all the song to play
+let musicUrl = [];
 var list_AddNomAnime = 0;
 
 function cl(Message) {
@@ -45,10 +49,6 @@ function cl(Message) {
 }
 
 bot.on('ready', () => {
-  var channel = bot.channels.get('589224223470256129');
-  function msg(msgs) {
-    channel.send(msgs);
-  }
   //notifAnime.notif(bot, msg);
 
   //msg('Bot is up !');
@@ -92,19 +92,19 @@ bot.on('message', async (message) => {
   }
   /* REWORK */
   if (message.content.startsWith(`${PREFIX}anime`)) {
-    anime.anime(bot, msgs, PREFIX, message);
+    //anime.anime(bot, msgs, PREFIX, message);
   }
   /* REWORK */
   if (message.content.startsWith(`${PREFIX}addanime`)) {
-    anime.addanime(bot, msgs, PREFIX, message);
+    //anime.addanime(bot, msgs, PREFIX, message);
   }
   /* REWORK */
   if (message.content.startsWith(`${PREFIX}delanime`)) {
-    anime.delanime(bot, msgs, PREFIX, message);
+    //anime.delanime(bot, msgs, PREFIX, message);
   }
   /* REWORK */
   if (message.content.toString() === `${PREFIX}myanimelist`) {
-    anime.myanimelist(bot, msgs, PREFIX, message);
+    //anime.myanimelist(bot, msgs, PREFIX, message);
   }
   /* Answer the cctl question. 100% acuracy */
   if (message.content.startsWith(`${PREFIX}cctl`)) {
@@ -126,6 +126,38 @@ bot.on('message', async (message) => {
   /* Show all the commands */
   if (message.content.toString() === `${PREFIX}help`) {
     help.help(bot, msgs, PREFIX);
+  }
+  if (message.content.startsWith(`${PREFIX}play`)) {
+    let getSentence = message.content;
+    // Split message and get last word the user entered
+    let getUrlMusic = getSentence.split(' ');
+    // verify if the url is correct
+    if (ytdl.validateURL(getUrlMusic[1])) {
+      musicUrl.push(getUrlMusic[1]);
+      // connect the bot to the vocal
+      const voiceBot = message.member.voice.channel;
+      // bot join the vocal channel
+      const connection = await message.member.voice.channel.join();
+      playSong();
+      async function playSong() {
+        // play the song
+        const dispatcher = connection.play(await ytdl(musicUrl[0]), {
+          type: 'opus',
+        });
+        // when the song is finished
+        dispatcher.on('finish', () => {
+          // delete first element of my array music
+          musicUrl.shift();
+          if (musicUrl.length == 0) {
+            // bot leave the vocal channel
+            voiceBot.leave();
+          } else {
+            // bot play another song
+            playSong();
+          }
+        });
+      }
+    }
   }
 
   /* TEST */
@@ -152,6 +184,7 @@ bot.on('message', async (message) => {
     db.createCollection('memo');
   }
 });
+/*
 //client.close();
 bot.music.start(bot, {
   // Set the api key used for YouTube.
@@ -179,7 +212,7 @@ bot.music.start(bot, {
     enabled: false,
   },
 });
-
+*/
 bot.login(bot_settings.token);
 
 // New method for get words of an user for the commands

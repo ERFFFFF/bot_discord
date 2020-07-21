@@ -18,7 +18,7 @@ Tous les npm install doivent êtres dans le dossier ou se situe le bot.
 
 - Aller sur le site officiel de FFMPEG (https://www.ffmpeg.org/)
 - Download la version de votre OS (certainement Wibdows)
-- Extraire le dossier sur le bureau (ou autre)
+- Extraire le dossier téléchargé dans le node_modules du projet
 - renommer le nom du dossier ultra long en "ffmpeg" (juste pour que ce soit plus lisible)
 - Mettre son sous-dossier "bin" dans les variables d'environnements. (donc ffmpeg/bin)
 - FIN
@@ -37,17 +37,17 @@ Tous les npm install doivent êtres dans le dossier ou se situe le bot.
 
 - Lancer le CMD en ADMINISTRATEUR
 - Aller dans le dossier du bot (cd ..)
-  - node bot.js ou pm2 start bot.js 
+  - node bot.js ou pm2 start bot.js
   - pm2 : pm2 restart all
   - pm2 usefull commands : pm2 show bot
-  
+
 Il est aussi possible d'utiliser nodemon afin de run le but h24 mais pm2 nous permet davoir des informations supplémentaire sur le status du bot, de le restart, ...
 
 Stop le bot avec pm2 :
 
 - pm2 stop all
 
-Si on désire Allumer le bot tout en voyant les console.log(); alors on doit le démarrrer de la manière suivant : 
+Si on désire Allumer le bot tout en voyant les console.log(); alors on doit le démarrrer de la manière suivant :
 
 - node bot.js
 
@@ -57,10 +57,10 @@ Hebergement du bot sous linux ubuntu :
 1. **Créé un nouvel utilisateur :**
     - adduser --disabled-login nom_dutilisateur
     - spammer la touche Entrer
-    
+
 2. **Aller dans le dossier du nouvel utilisateur :**
     - cd /home/nom_dutilisateur
-    
+
 3. **Cloner le répo git**
     - git clone lien_du_git
 
@@ -70,7 +70,7 @@ Hebergement du bot sous linux ubuntu :
 5. **Installer Nodejs :**
    - curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
    - sudo apt install -y nodejs
-   
+
 _Le setup_13.x est la version du packet, installer la derniere version en ligne exemple : setup_15.x_
 
 6. **Installer tous les packets un par un avec npm ou alors si le package.json est déja rempli, executer la commande suivante :**
@@ -101,7 +101,7 @@ Créé un fichier **bot_settings.json** et mettre le token du bot ainsi que l'AP
 > 	"token": "TOKEN",
 >
 > 	"GOOGLE_API_KEY": "TOKEN_GOOGLE"
-> 	
+>
 > }
 
 

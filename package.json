@@ -1,5 +1,5 @@
 {
-  "name": "PutineBot",
+  "name": "Ainz-Own-Goal",
   "version": "0.0.1",
   "description": "Discord Bot",
   "main": "bot.js",
@@ -9,15 +9,12 @@
   "author": "ERFFFFF",
   "license": "ISC",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
-    "discord.js": "^11.5.1",
-    "discord.js-musicbot-addon": "^13.4.5",
-    "ffmpeg": "0.0.4",
-    "ffmpeg-binaries": "^3.2.2",
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.2.0",
+    "ffmpeg-static": "^4.2.6",
     "mal-scraper": "^2.7.1",
     "mongodb": "^3.5.9",
-    "opusscript": "0.0.6",
-    "puppeteer": "^1.13.0"
+    "ytdl-core-discord": "^1.2.1"
   },
   "optionalDependencies": {}
 }
