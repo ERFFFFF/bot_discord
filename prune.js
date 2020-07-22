@@ -12,7 +12,6 @@ exports.prune = (bot, msg, message) => {
         // delete the command <prune>
         LastValPrune++;
         if (LastValPrune <= 100) {
-          console.log(LastValPrune);
           // Delete X message
           message.channel.bulkDelete(LastValPrune);
         } else {
