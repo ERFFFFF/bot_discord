@@ -1,5 +1,3 @@
-var fs = require('fs');
-
 exports.mymemo = (bot, msg, message, PREFIX, db) => {
   (async () => {
     let user_id_mymemo = message.author.id;
@@ -7,10 +5,10 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
     // GET message
     let Mymemo = message.content;
     // Split message and get last word the user entered
-    let sentenceMymemo = Mymemo.split(' ');
+    let sentenceMymemo = Mymemo.split(" ");
     // show a certain memo
     if (sentenceMymemo[0] == `${PREFIX}mymemo` && sentenceMymemo[1] != null) {
-      db.collection('memo').findOne(
+      db.collection("memo").findOne(
         {
           user_id: user_id_mymemo,
           title: sentenceMymemo[1],
@@ -20,7 +18,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
           // memo exist.
           if (result) {
             list_memo.push({
-              name: '**' + result.title + '**',
+              name: "**" + result.title + "**",
               value: result.content,
             });
             msg({
@@ -34,26 +32,26 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
                 timestamp: new Date(),
                 footer: {
                   icon_url: bot.user.avatarURL,
-                  text: '©',
+                  text: "©",
                 },
               },
             });
           } else {
-            msg('Memo doesnt exist.');
+            msg("Memo doesnt exist.");
           }
         }
       );
     }
     // show all the memo (without the content)
     if (sentenceMymemo[0] == `${PREFIX}mymemo` && sentenceMymemo[1] == null) {
-      db.collection('memo')
+      db.collection("memo")
         .find({ user_id: user_id_mymemo })
         .toArray(function (err, result) {
           if (err) throw err;
           if (result != []) {
             for (var index = 0; index < result.length; index++) {
               // .join : array to string, .replace : on enleve TOUTES les virgules.
-              let stringval = list_memo.join().replace(/,/g, ' ');
+              let stringval = list_memo.join().replace(/,/g, " ");
               if (stringval.length >= 1000) {
                 list_memo.splice(-1, 1);
                 msg({
@@ -65,18 +63,18 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
                     },
                     fields: [
                       {
-                        name: 'List de tes Mémos perso : ',
+                        name: "List de tes Mémos perso : ",
                         value: stringval,
                       },
                     ],
                     timestamp: new Date(),
                     footer: {
                       icon_url: bot.user.avatarURL,
-                      text: '©',
+                      text: "©",
                     },
                   },
                 });
-                stringval = '';
+                stringval = "";
                 list_memo = [];
               } else {
                 list_memo.push(` => [${index}] ${result[index].title} \n`);
@@ -84,7 +82,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
             }
             if (index == result.length) {
               // .join : array to string, .replace : on enleve TOUTES les virgules.
-              let stringval = list_memo.join().replace(/,/g, ' ');
+              let stringval = list_memo.join().replace(/,/g, " ");
               msg({
                 embed: {
                   color: 3447003,
@@ -94,20 +92,20 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
                   },
                   fields: [
                     {
-                      name: 'List de tes Mémos perso : ',
+                      name: "List de tes Mémos perso : ",
                       value: stringval,
                     },
                   ],
                   timestamp: new Date(),
                   footer: {
                     icon_url: bot.user.avatarURL,
-                    text: '©',
+                    text: "©",
                   },
                 },
               });
             }
           } else {
-            msg('aucun item dans ta liste perso de mémo.');
+            msg("aucun item dans ta liste perso de mémo.");
           }
         });
     }
@@ -120,7 +118,7 @@ exports.addmemo = (bot, msg, message, PREFIX, db) => {
     // GET message
     let AddMemo = message.content;
     // Split message and get last word the user entered
-    let sentenceAddMemo = AddMemo.split(' ');
+    let sentenceAddMemo = AddMemo.split(" ");
     // Send Message to a certain User.
     /*
         let MessageUser = bot.users.get("ID USER");
@@ -133,7 +131,7 @@ exports.addmemo = (bot, msg, message, PREFIX, db) => {
       sentenceAddMemo[2] != null
     ) {
       // check if a memo with the same title exist
-      db.collection('memo').findOne(
+      db.collection("memo").findOne(
         {
           user_id: user_id_addMemo,
           title: sentenceAddMemo[1],
@@ -143,10 +141,10 @@ exports.addmemo = (bot, msg, message, PREFIX, db) => {
           // memo doesnt exist, continue.
           if (!result) {
             // get all the content inside a variable
-            let contentMemo = '';
+            let contentMemo = "";
             for (let h = 2; h < sentenceAddMemo.length; h++) {
               tempMemo = sentenceAddMemo[h];
-              contentMemo = contentMemo + ' ' + tempMemo;
+              contentMemo = contentMemo + " " + tempMemo;
             }
             // verify the length before inserting the data in mongo
             if (
@@ -154,20 +152,20 @@ exports.addmemo = (bot, msg, message, PREFIX, db) => {
               contentMemo.length <= 1024
             ) {
               // write data inside mongo
-              db.collection('memo').insertOne({
+              db.collection("memo").insertOne({
                 user_id: user_id_addMemo,
                 title: sentenceAddMemo[1],
                 content: contentMemo,
               });
               msg(
-                '<@!' +
+                "<@!" +
                   user_id_addMemo +
-                  '>, ' +
-                  'Le mémo **' +
+                  ">, " +
+                  "Le mémo **" +
                   sentenceAddMemo[1] +
-                  '** avec le contenu : **' +
+                  "** avec le contenu : **" +
                   contentMemo +
-                  '** à bien été ajouté à ta liste personelle !'
+                  "** à bien été ajouté à ta liste personelle !"
               );
             } else {
               // length error.
@@ -196,13 +194,13 @@ exports.delmemo = (bot, msg, PREFIX, message, db) => {
     // GET message
     let DelMemo = message.content;
     // Split message and get last word the user entered
-    let sentenceDelMemo = DelMemo.split(' ');
+    let sentenceDelMemo = DelMemo.split(" ");
     if (
       sentenceDelMemo[0] == `${PREFIX}delmemo` &&
       sentenceDelMemo[1] != null
     ) {
       // delete the memo
-      db.collection('memo').deleteOne(
+      db.collection("memo").deleteOne(
         {
           user_id: user_id_delmemo,
           title: sentenceDelMemo[1],
@@ -211,16 +209,16 @@ exports.delmemo = (bot, msg, PREFIX, message, db) => {
           if (err) throw err;
           // check if the title exist
           if (obj.result.n == 0) {
-            msg('ya R a delete vu que le mémo existe pas bouffon');
+            msg("ya R a delete vu que le mémo existe pas bouffon");
           } else {
             // send message to confirm that the memo is deleted
             msg(
-              '<@!' +
+              "<@!" +
                 user_id_delmemo +
-                '>, ' +
-                'Le Mémo ' +
+                ">, " +
+                "Le Mémo " +
                 sentenceDelMemo[1] +
-                ' à bien été supprimer de ta liste personelle !'
+                " à bien été supprimer de ta liste personelle !"
             );
           }
         }
