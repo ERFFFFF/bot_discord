@@ -1,38 +1,37 @@
 //discord
-const Discord = require('Discord.js');
+const Discord = require("Discord.js");
 const bot = new Discord.Client({});
 
 //bot settings
-const bot_settings = require('./settings/bot_settings.json');
+const bot_settings = require("./settings/bot_settings.json");
 
 // created commands
 //const AnimeFunc = require('./animeFunc.js');
 //const MangaFunc = require('./mangaFunc.js');
 //const notifAnime = require('./comparateAnime.js');
-const delay = require('./delay.js');
+const delay = require("./delay.js");
 //const anime = require('./anime.js');
-const cctl = require('./cctl.js');
-const prune = require('./prune.js');
-const memo = require('./memo.js');
-const help = require('./help.js');
-const restart = require('./restart.js');
-
+const cctl = require("./cctl.js");
+const prune = require("./prune.js");
+const memo = require("./memo.js");
+const help = require("./help.js");
+const restart = require("./restart.js");
 // bot music
-const ytdl = require('ytdl-core-discord');
+const music = require("./music.js");
 // File reader, writer
-var fs = require('fs');
+var fs = require("fs");
 //MUSIC BOT
 //bot.music = require('discord.js-musicbot-addon');
 
 // scraper for MyAnimeList
-const malScraper = require('mal-scraper');
-const { VoiceChannel } = require('discord.js');
+const malScraper = require("mal-scraper");
+const { VoiceChannel } = require("discord.js");
 
 //Prefix for the Botbrowser
-const PREFIX = ',';
+const PREFIX = ",";
 
 // connection to the database
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
 const NameDB = bot_settings.DatabaseNameMongo;
 const uri = `mongodb+srv://${bot_settings.UsernameMongo}:${bot_settings.PasswordMongo}@cluster0.skkqx.mongodb.net/${NameDB}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
@@ -40,31 +39,29 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 
-// list with all the song to play
-let musicUrl = [];
 var list_AddNomAnime = 0;
 
 function cl(Message) {
   console.log(Message);
 }
 
-bot.on('ready', () => {
+bot.on("ready", () => {
   //notifAnime.notif(bot, msg);
 
   //msg('Bot is up !');
-  bot.user.setActivity('Peter des gueules');
+  bot.user.setActivity("Peter des gueules");
 });
 var db = null;
 var collection = null;
 var collectionMemo = null;
 client.connect((err) => {
-  console.log('Connected to Atlas Mongo.');
+  console.log("Connected to Atlas Mongo.");
   db = client.db(NameDB);
-  collection = db.collection('test');
-  collectionMemo = db.collection('memo');
+  collection = db.collection("test");
+  collectionMemo = db.collection("memo");
   //collection.insertOne({ item: 'toto', qty: 15 });
 });
-bot.on('message', async (message) => {
+bot.on("message", async (message) => {
   function msgs(msg) {
     message.channel.send(msg);
   }
@@ -83,7 +80,7 @@ bot.on('message', async (message) => {
   }
   /* Test */
   if (message.content.toString() === `${PREFIX}test`) {
-    let test = 'Ceci est un test. oui';
+    let test = "Ceci est un test. oui";
     msgs(test);
   }
   /* Rnadom number between 0 and 100 */
@@ -128,41 +125,14 @@ bot.on('message', async (message) => {
     help.help(bot, msgs, PREFIX);
   }
   if (message.content.startsWith(`${PREFIX}play`)) {
-    let getSentence = message.content;
-    // Split message and get last word the user entered
-    let getUrlMusic = getSentence.split(' ');
-    // verify if the url is correct
-    if (ytdl.validateURL(getUrlMusic[1])) {
-      musicUrl.push(getUrlMusic[1]);
-      // connect the bot to the vocal
-      const voiceBot = message.member.voice.channel;
-      // bot join the vocal channel
-      const connection = await message.member.voice.channel.join();
-      playSong();
-      async function playSong() {
-        // play the song
-        const dispatcher = connection.play(await ytdl(musicUrl[0]), {
-          type: 'opus',
-        });
-        // when the song is finished
-        dispatcher.on('finish', () => {
-          // delete first element of my array music
-          musicUrl.shift();
-          if (musicUrl.length == 0) {
-            // bot leave the vocal channel
-            voiceBot.leave();
-          } else {
-            // bot play another song
-            playSong();
-          }
-        });
-      }
-    }
+    music.play(bot, msgs, message);
   }
-
+  if (message.content.toString() === `${PREFIX}skip`) {
+    music.skip(bot, msgs, PREFIX);
+  }
   /* TEST */
   if (message.content.toString() === `${PREFIX}yes`) {
-    const name = 'Fugou Keiji: Balance:Unlimited';
+    const name = "Fugou Keiji: Balance:Unlimited";
     // get data of an anime
     malScraper
       .getInfoFromName(name)
@@ -181,7 +151,7 @@ bot.on('message', async (message) => {
   /* Reset the DB */
   if (message.content.toString() === `${PREFIX}resetDB`) {
     collectionMemo.drop();
-    db.createCollection('memo');
+    db.createCollection("memo");
   }
 });
 /*
