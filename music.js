@@ -56,16 +56,28 @@ exports.play = (bot, msg, message) => {
 
 exports.skip = (bot, msg, message) => {
   (async () => {
-    // delete first element of my array music
-    try {
-      dispatcher.destroy();
-      musicUrl.shift();
-      playSong(message, voiceBot, connection);
-      msg('Musique passée.');
-    } catch (error) {
-      msg('impossibe de passer la musique en cours.');
-      console.log(error);
-      voiceBot.leave();
+    // check if there is a music
+    if (musicUrl.length != 1) {
+      if (dispatcher != '') {
+        try {
+          // end the current music
+          dispatcher.destroy();
+          // delete the current music
+          musicUrl.shift();
+          // play the next music
+          playSong(message, voiceBot, connection);
+          msg('Musique passée.');
+        } catch (error) {
+          msg('impossibe de passer la musique en cours.');
+          console.log(error);
+          // bot leave the vocal channel
+          voiceBot.leave();
+        }
+      } else {
+        msg("Rien a passer vu que tu n'as pas fais play :D");
+      }
+    } else {
+      msg('Aucune musique a passer.');
     }
   })();
 };
