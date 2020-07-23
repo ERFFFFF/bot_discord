@@ -4,6 +4,7 @@ let musicUrl = [];
 let dispatcher = '';
 var voiceBot = '';
 var connection = '';
+
 async function playSong(message, voiceBot, connection) {
   // play the song
   dispatcher = connection.play(await ytdl(musicUrl[0]), {
@@ -17,6 +18,7 @@ async function playSong(message, voiceBot, connection) {
       // bot leave the vocal channel
       voiceBot.leave();
     } else {
+      // play another song
       playSong(message, voiceBot, connection);
     }
   });
@@ -45,11 +47,13 @@ exports.play = (bot, msg, message) => {
       musicUrl.push(getUrlMusic[1]);
       msg('Musique ajoutée à la liste de lecture !');
 
-      // bot join the vocal channel
       voiceBot = message.member.voice.channel;
+      // bot join the vocal channel
       connection = await message.member.voice.channel.join();
-
-      playSong(message, voiceBot, connection);
+      // check if a music is currently playing.
+      if (dispatcher == '') {
+        playSong(message, voiceBot, connection);
+      }
     }
   })();
 };
