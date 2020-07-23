@@ -103,11 +103,11 @@ bot.on('message', async (message) => {
   }
   /* Answer the cctl question. 100% acuracy */
   if (message.content.startsWith(`${PREFIX}cctl`)) {
-    cctl.cctlRandom(bot, msgs, message);
+    cctl.cctlRandom(msgs, message);
   }
   /* Delete X message on the current channel. */
   if (message.content.startsWith(`${PREFIX}prune`)) {
-    prune.prune(bot, msgs, message);
+    prune.prune(msgs, message);
   }
   if (message.content.startsWith(`${PREFIX}mymemo`)) {
     memo.mymemo(bot, msgs, message, PREFIX, db);

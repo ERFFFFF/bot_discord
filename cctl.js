@@ -1,6 +1,6 @@
-exports.cctlRandom = (bot, msg, message) =>
+exports.cctlRandom = (msg, message) =>
 {
-	(async () => 
+	(async () =>
     {
     	let randomcctl = message.content;
         let splitrandomcctl = randomcctl.split(" ");
@@ -11,15 +11,15 @@ exports.cctlRandom = (bot, msg, message) =>
         switch (LastValrandomcctl)
         {
             case "2":
-                msg("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse."); 
+                msg("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse.");
                 break;
 
             case "3":
-                msg("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse."); 
+                msg("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse.");
                 break;
 
             case "4":
-                msg("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse."); 
+                msg("D'après le théorème de Syd, la question " + valuecctl + " est la bonne réponse.");
                 break;
 
             case "5":
@@ -34,7 +34,7 @@ exports.cctlRandom = (bot, msg, message) =>
 }
 /*exports.addanime = (bot, msg, PREFIX, user_id_addAnime, AddAnime) =>
 {
-	(async () => 
+	(async () =>
     {
 
 	})();

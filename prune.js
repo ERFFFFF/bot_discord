@@ -1,4 +1,4 @@
-exports.prune = (bot, msg, message) => {
+exports.prune = (msg, message) => {
   (async () => {
     let user_id_addAnime = message.author.id;
     if (user_id_addAnime == '157510824426995714') {
