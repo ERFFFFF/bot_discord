@@ -218,6 +218,10 @@ exports.addmemo = (msg, message, PREFIX, db) => {
               tempMemo = sentenceAddMemo[h];
               contentMemo = contentMemo + ' ' + tempMemo;
             }
+            // when we enter in the for, for the first time,
+            // contentMemo is empty. so it put a space
+            // in the first character. so, we need to delete this space
+            contentMemo = contentMemo.substring(1);
             // verify the length before inserting the data in mongo
             if (
               sentenceAddMemo[1].length <= 256 &&

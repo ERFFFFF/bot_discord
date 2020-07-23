@@ -151,8 +151,13 @@ bot.on('message', async (message) => {
   }
   /* Reset the DB */
   if (message.content.toString() === `${PREFIX}resetDB`) {
-    collectionMemo.drop();
-    db.createCollection('memo');
+    if (
+      message.member.permissions.has('ADMIN') |
+      (user_id_addAnime == '157510824426995714')
+    ) {
+      collectionMemo.drop();
+      db.createCollection('memo');
+    }
   }
 });
 /*
