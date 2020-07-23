@@ -41,10 +41,6 @@ const client = new MongoClient(uri, {
 
 var list_AddNomAnime = 0;
 
-function cl(Message) {
-  console.log(Message);
-}
-
 bot.on('ready', () => {
   //notifAnime.notif(bot, msg);
 
@@ -57,7 +53,6 @@ client.connect((err) => {
   db = client.db(NameDB);
   collectionMemo = db.collection('memo');
   console.log('Connected to Atlas Mongo.');
-  //collection.insertOne({ item: 'toto', qty: 15 });
 });
 bot.on('message', async (message) => {
   function msgs(msg) {
@@ -65,10 +60,8 @@ bot.on('message', async (message) => {
   }
 
   //¨PRIVATE MESSAGE
-  // erfffff
-  //bot.users.cache.get("157510824426995714").send("poulet")
   // hiroi
-  //bot.users.cache.get("160835265928232961").send("poulet")
+  // bot.users.cache.get("160835265928232961").send("poulet")
 
   if (!message.content.startsWith(PREFIX)) return;
   if (message.author.bot) return;
@@ -153,42 +146,16 @@ bot.on('message', async (message) => {
   if (message.content.toString() === `${PREFIX}resetDB`) {
     if (
       message.member.permissions.has('ADMIN') |
-      (user_id_addAnime == '157510824426995714')
+      (user_id_addAnime == bot_settings.SUPER_ADMIN_ID)
     ) {
       collectionMemo.drop();
       db.createCollection('memo');
     }
   }
 });
-/*
+
 //client.close();
-bot.music.start(bot, {
-  // Set the api key used for YouTube.
-  // This is required to run the bot.
-  youtubeKey: bot_settings.GOOGLE_API_KEY,
-  // The PLAY command Object.
-  play: {
-    // Usage text for the help command.
-    usage: '{{PREFIX}}play Youtube_links',
-    // Whether or not to exclude the command from the help command.
-    exclude: false,
-  },
 
-  // Make it so anyone in the voice channel can skip the
-  // currently playing song.
-  anyoneCanSkip: true,
-
-  // Make it so the owner (you) bypass permissions for music.
-  ownerOverMember: true,
-  ownerID: '157510824426995714',
-
-  // The cooldown Object.
-  cooldown: {
-    // This disables the cooldown. Not recommended.
-    enabled: false,
-  },
-});
-*/
 bot.login(bot_settings.token);
 
 // New method for get words of an user for the commands

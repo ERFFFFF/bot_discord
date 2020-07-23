@@ -39,7 +39,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
               });
             }
             if (sentenceMymemo[0] == `${PREFIX}mymemopv`) {
-              bot.users.cache.get('157510824426995714').send({
+              bot.users.cache.get(user_id_mymemo).send({
                 embed: {
                   color: 3447003,
                   author: {
@@ -99,7 +99,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
                 }
                 // send list to use user.
                 if (sentenceMymemo[0] == `${PREFIX}mymemopv`) {
-                  bot.users.cache.get('157510824426995714').send({
+                  bot.users.cache.get(user_id_mymemo).send({
                     embed: {
                       color: 3447003,
                       author: {
@@ -154,7 +154,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
                 });
               }
               if (sentenceMymemo[0] == `${PREFIX}mymemopv`) {
-                bot.users.cache.get('157510824426995714').send({
+                bot.users.cache.get(user_id_mymemo).send({
                   embed: {
                     color: 3447003,
                     author: {

@@ -1,8 +1,9 @@
+const bot_settings = require('./settings/bot_settings.json');
 exports.prune = (msg, message) => {
   (async () => {
     let user_id_addAnime = message.author.id;
     if (
-      (user_id_addAnime == '157510824426995714') |
+      (user_id_addAnime == bot_settings.SUPER_ADMIN_ID) |
       message.member.permissions.has('ADMIN')
     ) {
       // GET message

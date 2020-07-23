@@ -3,7 +3,7 @@ exports.rs = (bot, msg, message) => {
   (async () => {
     let admin_id = message.author.id;
     if (
-      (admin_id == '157510824426995714') |
+      (admin_id == bot_settings.SUPER_ADMIN_ID) |
       message.member.permissions.has('ADMIN')
     ) {
       msg('Bot restarting....');
