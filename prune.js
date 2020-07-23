@@ -1,7 +1,10 @@
 exports.prune = (msg, message) => {
   (async () => {
     let user_id_addAnime = message.author.id;
-    if (user_id_addAnime == '157510824426995714') {
+    if (
+      (user_id_addAnime == '157510824426995714') |
+      message.member.permissions.has('ADMIN')
+    ) {
       // GET message
       let PruneMessage = message.content;
       // Split message and get last word the user entered
