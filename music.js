@@ -2,8 +2,8 @@ const ytdl = require('ytdl-core-discord');
 // list with all the song to play
 let musicUrl = [];
 let dispatcher = '';
-var voiceBot = '';
-var connection = '';
+let voiceBot = '';
+let connection = '';
 
 async function playSong(message, voiceBot, connection) {
   // play the song
@@ -24,7 +24,7 @@ async function playSong(message, voiceBot, connection) {
   });
 }
 
-exports.play = (bot, msg, message) => {
+exports.play = (msg, message) => {
   (async () => {
     if (!message.member.voice.channel) {
       //check if the user is in a voice channel
@@ -58,7 +58,7 @@ exports.play = (bot, msg, message) => {
   })();
 };
 
-exports.skip = (bot, msg, message) => {
+exports.skip = (msg, message) => {
   (async () => {
     // check if there is a music
     if (musicUrl.length > 1) {

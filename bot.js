@@ -123,10 +123,10 @@ bot.on('message', async (message) => {
     help.help(bot, msgs, PREFIX);
   }
   if (message.content.startsWith(`${PREFIX}play`)) {
-    music.play(bot, msgs, message);
+    music.play(msgs, message);
   }
   if (message.content.toString() === `${PREFIX}skip`) {
-    music.skip(bot, msgs, PREFIX);
+    music.skip(msgs, PREFIX);
   }
   if (message.content.toString() === `${PREFIX}stop`) {
     music.stop(msgs);
