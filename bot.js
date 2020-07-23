@@ -52,13 +52,11 @@ bot.on('ready', () => {
   bot.user.setActivity('Peter des gueules');
 });
 var db = null;
-var collection = null;
 var collectionMemo = null;
 client.connect((err) => {
-  console.log('Connected to Atlas Mongo.');
   db = client.db(NameDB);
-  collection = db.collection('test');
   collectionMemo = db.collection('memo');
+  console.log('Connected to Atlas Mongo.');
   //collection.insertOne({ item: 'toto', qty: 15 });
 });
 bot.on('message', async (message) => {
@@ -129,6 +127,9 @@ bot.on('message', async (message) => {
   }
   if (message.content.toString() === `${PREFIX}skip`) {
     music.skip(bot, msgs, PREFIX);
+  }
+  if (message.content.toString() === `${PREFIX}stop`) {
+    music.stop(msgs);
   }
   /* TEST */
   if (message.content.toString() === `${PREFIX}yes`) {

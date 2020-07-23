@@ -57,27 +57,45 @@ exports.play = (bot, msg, message) => {
 exports.skip = (bot, msg, message) => {
   (async () => {
     // check if there is a music
-    if (musicUrl.length != 1) {
-      if (dispatcher != '') {
-        try {
-          // end the current music
-          dispatcher.destroy();
-          // delete the current music
-          musicUrl.shift();
-          // play the next music
-          playSong(message, voiceBot, connection);
-          msg('Musique passée.');
-        } catch (error) {
-          msg('impossibe de passer la musique en cours.');
-          console.log(error);
-          // bot leave the vocal channel
-          voiceBot.leave();
-        }
-      } else {
-        msg("Rien a passer vu que tu n'as pas fais play :D");
+    if (musicUrl.length > 1) {
+      try {
+        // end the current music
+        dispatcher.destroy();
+        // delete the current music
+        musicUrl.shift();
+        // play the next music
+        playSong(message, voiceBot, connection);
+        msg('Musique passée.');
+      } catch (error) {
+        msg('impossibe de passer la musique en cours.');
+        console.log(error);
+        // bot leave the vocal channel
+        voiceBot.leave();
       }
     } else {
       msg('Aucune musique a passer.');
+    }
+  })();
+};
+
+exports.stop = (msg) => {
+  (async () => {
+    // check if there is a music
+    if (musicUrl.length > 0) {
+      try {
+        for (let index = 0; index < musicUrl.length; index++) {
+          musicUrl.splice(index, 1);
+        }
+        // end the current music
+        dispatcher.destroy();
+        msg('Musique Stopper.');
+        voiceBot.leave();
+      } catch (error) {
+        msg('impossibe de stopper la musique.');
+        console.log(error);
+      }
+    } else {
+      msg('Aucune musique a stopper.');
     }
   })();
 };
