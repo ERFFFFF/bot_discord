@@ -183,7 +183,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
     }
   })();
 };
-exports.addmemo = (bot, msg, message, PREFIX, db) => {
+exports.addmemo = (msg, message, PREFIX, db) => {
   (async () => {
     // GET user id
     let user_id_addMemo = message.author.id;
@@ -259,7 +259,7 @@ exports.addmemo = (bot, msg, message, PREFIX, db) => {
     }
   })();
 };
-exports.delmemo = (bot, msg, PREFIX, message, db) => {
+exports.delmemo = (msg, PREFIX, message, db) => {
   (async () => {
     // Get user id
     let user_id_delmemo = message.author.id;

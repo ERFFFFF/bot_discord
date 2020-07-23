@@ -113,10 +113,10 @@ bot.on('message', async (message) => {
     memo.mymemo(bot, msgs, message, PREFIX, db);
   }
   if (message.content.startsWith(`${PREFIX}addmemo`)) {
-    memo.addmemo(bot, msgs, message, PREFIX, db);
+    memo.addmemo(msgs, message, PREFIX, db);
   }
   if (message.content.startsWith(`${PREFIX}delmemo`)) {
-    memo.delmemo(bot, msgs, PREFIX, message, db);
+    memo.delmemo(msgs, PREFIX, message, db);
   }
   /* Show all the commands */
   if (message.content.toString() === `${PREFIX}help`) {
