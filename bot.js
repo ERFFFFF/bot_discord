@@ -26,7 +26,9 @@ var fs = require('fs');
 // scraper for MyAnimeList
 const malScraper = require('mal-scraper');
 const { VoiceChannel } = require('discord.js');
+const fetch = require('node-fetch');
 
+var request = require('request');
 //Prefix for the Botbrowser
 const PREFIX = ',';
 
@@ -47,6 +49,7 @@ bot.on('ready', () => {
   //msg('Bot is up !');
   bot.user.setActivity('Peter des gueules');
 });
+/* Connect to the Database */
 var db = null;
 var collectionMemo = null;
 client.connect((err) => {
@@ -54,6 +57,43 @@ client.connect((err) => {
   collectionMemo = db.collection('memo');
   console.log('Connected to Atlas Mongo.');
 });
+
+/* We use express to get the code token for anilist. We get this code when we accept the authorization on localhost:8000/*/
+var express = require('express');
+var app = express();
+var token_anilist = '';
+// after login to anilist with the link => https://anilist.co/api/v2/oauth/authorize?client_id=3852&redirect_uri=http://127.0.0.1:8000/&response_type=code
+app.get('/', function (req, res) {
+  // request to localhost:8000/ and get the code and transform it into a token
+  let options = {
+    uri: 'https://anilist.co/api/v2/oauth/token',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    json: {
+      grant_type: 'authorization_code',
+      client_id: bot_settings.anilist_client_id,
+      client_secret: bot_settings.anilist_secret,
+      redirect_uri: 'http://127.0.0.1:8000/', // http://example.com/callback
+      code: req.query.code, // The Authorization Code received previously
+    },
+  };
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      token_anilist = body.access_token;
+      console.log(token_anilist);
+    }
+  });
+});
+var server = app.listen(8000, 'localhost', function () {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('App listening at http://%s:%s', host, port);
+});
+
+/* BOT SECTION */
 bot.on('message', async (message) => {
   function msgs(msg) {
     message.channel.send(msg);
@@ -124,24 +164,6 @@ bot.on('message', async (message) => {
   if (message.content.toString() === `${PREFIX}stop`) {
     music.stop(msgs);
   }
-  /* TEST */
-  if (message.content.toString() === `${PREFIX}yes`) {
-    const name = 'Fugou Keiji: Balance:Unlimited';
-    // get data of an anime
-    malScraper
-      .getInfoFromName(name)
-      .then((data) => {
-        console.log(data.picture);
-        message.channel.send(data.picture);
-      })
-      .catch((err) => console.log(err));
-
-    // get list of aired on a particular anime
-    malScraper
-      .getEpisodesList(name)
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-  }
   /* Reset the DB */
   if (message.content.toString() === `${PREFIX}resetDB`) {
     if (
@@ -150,6 +172,52 @@ bot.on('message', async (message) => {
     ) {
       collectionMemo.drop();
       db.createCollection('memo');
+    }
+  }
+  /* TEST */
+  if (message.content.toString() === `${PREFIX}yes`) {
+    // request to make (user is authenticated)
+    var query = `
+    mutation ($about: String) {
+      UpdateUser(about: $about) {
+        about
+      }
+    }
+    `;
+    // variables used for the query
+    var variables = {
+      // variables qui va remplacer le $about dans la mutation UpdateUser
+      about: 'je suis un test !',
+    };
+    // make a request with the token to make authenticated requests
+    let url = 'https://graphql.anilist.co',
+      options = {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + token_anilist,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          query: query,
+          variables: variables,
+        }),
+      };
+    fetch(url, options)
+      .then(handleResponse)
+      .then(handleData)
+      .catch(handleError);
+    function handleResponse(response) {
+      return response.json().then(function (json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    }
+    function handleData(data) {
+      console.log('data => ', data);
+    }
+
+    function handleError(error) {
+      console.error(error);
     }
   }
 });
@@ -177,3 +245,152 @@ if(((splitAnime[0] == "!anime") && (splitAnime[1] != null)) && (splitAnime[2] !=
     // !anime Tensei
     console.log("je suis juste !anime anime anime")
 }*/
+
+/* GET ANIME BY NAME FROM PAGE 1 TO 3
+var query = `
+query ($id: Int, $page: Int, $perPage: Int, $search: String) {
+  Page (page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      currentPage
+      lastPage
+      hasNextPage
+      perPage
+    }
+    media (id: $id, search: $search) {
+      id
+      title {
+        romaji
+      }
+    }
+  }
+}
+`;
+
+var variables = {
+    search: "Fate/Zero",
+    page: 1,
+    perPage: 3
+};
+
+var url = 'https://graphql.anilist.co',
+    options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            query: query,
+            variables: variables
+        })
+    };
+
+fetch(url, options).then(handleResponse)
+                   .then(handleData)
+                   .catch(handleError);
+
+*/
+
+/* GET ANIME BY ID
+    var query = `
+     query ($id: Int) { # Define which variables will be used in the query (id)
+       Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
+         id
+         title {
+           romaji
+           english
+           native
+         }
+       }
+     }
+     `;
+
+    // Define our query variables and values that will be used in the query request
+    var variables = {
+      id: 15125,
+    };
+
+    // Define the config we'll need for our Api request
+    var url = 'https://graphql.anilist.co',
+      options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          query: query,
+          variables: variables,
+        }),
+      };
+
+    // Make the HTTP Api request
+    fetch(url, options)
+      .then(handleResponse)
+      .then(handleData)
+      .catch(handleError);
+
+    function handleResponse(response) {
+      return response.json().then(function (json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    }
+
+    function handleData(data) {
+      console.log('data => ', data);
+    }
+
+    function handleError(error) {
+      alert('Error, check console');
+      console.error(error);
+    }
+    */
+
+/* REQUETE FAITE PAR MOI QUI CHANGE LA BIO ANILIST AVEC FULL EXPLICATIONS
+// request to make (user is authenticated)
+var query = `
+    // type de la requete soit <query> ou <mutation>, query => general, mutation => user est authentifié
+    // les parametres de la mutation sont la déclaration des parametres de la/les mutation(s) utilisé(es), içi UpdateUser avec <about>
+    mutation ($about: String) {
+      // mutation a faire, içi UpdateUser avec comme parametres about (ce quon veut changer/effectuer)
+      // $about => variables a écrire
+      UpdateUser(about: $about) {
+        // ce qu'on doit display, (a voir dans le type, içi dans le type <user> on peut afficher <about>)
+        about
+      }
+    }
+    `;
+// variables used for the query
+var variables = {
+  // variables qui va remplacer le $about dans la mutation UpdateUser
+  about: 'je suis un test !',
+};
+// make a request with the token to make authenticated requests
+let url = 'https://graphql.anilist.co',
+  options = {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token_anilist,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      query: query,
+      variables: variables,
+    }),
+  };
+fetch(url, options).then(handleResponse).then(handleData).catch(handleError);
+function handleResponse(response) {
+  return response.json().then(function (json) {
+    return response.ok ? json : Promise.reject(json);
+  });
+}
+function handleData(data) {
+  console.log('data => ', data);
+}
+
+function handleError(error) {
+  console.error(error);
+}
+*/
