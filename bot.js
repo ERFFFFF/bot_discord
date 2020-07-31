@@ -174,6 +174,78 @@ bot.on('message', async (message) => {
       db.createCollection('memo');
     }
   }
+  if (message.content.toString() === `${PREFIX}connect`) {
+    var query = ` mutation($name:String,$password:String,$captcha:String)
+    {
+      Login(name:$name,password:$password,captcha:$captcha)
+      {
+        id name about avatar{large}bannerImage unreadNotificationCount donatorTier donatorBadge moderatorStatus options
+        {
+          titleLanguage airingNotifications displayAdultContent profileColor notificationOptions{type enabled}
+        }
+        mediaListOptions
+        {
+          scoreFormat rowOrder animeList{customLists sectionOrder splitCompletedSectionByFormat advancedScoring advancedScoringEnabled}mangaList{customLists sectionOrder splitCompletedSectionByFormat advancedScoring advancedScoringEnabled}
+        }
+      }
+    }
+  `;
+
+    // variables used for the query
+    var variables = {
+      captcha:
+        '03AGdBq24UDMbqKSb-Il-1arj9KIQG8Mhn5I6vvZJwJyI_JXYKLx9m1BdFOjwsTqaEn_J78kbUpRqYpuUH8CZ1xB3so6Wpg1fOUXzxm2hbf7JAORudrUZBnhiUbAZfu4u9WGKvkTmqUmCmGATPV_rP1DcW3zs6gIjKvBZNF7UYe4kNfzXFoVoJJw0k3bnd8xwmsLLfkecHsf8w14voDznIa29nrJFZzo_U3_kBgDbl2vrsbLLISfyQkYzAYz4P-iStjvn5_PYiwgulz9id1sTNLXUQV13wSVLg5-ja99o43pceQuTcSSL8iAJLYnvEEPzoy6P9bbpFRgw_jVJy_ikTZI_2oBD9LgaRMFN0jHKAszIc9zd436_0-FEax9EoEi4EgXd1hI0kySd7Jb4_Bhb_Gs7a6ai_wK0UF9aVSDkCfbubk6_KCXGGvwJmJgDCXJ_QVIuC-Uo88K3v',
+      name: bot_settings.EmailAnilist,
+      password: bot_settings.PasswordAnilist,
+    };
+    // make a request with the token to make authenticated requests
+    let url = 'https://anilist.co/graphql',
+      options = {
+        authority: 'anilist.co',
+        method: 'POST',
+        path: '/graphql',
+        scheme: 'https',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: '*/*',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Content-Length': 1124,
+          Cookie:
+            '__cfduid=d7f655517b92237e4e177db01450f33911595091654; laravel_session=5dZw7Yc2kxnFzBYPB9zU6kGbvrvYJhrdjUpEOLJX',
+          Dnt: 1,
+          Origin: 'https://anilist.co',
+          Referer: 'https://anilist.co/09a54eee3e0f7dadb450.worker.js',
+          'Sec-Fetch-Dest': 'empty',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Site': 'same-origin',
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',
+          'X-CSRF-TOKEN': 'Xm86iM6pEtsjOhLg5bAyOHKnf31VH6bqAoTBgcR6',
+        },
+        body: JSON.stringify({
+          query: query,
+          variables: variables,
+        }),
+      };
+
+    fetch(url, options)
+      .then(handleResponse)
+      .then(handleData)
+      .catch(handleError);
+    function handleResponse(response) {
+      return response.json().then(function (json) {
+        return response.ok ? json : Promise.reject(json);
+      });
+    }
+    function handleData(data) {
+      console.log('data => ', data);
+    }
+
+    function handleError(error) {
+      console.error('Error => ', error);
+    }
+  }
   /* TEST */
   if (message.content.toString() === `${PREFIX}yes`) {
     // request to make (user is authenticated)
