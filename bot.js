@@ -24,9 +24,15 @@ var fs = require('fs');
 //bot.music = require('discord.js-musicbot-addon');
 
 // scraper for MyAnimeList
-const malScraper = require('mal-scraper');
 const { VoiceChannel } = require('discord.js');
 const fetch = require('node-fetch');
+// Chromium controler
+// puppeteer-extra in an extra module of puppeteer
+const puppeteer = require('puppeteer-extra');
+// puppeteer-extra-plugin-recaptcha is an extra module for puppeteer-extra
+// in order to RecaptchaPlugin to work, we need to add fund to the website "2captcha"
+// moreover, to resolve a captcha it need between 10 and 60 seconds.
+const RecaptchaPlugin = require('puppeteer-extra-plugin-recaptcha');
 
 var request = require('request');
 //Prefix for the Botbrowser
@@ -40,8 +46,6 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-var list_AddNomAnime = 0;
 
 bot.on('ready', () => {
   //notifAnime.notif(bot, msg);
@@ -62,7 +66,7 @@ client.connect((err) => {
 var express = require('express');
 var app = express();
 var token_anilist = '';
-// after login to anilist with the link => https://anilist.co/api/v2/oauth/authorize?client_id=3852&redirect_uri=http://127.0.0.1:8000/&response_type=code
+// after login to anilist with the link => https://anilist.co/api/v2/oauth/authorize?client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code or the /command ,connect
 app.get('/', function (req, res) {
   // request to localhost:8000/ and get the code and transform it into a token
   let options = {
@@ -83,6 +87,7 @@ app.get('/', function (req, res) {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       token_anilist = body.access_token;
+      // show token of anilist
       console.log(token_anilist);
     }
   });
@@ -174,77 +179,63 @@ bot.on('message', async (message) => {
       db.createCollection('memo');
     }
   }
+  // connect user to anilist
   if (message.content.toString() === `${PREFIX}connect`) {
-    var query = ` mutation($name:String,$password:String,$captcha:String)
-    {
-      Login(name:$name,password:$password,captcha:$captcha)
-      {
-        id name about avatar{large}bannerImage unreadNotificationCount donatorTier donatorBadge moderatorStatus options
-        {
-          titleLanguage airingNotifications displayAdultContent profileColor notificationOptions{type enabled}
-        }
-        mediaListOptions
-        {
-          scoreFormat rowOrder animeList{customLists sectionOrder splitCompletedSectionByFormat advancedScoring advancedScoringEnabled}mangaList{customLists sectionOrder splitCompletedSectionByFormat advancedScoring advancedScoringEnabled}
-        }
-      }
-    }
-  `;
+    (async () => {
+      // add params
+      puppeteer.use(
+        RecaptchaPlugin({
+          provider: {
+            id: '2captcha',
+            token: bot_settings.token_2capcha, // token of 2captcha with funds
+          },
+          visualFeedback: true, // colorize reCAPTCHAs (violet = detected, green = solved)
+        })
+      );
 
-    // variables used for the query
-    var variables = {
-      captcha:
-        '03AGdBq24UDMbqKSb-Il-1arj9KIQG8Mhn5I6vvZJwJyI_JXYKLx9m1BdFOjwsTqaEn_J78kbUpRqYpuUH8CZ1xB3so6Wpg1fOUXzxm2hbf7JAORudrUZBnhiUbAZfu4u9WGKvkTmqUmCmGATPV_rP1DcW3zs6gIjKvBZNF7UYe4kNfzXFoVoJJw0k3bnd8xwmsLLfkecHsf8w14voDznIa29nrJFZzo_U3_kBgDbl2vrsbLLISfyQkYzAYz4P-iStjvn5_PYiwgulz9id1sTNLXUQV13wSVLg5-ja99o43pceQuTcSSL8iAJLYnvEEPzoy6P9bbpFRgw_jVJy_ikTZI_2oBD9LgaRMFN0jHKAszIc9zd436_0-FEax9EoEi4EgXd1hI0kySd7Jb4_Bhb_Gs7a6ai_wK0UF9aVSDkCfbubk6_KCXGGvwJmJgDCXJ_QVIuC-Uo88K3v',
-      name: bot_settings.EmailAnilist,
-      password: bot_settings.PasswordAnilist,
-    };
-    // make a request with the token to make authenticated requests
-    let url = 'https://anilist.co/graphql',
-      options = {
-        authority: 'anilist.co',
-        method: 'POST',
-        path: '/graphql',
-        scheme: 'https',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: '*/*',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Accept-Language': 'en-US,en;q=0.9',
-          'Content-Length': 1124,
-          Cookie:
-            '__cfduid=d7f655517b92237e4e177db01450f33911595091654; laravel_session=5dZw7Yc2kxnFzBYPB9zU6kGbvrvYJhrdjUpEOLJX',
-          Dnt: 1,
-          Origin: 'https://anilist.co',
-          Referer: 'https://anilist.co/09a54eee3e0f7dadb450.worker.js',
-          'Sec-Fetch-Dest': 'empty',
-          'Sec-Fetch-Mode': 'cors',
-          'Sec-Fetch-Site': 'same-origin',
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36',
-          'X-CSRF-TOKEN': 'Xm86iM6pEtsjOhLg5bAyOHKnf31VH6bqAoTBgcR6',
-        },
-        body: JSON.stringify({
-          query: query,
-          variables: variables,
-        }),
-      };
-
-    fetch(url, options)
-      .then(handleResponse)
-      .then(handleData)
-      .catch(handleError);
-    function handleResponse(response) {
-      return response.json().then(function (json) {
-        return response.ok ? json : Promise.reject(json);
+      // without navigation
+      const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
       });
-    }
-    function handleData(data) {
-      console.log('data => ', data);
-    }
 
-    function handleError(error) {
-      console.error('Error => ', error);
-    }
+      // show the navigation
+      /*
+      const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: false,
+      });
+      */
+      //create a new page
+      const page = await browser.newPage();
+
+      //tell to the bot to go to the website
+      await page.goto(
+        `https://anilist.co/login?apiVersion=v2&client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code`,
+        {
+          waitUntil: 'networkidle2',
+        }
+      );
+
+      await page.type('[placeholder="Email"]', bot_settings.EmailAnilist);
+      await page.type('[placeholder="Password"]', bot_settings.PasswordAnilist);
+
+      // resolve Recaptcha
+      await page.solveRecaptchas();
+
+      await Promise.all([
+        page.waitForNavigation(),
+        // click on the login button
+        page.click(`.submit`),
+      ]);
+
+      /* after submit */
+      //await page.waitForNavigation();
+      // AUTHORIZE THE APP
+      //console.log('New Page URL:', page.url());
+
+      // close browser
+      await browser.close();
+    })();
   }
   /* TEST */
   if (message.content.toString() === `${PREFIX}yes`) {
