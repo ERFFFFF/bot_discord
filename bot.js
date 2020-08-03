@@ -182,6 +182,7 @@ bot.on('message', async (message) => {
   // connect user to anilist
   if (message.content.toString() === `${PREFIX}connect`) {
     (async () => {
+      msgs('Connecting...');
       // add params
       puppeteer.use(
         RecaptchaPlugin({
@@ -194,6 +195,7 @@ bot.on('message', async (message) => {
       );
 
       // without navigation
+
       const browser = await puppeteer.launch({
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
       });
@@ -204,37 +206,49 @@ bot.on('message', async (message) => {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         headless: false,
       });
-      */
+*/
       //create a new page
       const page = await browser.newPage();
 
-      //tell to the bot to go to the website
-      await page.goto(
-        `https://anilist.co/login?apiVersion=v2&client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code`,
-        {
-          waitUntil: 'networkidle2',
-        }
-      );
+      // set timeout to 70 seconds (cuz the program take ~60s)
+      await page.setDefaultNavigationTimeout(0);
 
-      await page.type('[placeholder="Email"]', bot_settings.EmailAnilist);
-      await page.type('[placeholder="Password"]', bot_settings.PasswordAnilist);
+      try {
+        //tell to the bot to go to the website
+        await page.goto(
+          `https://anilist.co/login?apiVersion=v2&client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code`,
+          {
+            waitUntil: 'networkidle2',
+          }
+        );
+        await page.type('[placeholder="Email"]', bot_settings.EmailAnilist);
+        await page.type(
+          '[placeholder="Password"]',
+          bot_settings.PasswordAnilist
+        );
 
-      // resolve Recaptcha
-      await page.solveRecaptchas();
+        // resolve Recaptcha
+        await page.solveRecaptchas();
 
-      await Promise.all([
-        page.waitForNavigation(),
-        // click on the login button
-        page.click(`.submit`),
-      ]);
+        await Promise.all([
+          page.waitForNavigation(),
+          // click on the login button
+          page.click(`.submit`),
+        ]);
+        /* after submit */
+        //await page.waitForNavigation();
+        // AUTHORIZE THE APP
+        //console.log('New Page URL:', page.url());
 
-      /* after submit */
-      //await page.waitForNavigation();
-      // AUTHORIZE THE APP
-      //console.log('New Page URL:', page.url());
-
-      // close browser
-      await browser.close();
+        // close browser
+        await browser.close();
+        msgs('Connected !');
+      } catch (error) {
+        console.log(error);
+        msgs('Impossible de se connecter à anilist.');
+        // close browser
+        await browser.close();
+      }
     })();
   }
   /* TEST */
@@ -277,10 +291,12 @@ bot.on('message', async (message) => {
     }
     function handleData(data) {
       console.log('data => ', data);
+      msgs('Requête bien effectuée !');
     }
 
     function handleError(error) {
       console.error(error);
+      msgs("Impossible d'effectuer l'action demandée.");
     }
   }
 });
