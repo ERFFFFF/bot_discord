@@ -33,8 +33,10 @@ const puppeteer = require('puppeteer-extra');
 // in order to RecaptchaPlugin to work, we need to add fund to the website "2captcha"
 // moreover, to resolve a captcha it need between 10 and 60 seconds.
 const RecaptchaPlugin = require('puppeteer-extra-plugin-recaptcha');
+var browser = '';
 
 var request = require('request');
+
 //Prefix for the Botbrowser
 const PREFIX = ',';
 
@@ -89,6 +91,8 @@ app.get('/', function (req, res) {
       token_anilist = body.access_token;
       // show token of anilist
       console.log(token_anilist);
+      // close browser
+      browser.close();
     }
   });
 });
@@ -196,20 +200,52 @@ bot.on('message', async (message) => {
 
       // without navigation
 
-      const browser = await puppeteer.launch({
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      });
+      const browser = await puppeteer
+        // headless: true => without showing the navigation
+        // headless: false => not showing the navigation
+        .launch({ headless: true })
+        .then(async (browser) => {
+          const page = await browser.newPage();
+          // Change the signature of the bot: bot => user
+          await page.setUserAgent(
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
+          );
+          await page.setExtraHTTPHeaders({
+            'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+          });
+
+          //tell to the bot to go to the website
+          await page.goto(
+            `https://anilist.co/login?apiVersion=v2&client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code`,
+            {
+              waitUntil: 'networkidle2',
+            }
+          );
+          // set the email
+          await page.type('[placeholder="Email"]', bot_settings.EmailAnilist);
+          // set the password
+          await page.type(
+            '[placeholder="Password"]',
+            bot_settings.PasswordAnilist
+          );
+          // resolve Recaptcha
+          await page.solveRecaptchas();
+          // login + wait loading of the page
+          await Promise.all([page.waitForNavigation(), page.click(`.submit`)]);
+          // close the browser
+          //await browser.close();
+        });
 
       // show the navigation
       /*
-      const browser = await puppeteer.launch({
+      browser = await puppeteer.launch({
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         headless: false,
       });
 */
+      /*
       //create a new page
       const page = await browser.newPage();
-
       // set timeout to 70 seconds (cuz the program take ~60s)
       await page.setDefaultNavigationTimeout(0);
 
@@ -221,7 +257,9 @@ bot.on('message', async (message) => {
             waitUntil: 'networkidle2',
           }
         );
+
         await page.type('[placeholder="Email"]', bot_settings.EmailAnilist);
+
         await page.type(
           '[placeholder="Password"]',
           bot_settings.PasswordAnilist
@@ -230,25 +268,35 @@ bot.on('message', async (message) => {
         // resolve Recaptcha
         await page.solveRecaptchas();
 
+        // submit
         await Promise.all([
-          page.waitForNavigation(),
           // click on the login button
           page.click(`.submit`),
+          browser.on('targetchanged', () => {
+            console.log('salut');
+          }),
+          page.waitForNavigation(),
+          // close the browser after clicking on submit
+          //browser.close(),
         ]);
-        /* after submit */
-        //await page.waitForNavigation();
-        // AUTHORIZE THE APP
-        //console.log('New Page URL:', page.url());
 
-        // close browser
-        await browser.close();
+        /* after submit */
+      //await page.waitForNavigation();
+      // AUTHORIZE THE APP
+      //console.log('New Page URL:', page.url());
+
+      /*
+        console.log('9');
         msgs('Connected !');
+        */
+      /*
       } catch (error) {
         console.log(error);
         msgs('Impossible de se connecter à anilist.');
         // close browser
-        await browser.close();
+        //await browser.close();
       }
+      */
     })();
   }
   /* TEST */
