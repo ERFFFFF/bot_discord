@@ -33,7 +33,6 @@ const puppeteer = require('puppeteer-extra');
 // in order to RecaptchaPlugin to work, we need to add fund to the website "2captcha"
 // moreover, to resolve a captcha it need between 10 and 60 seconds.
 const RecaptchaPlugin = require('puppeteer-extra-plugin-recaptcha');
-var browser = '';
 
 var request = require('request');
 
@@ -68,34 +67,7 @@ client.connect((err) => {
 var express = require('express');
 var app = express();
 var token_anilist = '';
-// after login to anilist with the link => https://anilist.co/api/v2/oauth/authorize?client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code or the /command ,connect
-app.get('/', function (req, res) {
-  // request to localhost:8000/ and get the code and transform it into a token
-  let options = {
-    uri: 'https://anilist.co/api/v2/oauth/token',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    json: {
-      grant_type: 'authorization_code',
-      client_id: bot_settings.anilist_client_id,
-      client_secret: bot_settings.anilist_secret,
-      redirect_uri: 'http://127.0.0.1:8000/', // http://example.com/callback
-      code: req.query.code, // The Authorization Code received previously
-    },
-  };
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      token_anilist = body.access_token;
-      // show token of anilist
-      console.log(token_anilist);
-      // close browser
-      browser.close();
-    }
-  });
-});
+// web server
 var server = app.listen(8000, 'localhost', function () {
   var host = server.address().address;
   var port = server.address().port;
@@ -198,105 +170,102 @@ bot.on('message', async (message) => {
         })
       );
 
-      // without navigation
-
       const browser = await puppeteer
         // headless: true => without showing the navigation
         // headless: false => not showing the navigation
-        .launch({ headless: true })
+        .launch({ headless: false })
         .then(async (browser) => {
-          const page = await browser.newPage();
-          // Change the signature of the bot: bot => user
-          await page.setUserAgent(
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
-          );
-          await page.setExtraHTTPHeaders({
-            'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
-          });
+          try {
+            //create a new page
+            const page = await browser.newPage();
 
-          //tell to the bot to go to the website
-          await page.goto(
-            `https://anilist.co/login?apiVersion=v2&client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code`,
-            {
-              waitUntil: 'networkidle2',
+            // set timeout to 70 seconds (cuz the program take ~60s)
+            //await page.setDefaultNavigationTimeout(0);
+
+            // Change the signature of the bot: bot => user
+            await page.setUserAgent(
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36'
+            );
+            await page.setExtraHTTPHeaders({
+              'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
+            });
+
+            //tell to the bot to go to the website
+            await page.goto(
+              `https://anilist.co/login?apiVersion=v2&client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code`,
+              {
+                waitUntil: 'networkidle2',
+              }
+            );
+            // set the email
+            await page.type('[placeholder="Email"]', bot_settings.EmailAnilist);
+            // set the password
+            await page.type(
+              '[placeholder="Password"]',
+              bot_settings.PasswordAnilist
+            );
+            // resolve Recaptcha
+            await page.solveRecaptchas();
+            // login
+            await page.click(`.submit`);
+
+            // after login, authorize the app
+            try {
+              console.log('entry');
+              await page.waitForSelector('.btn-approve').then(async () => {
+                console.log('found it !');
+                await page.click(`.btn-approve`);
+                console.log('App approuved !');
+              });
+            } catch (error) {
+              console.log(error);
+              console.log(
+                'Can not authorize the app (or app is already authorized).'
+              );
             }
-          );
-          // set the email
-          await page.type('[placeholder="Email"]', bot_settings.EmailAnilist);
-          // set the password
-          await page.type(
-            '[placeholder="Password"]',
-            bot_settings.PasswordAnilist
-          );
-          // resolve Recaptcha
-          await page.solveRecaptchas();
-          // login + wait loading of the page
-          await Promise.all([page.waitForNavigation(), page.click(`.submit`)]);
-          // close the browser
-          //await browser.close();
-        });
-
-      // show the navigation
-      /*
-      browser = await puppeteer.launch({
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-        headless: false,
-      });
-*/
-      /*
-      //create a new page
-      const page = await browser.newPage();
-      // set timeout to 70 seconds (cuz the program take ~60s)
-      await page.setDefaultNavigationTimeout(0);
-
-      try {
-        //tell to the bot to go to the website
-        await page.goto(
-          `https://anilist.co/login?apiVersion=v2&client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code`,
-          {
-            waitUntil: 'networkidle2',
+          } catch (error) {
+            console.log('Error to login to AniList.');
           }
-        );
 
-        await page.type('[placeholder="Email"]', bot_settings.EmailAnilist);
-
-        await page.type(
-          '[placeholder="Password"]',
-          bot_settings.PasswordAnilist
-        );
-
-        // resolve Recaptcha
-        await page.solveRecaptchas();
-
-        // submit
-        await Promise.all([
-          // click on the login button
-          page.click(`.submit`),
-          browser.on('targetchanged', () => {
-            console.log('salut');
-          }),
-          page.waitForNavigation(),
-          // close the browser after clicking on submit
-          //browser.close(),
-        ]);
-
-        /* after submit */
-      //await page.waitForNavigation();
-      // AUTHORIZE THE APP
-      //console.log('New Page URL:', page.url());
-
-      /*
-        console.log('9');
-        msgs('Connected !');
-        */
-      /*
-      } catch (error) {
-        console.log(error);
-        msgs('Impossible de se connecter à anilist.');
-        // close browser
-        //await browser.close();
-      }
-      */
+          // after login to anilist with the link => https://anilist.co/api/v2/oauth/authorize?client_id=${bot_settings.anilist_client_id}&redirect_uri=${bot_settings.anilist_redirect_uri}&response_type=code or the /command ,connect AND the app is authorized
+          // request that listen localhost in order to get the <code> delivered above
+          app.get('/', async function (req, res) {
+            console.log('requete en cours');
+            // request to localhost:8000/ and get the code and transform it into a token
+            let options = {
+              uri: 'https://anilist.co/api/v2/oauth/token',
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+              json: {
+                grant_type: 'authorization_code',
+                client_id: bot_settings.anilist_client_id,
+                client_secret: bot_settings.anilist_secret,
+                redirect_uri: 'http://127.0.0.1:8000/', // http://example.com/callback
+                code: req.query.code, // The Authorization Code received previously
+              },
+            };
+            request(options, async function (error, response, body) {
+              // if we got a valid response
+              if (!error && response.statusCode == (200 || 302)) {
+                // get token transformed
+                token_anilist = body.access_token;
+                // show token of anilist
+                console.log(token_anilist);
+                // close browser
+                await browser.close();
+              } else {
+                console.log(error);
+                console.log(response.statusCode);
+                console.log('Can not retreive the token of AniList.');
+                // close browser
+                //await browser.close();
+              }
+            });
+          });
+        });
     })();
   }
   /* TEST */
