@@ -172,7 +172,7 @@ bot.on('message', async (message) => {
 
       const browser = await puppeteer
         // headless: true => without showing the navigation
-        // headless: false => not showing the navigation
+        // headless: false => show the navigation
         .launch({ headless: false })
         .then(async (browser) => {
           try {
@@ -206,6 +206,10 @@ bot.on('message', async (message) => {
             );
             // resolve Recaptcha
             await page.solveRecaptchas();
+            let yes =  await page.enterRecaptchaSolutions();
+            let no =  await page.getRecaptchaSolutions();
+            console.log(yes)
+            console.log(no)
             // login
             await page.click(`.submit`);
 
@@ -232,6 +236,7 @@ bot.on('message', async (message) => {
           app.get('/', async function (req, res) {
             console.log('requete en cours');
             // request to localhost:8000/ and get the code and transform it into a token
+            console.log('token code => ', req.query.code);
             let options = {
               uri: 'https://anilist.co/api/v2/oauth/token',
               method: 'POST',
