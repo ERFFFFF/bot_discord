@@ -15,6 +15,7 @@ const cctl = require('./cctl.js');
 const prune = require('./prune.js');
 const memo = require('./memo.js');
 const help = require('./help.js');
+const dice = require('./dice.js');
 // bot music
 const music = require('./music.js');
 // File reader, writer
@@ -103,12 +104,15 @@ bot.on('message', async (message) => {
   if (message.content.startsWith(`${PREFIX}prune`)) {
     prune.prune(msgs, message);
   }
+  /* a revoir, continuer a dev */
   if (message.content.startsWith(`${PREFIX}mymemo`)) {
     memo.mymemo(bot, msgs, message, PREFIX, db);
   }
+  /* a revoir, continuer a dev */
   if (message.content.startsWith(`${PREFIX}addmemo`)) {
     memo.addmemo(msgs, message, PREFIX, db);
   }
+  /* a revoir, continuer a dev */
   if (message.content.startsWith(`${PREFIX}delmemo`)) {
     memo.delmemo(msgs, PREFIX, message, db);
   }
@@ -116,12 +120,15 @@ bot.on('message', async (message) => {
   if (message.content.toString() === `${PREFIX}help`) {
     help.help(bot, msgs, PREFIX);
   }
+  /* Play a music with a youtube link */
   if (message.content.startsWith(`${PREFIX}play`)) {
     music.play(msgs, message);
   }
+  /* Skip the current music */
   if (message.content.toString() === `${PREFIX}skip`) {
     music.skip(msgs, PREFIX);
   }
+  /* Stop the current music */
   if (message.content.toString() === `${PREFIX}stop`) {
     music.stop(msgs);
   }
@@ -134,6 +141,10 @@ bot.on('message', async (message) => {
       collectionMemo.drop();
       db.createCollection('memo');
     }
+  }
+  /* Dice for JDR */
+  if (message.content.startsWith(`${PREFIX}dice`)) {
+    dice.dice(msgs, message)
   }
 });
 

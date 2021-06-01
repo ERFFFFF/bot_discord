@@ -8,7 +8,7 @@ exports.help = (bot, msg, PREFIX) => {
           icon_url: bot.user.avatarURL,
         },
         fields: [
-          { name: `**${PREFIX}rs**`, value: 'Restart le bot.' },
+          // { name: `**${PREFIX}rs**`, value: 'Restart le bot.' },
           {
             name: `**${PREFIX}random**`,
             value: 'Nombre random entre 0 et 100.',
@@ -32,33 +32,56 @@ exports.help = (bot, msg, PREFIX) => {
           //{ name: `~~**${PREFIX}delmanga nom_manga**~~`, value: "Permet de supprimer un manga de votre liste personnelle \n Exemple : delmanga one_piece \n Le nom du manga que vous supprimer doit être le même que le nom du manga dans votre liste personnelle."},
           //{ name: `~~**${PREFIX}manga**~~`, value: "Liste les mangas qui sont sorties aujourdhui"},
           //{ name: `~~**${PREFIX}manga nom_manga**~~`, value: "Permets de voir en détail un manga. \n nom_manga = premier mot ou premier & deuxieme mot du manga. \n Exemple : Tate no Yuusha no Nariagari \n -> Tate \n -> Tate no"},
+          // {
+          //   name: `**${PREFIX}addmemo titre content**`,
+          //   value:
+          //     "Permet d'ajouter un mémo. \n titre = Je_suis_un_titre (le titre doit être un seul mot) \n content = je suis un paragraphe. (paragraphe/phrase à mettre dans le mémo)",
+          // },
+          // {
+          //   name: `**${PREFIX}mymemo**`,
+          //   value: "Permet d'afficher votre liste de mémo.'",
+          // },
+          // {
+          //   name: `**${PREFIX}mymemo titre**`,
+          //   value:
+          //     "Permet d'afficher un element de votre liste de mémo. \n titre = titre_de_ma_liste_de_memo'",
+          // },
+          // {
+          //   name: `**${PREFIX}mymemopv**`,
+          //   value: "Permet d'afficher votre liste de mémo en MP.'",
+          // },
+          // {
+          //   name: `**${PREFIX}mymemopv titre**`,
+          //   value:
+          //     "Permet d'afficher un element de votre liste de mémo en MP. \n titre = titre_de_ma_liste_de_memo'",
+          // },
+          // {
+          //   name: `**${PREFIX}delmemo titre**`,
+          //   value:
+          //     "Permet de supprimer un element de votre liste de mémo. \n titre = Je_suis_un_titre (le titre doit être un seul mot)'",
+          // },
           {
-            name: `**${PREFIX}addmemo titre content**`,
+            name: `**${PREFIX}dice XdX**`,
             value:
-              "Permet d'ajouter un mémo. \n titre = Je_suis_un_titre (le titre doit être un seul mot) \n content = je suis un paragraphe. (paragraphe/phrase à mettre dans le mémo)",
+              "Permet de réaliser un jet de dé. \n Les _X_ sont à remplacer par des nombres.\
+              Le premier _X_ correspond aux nombres de dés à jetés quand au deuxième _X_,\
+              il correspond au nombres de faces du dé.",
           },
           {
-            name: `**${PREFIX}mymemo**`,
-            value: "Permet d'afficher votre liste de mémo.'",
-          },
-          {
-            name: `**${PREFIX}mymemo titre**`,
+            name: `**${PREFIX}play ytb_link**`,
             value:
-              "Permet d'afficher un element de votre liste de mémo. \n titre = titre_de_ma_liste_de_memo'",
+              "Permet de jouer une musique youtube. \n ytb_link = correspond à un lien youtube valide.\
+              \n De plus, vous devez être dans un channel vocal afin que cette commande fonctionne.",
           },
           {
-            name: `**${PREFIX}mymemopv**`,
-            value: "Permet d'afficher votre liste de mémo en MP.'",
-          },
-          {
-            name: `**${PREFIX}mymemopv titre**`,
+            name: `**${PREFIX}skip**`,
             value:
-              "Permet d'afficher un element de votre liste de mémo en MP. \n titre = titre_de_ma_liste_de_memo'",
+              "Permet de passer la musique actuelle.",
           },
           {
-            name: `**${PREFIX}delmemo titre**`,
+            name: `**${PREFIX}stop**`,
             value:
-              "Permet de supprimer un element de votre liste de mémo. \n titre = Je_suis_un_titre (le titre doit être un seul mot)'",
+              "Permet de stopper l'ensemble des musiques et de déconnecter le bot du channel vocal.",
           },
         ],
         timestamp: new Date(),
