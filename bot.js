@@ -16,6 +16,7 @@ const prune = require('./prune.js');
 const memo = require('./memo.js');
 const help = require('./help.js');
 const dice = require('./dice.js');
+const card = require('./card.js');
 // bot music
 const music = require('./music.js');
 // File reader, writer
@@ -55,6 +56,9 @@ client.connect((err) => {
 bot.on('message', async (message) => {
   function msgs(msg) {
     message.channel.send(msg);
+  }
+  function msgFile(msg, file) {
+    message.channel.send(msg, { files: [file] });
   }
 
   //¨PRIVATE MESSAGE
@@ -136,15 +140,24 @@ bot.on('message', async (message) => {
   if (message.content.toString() === `${PREFIX}resetDB`) {
     if (
       message.member.permissions.has('ADMIN') |
-      (user_id_addAnime == bot_settings.SUPER_ADMIN_ID)
+      (message.author.id == bot_settings.SUPER_ADMIN_ID)
     ) {
       collectionMemo.drop();
       db.createCollection('memo');
+      console.log("database deleted !")
     }
   }
   /* Dice for JDR */
   if (message.content.startsWith(`${PREFIX}dice`)) {
     dice.dice(msgs, message)
+  }
+  /* Register mage for JDR */
+  if (message.content.toString() === `${PREFIX}register`) {
+    card.register(msgs, message, collectionMemo)
+  }
+  /* Cards mage for JDR */
+  if (message.content.toString() === `${PREFIX}card`) {
+    card.card(msgs, msgFile, message)
   }
 });
 

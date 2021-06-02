@@ -14,7 +14,7 @@ exports.dice = (msg, message) => {
         for (i = 1; i <= intdiceNumber; i++) {
           let valuecctl = Math.floor(Math.random() * intdiceNumberValue) + 1;
           msg(`${message.author} tu as fais un ${valuecctl} !`);
-          if (i > 50)
+          if (i > 10)
             break;
         }
       }
