@@ -15,16 +15,9 @@ const cctl = require('./cctl.js');
 const prune = require('./prune.js');
 const memo = require('./memo.js');
 const help = require('./help.js');
-const dice = require('./dice.js');
-const card = require('./card.js');
+const jdr = require('./jdr.js');
 // bot music
 const music = require('./music.js');
-// File reader, writer
-var fs = require('fs');
-//MUSIC BOT
-//bot.music = require('discord.js-musicbot-addon');
-
-const { VoiceChannel } = require('discord.js');
 
 //Prefix for the Botbrowser
 const PREFIX = ',';
@@ -54,7 +47,7 @@ client.connect((err) => {
 
 /* BOT SECTION */
 bot.on('message', async (message) => {
-  function msgs(msg) {
+  function msg(msg) {
     message.channel.send(msg);
   }
   function msgFile(msg, file) {
@@ -70,71 +63,71 @@ bot.on('message', async (message) => {
   /* Test */
   if (message.content.toString() === `${PREFIX}test`) {
     let test = 'Ceci est un test. oui';
-    msgs(test);
+    msg(test);
   }
   /* Random number between 0 and 100 */
   if (message.content.toString() === `${PREFIX}random`) {
-    msgs(Math.floor(Math.random() * 101));
+    msg(Math.floor(Math.random() * 101));
   }
   /* DELETE, NEED FURTHER API */
   /*
   if (message.content.startsWith(`${PREFIX}anime`)) {
-    //anime.anime(bot, msgs, PREFIX, message);
+    //anime.anime(bot, msg, PREFIX, message);
   }
   */
   /* DELETE, NEED FURTHER API */
   /*
   if (message.content.startsWith(`${PREFIX}addanime`)) {
-    //anime.addanime(bot, msgs, PREFIX, message);
+    //anime.addanime(bot, msg, PREFIX, message);
   }
   */
   /* DELETE, NEED FURTHER API */
   /*
   if (message.content.startsWith(`${PREFIX}delanime`)) {
-    //anime.delanime(bot, msgs, PREFIX, message);
+    //anime.delanime(bot, msg, PREFIX, message);
   }
   */
   /* DELETE, NEED FURTHER API */
   /*
   if (message.content.toString() === `${PREFIX}myanimelist`) {
-    anime.myanimelist(bot, msgs, PREFIX, message);
+    anime.myanimelist(bot, msg, PREFIX, message);
   }
   */
   /* Answer the cctl question. 100% acuracy */
   if (message.content.startsWith(`${PREFIX}cctl`)) {
-    cctl.cctlRandom(msgs, message);
+    cctl.cctlRandom(msg, message);
   }
   /* Delete X message on the current channel. */
   if (message.content.startsWith(`${PREFIX}prune`)) {
-    prune.prune(msgs, message);
+    prune.prune(msg, message);
   }
   /* a revoir, continuer a dev */
   if (message.content.startsWith(`${PREFIX}mymemo`)) {
-    memo.mymemo(bot, msgs, message, PREFIX, db);
+    memo.mymemo(bot, msg, message, PREFIX, db);
   }
   /* a revoir, continuer a dev */
   if (message.content.startsWith(`${PREFIX}addmemo`)) {
-    memo.addmemo(msgs, message, PREFIX, db);
+    memo.addmemo(msg, message, PREFIX, db);
   }
   /* a revoir, continuer a dev */
   if (message.content.startsWith(`${PREFIX}delmemo`)) {
-    memo.delmemo(msgs, PREFIX, message, db);
+    memo.delmemo(msg, PREFIX, message, db);
   }
   /* Show all the commands */
   if (message.content.toString() === `${PREFIX}help`) {
-    help.help(bot, msgs, PREFIX);
+    help.help(bot, msg, PREFIX);
   }
   /* Play a music with a youtube link */
   if (message.content.startsWith(`${PREFIX}play`)) {
-    music.play(msgs, message);
+    music.play(msg, message);
   }
   /* Skip the current music */
   if (message.content.toString() === `${PREFIX}skip`) {
-    music.skip(msgs, PREFIX);
+    music.skip(msg, PREFIX);
   }
   /* Stop the current music */
   if (message.content.toString() === `${PREFIX}stop`) {
-    music.stop(msgs);
+    music.stop(msg);
   }
   /* Reset the DB */
   if (message.content.toString() === `${PREFIX}resetDB`) {
@@ -149,11 +142,11 @@ bot.on('message', async (message) => {
   }
   /* Dice for JDR */
   if (message.content.startsWith(`${PREFIX}dice`)) {
-    dice.dice(msgs, message)
+    jdr.dice(msg, message)
   }
   /* Cards mage for JDR */
   if (message.content.toString() === `${PREFIX}card`) {
-    card.card(msgs, msgFile, message)
+    jdr.card(msg, msgFile, message)
   }
 });
 
