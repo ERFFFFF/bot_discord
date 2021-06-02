@@ -151,10 +151,6 @@ bot.on('message', async (message) => {
   if (message.content.startsWith(`${PREFIX}dice`)) {
     dice.dice(msgs, message)
   }
-  /* Register mage for JDR */
-  if (message.content.toString() === `${PREFIX}register`) {
-    card.register(msgs, message, collectionMemo)
-  }
   /* Cards mage for JDR */
   if (message.content.toString() === `${PREFIX}card`) {
     card.card(msgs, msgFile, message)

@@ -68,6 +68,11 @@ exports.help = (bot, msg, PREFIX) => {
               il correspond au nombres de faces du dé.",
           },
           {
+            name: `**${PREFIX}card**`,
+            value:
+              "Permet de tirer une carte (paquet de 52) aléatoirement.",
+          },
+          {
             name: `**${PREFIX}play ytb_link**`,
             value:
               "Permet de jouer une musique youtube. \n ytb_link = correspond à un lien youtube valide.\
