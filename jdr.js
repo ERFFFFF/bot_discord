@@ -9,10 +9,9 @@ exports.card = (msgFile, message) => {
     let randomCards = Math.floor(Math.random() * 52) + 1;
     msgFile(`${message.author} a tiré la carte `, __dirname + arrayOfFiles[randomCards])
   })();
-}
+};
 exports.dice = (msg, message) => {
   (async () => {
-
     try {
       let diceContent = message.content;
       let splitDiceContent = diceContent.split(" ");
@@ -22,16 +21,19 @@ exports.dice = (msg, message) => {
       let diceNumber = diceSplitContent[1];
       let intdiceNumberValue = parseInt(diceNumber);
       let intdiceNumber = parseInt(numberOfDices);
-      if (!intdiceNumber.isNaN() && !intdiceNumberValue.isNaN()) {
+      if (!isNaN(intdiceNumber) && !isNaN(intdiceNumberValue)) {
         for (i = 1; i <= intdiceNumber; i++) {
           let valuecctl = Math.floor(Math.random() * intdiceNumberValue) + 1;
           msg(`${message.author} tu as fais un ${valuecctl} !`);
-          if (i > 10)
+          if (i >= 10)
             break;
         }
+      } else {
+        msg(`écris bien sale chien`);
       }
     } catch (error) {
-      msg("écris bien sale chien");
+      msg(`écris bien sale chien`);
+      throw console.error(error);
     }
   })();
-}
+};

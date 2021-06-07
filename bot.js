@@ -5,6 +5,9 @@ const bot = new Discord.Client({});
 //bot settings
 const bot_settings = require('./settings/bot_settings.json');
 
+// mongoose
+const mongoose = require("mongoose");
+
 // created commands
 //const AnimeFunc = require('./animeFunc.js');
 //const MangaFunc = require('./mangaFunc.js');
@@ -23,26 +26,25 @@ const music = require('./music.js');
 const PREFIX = ',';
 
 // connection to the database
-const MongoClient = require('mongodb').MongoClient;
-const NameDB = bot_settings.DatabaseNameMongo;
-const uri = `mongodb+srv://${bot_settings.UsernameMongo}:${bot_settings.PasswordMongo}@cluster0.skkqx.mongodb.net/${NameDB}?retryWrites=true&w=majority`;
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+mongoose.connect(
+  `mongodb+srv://${bot_settings.UsernameMongo}:${bot_settings.PasswordMongo}@cluster0.skkqx.mongodb.net/${bot_settings.DatabaseNameMongo}?retryWrites=true&w=majority`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  },
+);
+
+const connection = mongoose.connection;
+var db = null
+connection.on("error", console.error.bind(console, "connection error: "));
+connection.once("open", () => {
+  console.log('Connected to Atlas Mongo.');
+  db = connection.db;
 });
 
 bot.on('ready', () => {
   //msg('Bot is up !');
   bot.user.setActivity('Peter des gueules');
-});
-
-/* Connect to the Database */
-var db = null;
-var collectionMemo = null;
-client.connect((err) => {
-  db = client.db(NameDB);
-  collectionMemo = db.collection('memo');
-  console.log('Connected to Atlas Mongo.');
 });
 
 /* BOT SECTION */
@@ -135,18 +137,23 @@ bot.on('message', async (message) => {
       message.member.permissions.has('ADMIN') |
       (message.author.id == bot_settings.SUPER_ADMIN_ID)
     ) {
-      collectionMemo.drop();
-      db.createCollection('memo');
-      console.log("database deleted !")
+      // list collections
+      //db.listCollections().toArray((error, collections) => { console.log(collections) })
+      db.dropCollection('memo')
+      db.dropCollection('User')
+      db.createCollection('Memo')
+      db.createCollection('User')
+      console.log("Collections reseted !");
+      msg("Collections reseted ! ")
     }
   }
   /* Dice for JDR */
   if (message.content.startsWith(`${PREFIX}dice`)) {
-    jdr.dice(msg, message)
+    jdr.dice(msg, message);
   }
   /* Cards mage for JDR */
   if (message.content.toString() === `${PREFIX}card`) {
-    jdr.card(msg, msgFile, message)
+    jdr.card(msgFile, message);
   }
 });
 

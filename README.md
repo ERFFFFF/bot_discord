@@ -10,6 +10,8 @@ Hebergement sous windows :
 5. npm i discord.js-musicbot-addon (bot musique)
 6. npm install cheerio (implémentation des éléments de bases de jquery)
 7. npm i puppeteer (permet de naviguer sur une page web pour ensuite extraire des éléments)
+8. npm i forever (permet de restart une application node en cas de crash. => mode production)
+9. npm i nodemon (permet de restart une application node en quand on sauvegarde du code => mode debug)
 
 Si les commandes npm ne marchent pas, cela pourrait peut etre due au fait que Nodejs ne soit pas dans les "variables d'environnements".
 Tous les npm install doivent êtres dans le dossier ou se situe le bot.

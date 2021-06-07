@@ -10,7 +10,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
     if (sentenceMymemo[1] != null) {
       db.collection('memo').findOne(
         {
-          user_id: user_id_mymemo,
+          id: user_id_mymemo,
           title: sentenceMymemo[1],
         },
         function (err, result) {
@@ -64,7 +64,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
     // show all the memo (without the content)
     if (sentenceMymemo[1] == null) {
       db.collection('memo')
-        .find({ user_id: user_id_mymemo })
+        .find({ id: user_id_mymemo })
         .toArray(function (err, result) {
           if (err) throw err;
           if (result != []) {
@@ -205,7 +205,7 @@ exports.addmemo = (msg, message, PREFIX, db) => {
       // check if a memo with the same title exist
       db.collection('memo').findOne(
         {
-          user_id: user_id_addMemo,
+          id: user_id_addMemo,
           title: sentenceAddMemo[1],
         },
         function (err, result) {
@@ -229,27 +229,27 @@ exports.addmemo = (msg, message, PREFIX, db) => {
             ) {
               // write data inside mongo
               db.collection('memo').insertOne({
-                user_id: user_id_addMemo,
+                id: user_id_addMemo,
                 title: sentenceAddMemo[1],
                 content: contentMemo,
               });
               msg(
                 '<@!' +
-                  user_id_addMemo +
-                  '>, ' +
-                  'Le mémo **' +
-                  sentenceAddMemo[1] +
-                  '** avec le contenu : **' +
-                  contentMemo +
-                  '** à bien été ajouté à ta liste personelle !'
+                user_id_addMemo +
+                '>, ' +
+                'Le mémo **' +
+                sentenceAddMemo[1] +
+                '** avec le contenu : **' +
+                contentMemo +
+                '** à bien été ajouté à ta liste personelle !'
               );
             } else {
               // length error.
               msg(
                 "tutututu kestufé, ta cru tu voulais réécrire la bible fdp, fais un titre et un content plus cours sale chien, pour un titre c'est max 256 characteres et la t'en as " +
-                  sentenceAddMemo[1].length +
-                  " et dans le content c'est max 1024 charactères et la t'en as " +
-                  contentMemo.length
+                sentenceAddMemo[1].length +
+                " et dans le content c'est max 1024 charactères et la t'en as " +
+                contentMemo.length
               );
             }
           } else {
@@ -278,7 +278,7 @@ exports.delmemo = (msg, PREFIX, message, db) => {
       // delete the memo
       db.collection('memo').deleteOne(
         {
-          user_id: user_id_delmemo,
+          id: user_id_delmemo,
           title: sentenceDelMemo[1],
         },
         function (err, obj) {
@@ -290,11 +290,11 @@ exports.delmemo = (msg, PREFIX, message, db) => {
             // send message to confirm that the memo is deleted
             msg(
               '<@!' +
-                user_id_delmemo +
-                '>, ' +
-                'Le Mémo ' +
-                sentenceDelMemo[1] +
-                ' à bien été supprimer de ta liste personelle !'
+              user_id_delmemo +
+              '>, ' +
+              'Le Mémo ' +
+              sentenceDelMemo[1] +
+              ' à bien été supprimer de ta liste personelle !'
             );
           }
         }
