@@ -1,3 +1,6 @@
+const User = require("./models/userModel");
+const Memo = require("./models/memoModel");
+
 exports.mymemo = (bot, msg, message, PREFIX, db) => {
   (async () => {
     let user_id_mymemo = message.author.id;
@@ -8,7 +11,7 @@ exports.mymemo = (bot, msg, message, PREFIX, db) => {
     let sentenceMymemo = Mymemo.split(' ');
     // show a certain memo
     if (sentenceMymemo[1] != null) {
-      db.collection('memo').findOne(
+      Memo.findOne(
         {
           id: user_id_mymemo,
           title: sentenceMymemo[1],
@@ -187,10 +190,10 @@ exports.addmemo = (msg, message, PREFIX, db) => {
   (async () => {
     // GET user id
     let user_id_addMemo = message.author.id;
-    // GET message
-    let AddMemo = message.content;
-    // Split message and get last word the user entered
-    let sentenceAddMemo = AddMemo.split(' ');
+
+    // Split message
+    let sentenceAddMemo = message.content.split(' ');
+
     // Send Message to a certain User.
     /*
         let MessageUser = bot.users.get("ID USER");
@@ -203,9 +206,9 @@ exports.addmemo = (msg, message, PREFIX, db) => {
       sentenceAddMemo[2] != null
     ) {
       // check if a memo with the same title exist
-      db.collection('memo').findOne(
+      db.collection('Memo').findOne(
         {
-          id: user_id_addMemo,
+          user_id: user_id_addMemo,
           title: sentenceAddMemo[1],
         },
         function (err, result) {
