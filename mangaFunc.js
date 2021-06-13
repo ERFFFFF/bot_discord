@@ -4,84 +4,75 @@ const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 
 function delay(timeout) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, timeout);
-    });
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout);
+  });
 }
 
-exports.manga = () =>
-{
-	// array that will contain our final data
-	var dataMangaChap=[];
-	var dataMangaName=[];
+exports.manga = async () => {
+  // array that will contain our final data
+  var dataMangaChap = [];
+  var dataMangaName = [];
 
-    (async () => 
-    {
-        //launch pupeteer
-        const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
-        //const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
-        
-        //create a new page
-        const page = await browser.newPage();
+  //launch pupeteer
+  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+  //const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: false});
 
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
-        // Some sites require this header to be set in order to work. (this one for exemple need it)
-        await page.setExtraHTTPHeaders({
-            'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
-        });
+  //create a new page
+  const page = await browser.newPage();
 
-        //tell to the bot to go to the website
-        await page.goto('https://www.japscan.to/', { waitUntil: 'networkidle0'});
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
+  // Some sites require this header to be set in order to work. (this one for exemple need it)
+  await page.setExtraHTTPHeaders({
+    'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8'
+  });
 
-        await page.waitForNavigation( { waitUntil : 'networkidle0' } );
+  //tell to the bot to go to the website
+  await page.goto('https://www.japscan.to/', { waitUntil: 'networkidle0' });
 
-       //	await delay(8000);
+  await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-        //Tell to the bot to scroll to the bottom of the page
-        page.evaluate(_ => 
-        {
-            window.scrollBy(0, window.innerHeight);
-        });
+  //	await delay(8000);
 
-        //get the data of the website
-        let content = await page.content();
+  //Tell to the bot to scroll to the bottom of the page
+  page.evaluate(_ => {
+    window.scrollBy(0, window.innerHeight);
+  });
 
-        //put all the content of the webpage into cheerio
-        var $ = cheerio.load(content);
-        //research all the items that we want to get
-        $('.container .row #main .card .tab-content #tab-1 .chapters_list').each((index,item)=>
-        {
-            const $element = $(item);
-            //verify if the class is the object that we want
-            if($element.attr('class') == "chapters_list")
-            {
-                //push the data into a board
-                dataMangaChap.push
-                ({
-                    //the data, we dont need to describe all the path but just the path after the class anime
-                    next_epiosode:$element.find('.text-truncate .text-dark').text()
-                })
-               // console.log(dataMangaChap)
-            }
+  //get the data of the website
+  let content = await page.content();
+
+  //put all the content of the webpage into cheerio
+  var $ = cheerio.load(content);
+  //research all the items that we want to get
+  $('.container .row #main .card .tab-content #tab-1 .chapters_list').each((index, item) => {
+    const $element = $(item);
+    //verify if the class is the object that we want
+    if ($element.attr('class') == "chapters_list") {
+      //push the data into a board
+      dataMangaChap.push
+        ({
+          //the data, we dont need to describe all the path but just the path after the class anime
+          next_epiosode: $element.find('.text-truncate .text-dark').text()
         })
-        $('.container .row #main .card .tab-content #tab-1 .text-truncate').each((index,item)=>
-        {
-            const $elem = $(item);
-            //verify if the class is the object that we want
-            if($elem.attr('class') == "text-truncate")
-            {
-                //push the data into a board
-                dataMangaName.push
-                ({
-                    //the data, we dont need to describe all the path but just the path after the class anime
-                    en:$elem.find('.text-dark').text()
-                })
-            }
-        })		       
-        //close the browser
-        browser.close();
-    })();
+      // console.log(dataMangaChap)
+    }
+  })
+  $('.container .row #main .card .tab-content #tab-1 .text-truncate').each((index, item) => {
+    const $elem = $(item);
+    //verify if the class is the object that we want
+    if ($elem.attr('class') == "text-truncate") {
+      //push the data into a board
+      dataMangaName.push
+        ({
+          //the data, we dont need to describe all the path but just the path after the class anime
+          en: $elem.find('.text-dark').text()
+        })
+    }
+  })
+  //close the browser
+  browser.close();
 
-    // Return data
-    return [dataMangaChap, dataMangaName];
+  // Return data
+  return [dataMangaChap, dataMangaName];
 }
