@@ -94,10 +94,8 @@ _Le setup_13.x est la version du packet, installer la derniere version en ligne 
 Global setup :
 ==============
 
-Créé un dossier nommé "DatabaseList" à la racine du projet. Puis créé le fichier "ListeAnime.json" dans le dossier DatabaseList. (mettre dans le fichier ListeAnime.json la phrase suivante : [])
-
-### TOKEN ###
-Créé un fichier **bot_settings.json** et mettre le token du bot ainsi que l'API google :
+### PARAMS ###
+Créé un fichier **settings/bot_settings.json** et remplir l'ensemble des champs ci-dessous :
 ```JSON
 {
   "token": "BOT TOKEN", 
@@ -116,6 +114,6 @@ Créé un fichier **bot_settings.json** et mettre le token du bot ainsi que l'AP
 }
 ```
 
-### Uninctall package ###
+### Uninstall package ###
 delete a package :
 > npm uninstall NAME_PACKAGE -S -D -O
