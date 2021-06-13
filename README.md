@@ -98,22 +98,23 @@ Créé un dossier nommé "DatabaseList" à la racine du projet. Puis créé le f
 
 ### TOKEN ###
 Créé un fichier **bot_settings.json** et mettre le token du bot ainsi que l'API google :
->{
->  "token": "BOT TOKEN",
->  "GOOGLE_API_KEY": "API KEY",
->  "UsernameMongo": "ATLAS USERNAME",
->  "PasswordMongo": "ATLAS PASSWORD",
->  "DatabaseNameMongo": "ATLAS DATABASE NAME",
->  "SUPER_ADMIN_ID": "ADMIN DISCORD OF A USER",
->  "anilist_client_id": "ANALIST CLIENT ID",
->  "anilist_secret": "ANILIST SECRET",
->  "anilist_redirect_url": "https://anilist.co/api/v2/oauth/authorize",
->  "anilist_redirect_uri": "http://127.0.0.1:8000/",
->  "PasswordAnilist": "ANILIST PASSWORD",
->  "EmailAnilist": "ANILIST EMAIL",
->  "token_2capcha": "2CAPCHA TOKEN"
->}
-
+```JSON
+{
+  "token": "BOT TOKEN", 
+  "GOOGLE_API_KEY": "API KEY",
+  "UsernameMongo": "ATLAS USERNAME",
+  "PasswordMongo": "ATLAS PASSWORD",
+  "DatabaseNameMongo": "ATLAS DATABASE NAME",
+  "SUPER_ADMIN_ID": "ADMIN DISCORD OF A USER",
+  "anilist_client_id": "ANALIST CLIENT ID",
+  "anilist_secret": "ANILIST SECRET",
+  "anilist_redirect_url": "https://anilist.co/api/v2/oauth/authorize",
+  "anilist_redirect_uri": "http://127.0.0.1:8000/",
+  "PasswordAnilist": "ANILIST PASSWORD",
+  "EmailAnilist": "ANILIST EMAIL",
+  "token_2capcha": "2CAPCHA TOKEN"
+}
+```
 
 ### Uninctall package ###
 delete a package :
