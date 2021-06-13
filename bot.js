@@ -1,3 +1,4 @@
+// add bot to server => https://discord.com/oauth2/authorize?client_id=453669165362839563&scope=bot+applications.commands where the client id is the id of the bot, see more at discord developers
 //discord
 const Discord = require('Discord.js');
 const bot = new Discord.Client({});
@@ -44,7 +45,8 @@ connection.once("open", () => {
 
 bot.on('ready', () => {
   //msg('Bot is up !');
-  bot.user.setActivity('Peter des gueules');
+  bot.users.fetch("150251967959138304").then(result => { bot.user.setActivity(result.username + ' ptite salope'); })
+
 });
 
 /* BOT SECTION */
@@ -55,11 +57,12 @@ bot.on('message', async (message) => {
   function msgFile(msg, file) {
     message.channel.send(msg, { files: [file] });
   }
-
+  //console.log(message.author.id)
   //¨PRIVATE MESSAGE
   // hiroi
   // bot.users.cache.get("160835265928232961").send("poulet")
-
+  // mougow id
+  //bot.users.cache.get("150251967959138304").send("salut ma cocotte")
   if (!message.content.startsWith(PREFIX)) return;
   if (message.author.bot) return;
   /* Test */
@@ -139,7 +142,7 @@ bot.on('message', async (message) => {
     ) {
       // list collections
       //db.listCollections().toArray((error, collections) => { console.log(collections) })
-      db.dropCollection('memo')
+      db.dropCollection('Memo')
       db.dropCollection('User')
       db.createCollection('Memo')
       db.createCollection('User')

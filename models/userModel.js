@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     Role: String,
     cards: Array
   },
-  Date: Date.now()
-})
+  Date: Date
+}, { collection: "User" })
 
 module.exports = mongoose.model('User', userSchema);
