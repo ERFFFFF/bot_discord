@@ -1,6 +1,6 @@
 // add bot to server => https://discord.com/oauth2/authorize?client_id=453669165362839563&scope=bot+applications.commands where the client id is the id of the bot, see more at discord developers
 //discord
-const Discord = require('Discord.js');
+const Discord = require('discord.js');
 const bot = new Discord.Client({});
 
 //bot settings
