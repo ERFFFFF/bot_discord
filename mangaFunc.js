@@ -1,5 +1,5 @@
 const bot_settings = require("./settings/bot_settings.json");
-const Discord = require("Discord.js");
+const Discord = require("discord.js");
 const cheerio = require('cheerio');
 const puppeteer = require('puppeteer');
 
