@@ -16,5 +16,9 @@
     "puppeteer": "^5.5.0",
     "ytdl-core-discord": "^1.3.0"
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ERFFFFF/bot_discord"
+  },
 }
