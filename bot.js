@@ -24,29 +24,28 @@ const jdr = require('./jdr.js');
 const music = require('./music.js');
 
 //Prefix for the Botbrowser
-const PREFIX = ',';
-
-// connection to the database
-mongoose.connect(
-  `mongodb+srv://${bot_settings.UsernameMongo}:${bot_settings.PasswordMongo}@cluster0.skkqx.mongodb.net/${bot_settings.DatabaseNameMongo}?retryWrites=true&w=majority`,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  },
-);
-
-const connection = mongoose.connection;
+const PREFIX = '!';
 var db = null
-connection.on("error", console.error.bind(console, "connection error: "));
-connection.once("open", () => {
-  console.log('Connected to Atlas Mongo.');
-  db = connection.db;
-});
+
 
 bot.on('ready', () => {
   //msg('Bot is up !');
-  bot.users.fetch("150251967959138304").then(result => { bot.user.setActivity(result.username + ' ptite salope'); })
-
+  bot.users.fetch("150251967959138304").then(result => { bot.user.setActivity(result.username + ' ptite salope'); }
+  )
+  // connection to the database
+  mongoose.connect(
+    `mongodb+srv://${bot_settings.UsernameMongo}:${bot_settings.PasswordMongo}@cluster0.skkqx.mongodb.net/${bot_settings.DatabaseNameMongo}?retryWrites=true&w=majority`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    },
+  );
+  const connection = mongoose.connection;
+  connection.on("error", console.error.bind(console, "connection error: "));
+  connection.once("open", () => {
+    console.log('Connected to Atlas Mongo.');
+    db = connection.db;
+  });
 });
 
 /* BOT SECTION */
